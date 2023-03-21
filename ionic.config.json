@@ -1,0 +1,7 @@
+{
+  "name": "coachfit",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
