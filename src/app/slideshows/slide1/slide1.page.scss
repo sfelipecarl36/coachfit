@@ -1,0 +1,82 @@
+ion-content {
+    --background: #4D42FF;
+    --color: white;
+}
+
+ion-icon {
+    font-size: 30px;
+}
+
+#elipse1 {
+    background: #3225FF;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    position: absolute;
+    left: 5px;
+    top: 9px;
+}
+
+#elipse2 {
+    background: #3225FF;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    position: absolute;
+    right: 25px;
+    top: 8px;
+}
+
+.roxo {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+
+    img {
+        width: 100%;
+        max-width: 500px;
+        margin: 15px 0px;
+    }
+
+    h1 {
+        font-family: 'Fugaz One';
+    }
+
+    h4 {
+        position: absolute;
+        left: 25px;
+        top: 12px;
+    }
+
+    .container-bolinhas {
+        width: 100%;
+        height: auto;
+        padding: 5px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+
+        .bolinha {
+            background-color: white;
+            width: 10px;
+            height: 10px;
+            margin: 5px 4px;
+            opacity: 0.8;
+            border-radius: 50%;
+        }
+    }
+
+    .container-setinhas {
+        width: 100%;
+        height: auto;
+        padding: 5px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+    }
+}
