@@ -26,6 +26,10 @@ const routes: Routes = [
     path: 'slide3',
     loadChildren: () => import('./slideshows/slide3/slide3.module').then( m => m.Slide3PageModule)
   },
+  {
+    path: 'login',
+    loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
+  },
 ];
 
 @NgModule({
