@@ -1,9 +1,25 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>login</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
+
+  <div class="fundo">
+
+    <h1>Login no CoachFit</h1>
+    <img alt="logo" id="logo" src="../assets/img/logo.png">
+
+  <div class="form">
+
+    <ion-label for="usuario">Usuário</ion-label>
+    <ion-input type="text" #usuario placeholder="Insira aqui seu usuário"></ion-input>
+    
+    <ion-label for="senha">Senha</ion-label>
+    <ion-input type="password" #senha placeholder="Senha da sua conta"></ion-input>
+
+    <ion-button>Entrar</ion-button>
+
+  </div>
+
+  <p>Não possui conta? <strong [routerLink]="['/cadastro']">Cadastre aqui</strong></p>
+
+
+  </div>
 
 </ion-content>

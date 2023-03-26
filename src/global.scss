@@ -30,3 +30,73 @@
     font-family: 'Fugaz One';
     src: url('assets/font/FugazOne-Regular.ttf');
 }
+
+@font-face {
+    font-family: 'Inder';
+    src: url('assets/font/Inder-Regular.ttf');
+}
+
+*{font-family: 'Inder';}
+
+ion-content {
+    --background: white;
+    --color: black;
+}
+
+strong {
+    color: var(--ion-color-primary);
+}
+
+p {
+    margin: 2px 0px;
+}
+
+ion-item {
+    --ion-item-background: transparent;
+    --background-color:transparent !important;
+    --padding-start: 0px;
+    --padding-end: 0px;
+    --inner-padding-end: 0px;
+}
+
+ion-label {
+    padding-left: 3px;
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+
+ion-input {
+        border-radius: 12px;
+        border: 1px solid #929292;
+        color:#A4A4A4;
+        background: transparent;
+        --padding-start: 15px !important;
+        max-height: 45px;
+        min-height: 45px;
+        min-width: 100%;
+}
+
+ion-input:hover {
+    border-color: var(--ion-color-primary);
+}
+
+ion-button {
+    font-family: 'Fugaz One';
+}
+
+div.header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100vw;
+    max-width: 600px;   
+    padding: 5px 25px;
+    margin: 10px 0px;
+
+    h1 {
+        margin-top: 0px;
+        margin-bottom: 0px;
+        margin-left: 10px;
+        text-align: center;
+    }
+}
