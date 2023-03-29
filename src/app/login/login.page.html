@@ -7,13 +7,13 @@
 
   <div class="form">
 
-    <ion-label for="usuario">Usuário</ion-label>
-    <ion-input type="text" #usuario placeholder="Insira aqui seu usuário"></ion-input>
+    <ion-label for="email">E-mail</ion-label>
+    <ion-input type="text" #email placeholder="Insira aqui seu E-mail"></ion-input>
     
     <ion-label for="senha">Senha</ion-label>
     <ion-input type="password" #senha placeholder="Senha da sua conta"></ion-input>
 
-    <ion-button>Entrar</ion-button>
+    <ion-button (click)="logar(email, senha)">Entrar</ion-button>
 
   </div>
 
