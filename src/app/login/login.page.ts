@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import { AuthService } from '../shared/auth-service';
+import { User } from '../shared/user';
 
 @Component({
   selector: 'app-login',
@@ -9,9 +11,12 @@ import { AuthService } from '../shared/auth-service';
 })
 export class LoginPage implements OnInit {
 
+  users: any
+
   constructor(
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private firestore: AngularFirestore
   ) {
 
    }

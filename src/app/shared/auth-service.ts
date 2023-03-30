@@ -13,6 +13,7 @@ import firebase from 'firebase/compat';
   providedIn: 'root',
 })
 export class AuthService {
+  users: any
   userData: any;
   public userUid: string = '';
   constructor(
@@ -32,6 +33,7 @@ export class AuthService {
         this.userData = user;
         localStorage.setItem('user', JSON.stringify(this.userData));
         JSON.parse(localStorage.getItem('user')!);
+        console.log(this.userData);
       } else {
         localStorage.setItem('user', '');
         JSON.parse(localStorage.getItem('user')!);
@@ -41,15 +43,14 @@ export class AuthService {
   // Login in with email/password
   async SignIn(email: string, senha: string) {
           const user = await this.ngFireAuth.signInWithEmailAndPassword(email, senha)
-          console.log(user.user!.uid);
           this.userUid = user.user!.uid
           return user;
 }
   // Register user with email/password
-  RegisterUser(nome: any, celular: any, email: string, senha: string) {
+  RegisterUser(nome: any, usuario: any, email: string, senha: string) {
     
     return this.ngFireAuth.createUserWithEmailAndPassword(email, senha).then( newUser => {
-      this.afs.collection('users').doc(newUser.user!.uid).set({ email: email,emailVerified: false,displayName: nome, celular: celular, photoURL: '../assets/perfil.png', uid: newUser.user!.uid});
+      this.afs.collection('users').doc(newUser.user!.uid).set({ email: email,emailVerified: false,displayName: nome, usuario: usuario, photoURL: '../assets/perfil.png', uid: newUser.user!.uid});
       const ref = this.afStorage.ref('perfil.png')
       ref.getDownloadURL().subscribe((url) => {
         this.afs.collection('users').doc(newUser.user!.uid).update({photoURL: url})
@@ -73,7 +74,7 @@ export class AuthService {
       .sendPasswordResetEmail(passwordResetEmail)
       .then(() => {
         window.alert(
-          'Password reset email has been sent, please check your inbox.'
+          'Um E-mail para resetar a sua senha foi enviado! Cheque sua caixa de entrada.'
         );
       })
       .catch((error) => {
@@ -82,9 +83,18 @@ export class AuthService {
   }
   // Returns true when user is looged in
   get isLoggedIn(): boolean {
-    const user = JSON.parse(localStorage.getItem('user')!);
+    const user = JSON.parse(localStorage.getItem('user')||'');
+    console.log(user);
     return user !== 'null' ? true : false;
   }
+
+  GuardLogin() {
+    console.log('Está logado?',this.isLoggedIn);
+    if (!this.isLoggedIn){
+      this.router.navigate(['login']);
+    }
+  }
+
   // Returns true when user's email is verified
   get isEmailVerified(): boolean {
     const user = JSON.parse(localStorage.getItem('user')!);
@@ -119,7 +129,7 @@ export class AuthService {
       email: user.email,
       displayName: user.displayName,
       photoURL: user.photoURL,
-      celular: user.phoneNumber,
+      usuario: user.usuario,
       emailVerified: user.emailVerified,
       
     };
@@ -132,7 +142,7 @@ export class AuthService {
     return this.ngFireAuth.signOut().then(() => {
       this.userUid = ''
       localStorage.removeItem('user');
-      this.router.navigate(['inicio']);
+      this.router.navigate(['login']);
     });
   }
 }

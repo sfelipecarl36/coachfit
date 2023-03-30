@@ -10,23 +10,23 @@
   <div class="form">
 
     <ion-label>Nome Completo</ion-label>
-    <ion-input type="text" placeholder="Seu nome completo"></ion-input>
+    <ion-input type="text" #nomecompleto placeholder="Seu nome completo"></ion-input>
     
     <ion-label>Nome de Usuário</ion-label>
-    <ion-input type="text" placeholder="usuario_coachfit@123"></ion-input>
+    <ion-input type="text" #usuario placeholder="usuario_coachfit@123"></ion-input>
 
     <ion-label>E-mail</ion-label>
-    <ion-input type="email" placeholder="seuemail@meuemail.com"></ion-input>
+    <ion-input type="email" #email placeholder="seuemail@meuemail.com"></ion-input>
 
     <ion-label>Senha</ion-label>
-    <ion-input type="password" placeholder="********"></ion-input>
+    <ion-input type="password" #senha placeholder="********"></ion-input>
 
     <ion-label>Confirme sua Senha</ion-label>
-    <ion-input type="password" placeholder="********"></ion-input>
+    <ion-input type="password" #confirmasenha placeholder="********"></ion-input>
 
     <hr>
 
-    <ion-button>Cadastrar</ion-button>
+    <ion-button (click)="cadastrar(nomecompleto, usuario, email, senha, confirmasenha)">Cadastrar</ion-button>
 
   </div>
 

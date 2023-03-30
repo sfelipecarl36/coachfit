@@ -3,6 +3,6 @@ export interface User {
     email: string;
     displayName: string;
     photoURL: string;
-    celular: string;
+    usuario: string;
     emailVerified: boolean;
  }
