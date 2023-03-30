@@ -42,7 +42,7 @@ h1 {
     font-family: 'Fugaz One';
     font-size: 20px;
     text-align: center;
-    width: 100%;
+    align-self: start;
 }
 
 ion-content {
@@ -102,6 +102,7 @@ ion-input:hover {
 
 ion-button {
     font-family: 'Fugaz One';
+    font-size: 20px;
 }
 
 ion-ripple-effect{

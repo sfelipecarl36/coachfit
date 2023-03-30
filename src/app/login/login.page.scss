@@ -1,3 +1,8 @@
+h1 {
+    font-family: Arial, Helvetica, sans-serif;
+    align-self: normal;
+}
+
 .fundo {
     width: 100vw;
     height: 100vh;
@@ -23,7 +28,7 @@
         ion-button {
             margin: 35px 0px;
             min-height: 45px;
-            font-size: 16px;
+            font-size: 20px;
             --border-radius: 12px;
         }
     }

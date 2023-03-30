@@ -10,28 +10,16 @@ import { User } from '../shared/user';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-  userData: any;
-  users: any;
+  user: any;
 
   constructor(
     private auth: AuthService,
     private router: Router,
     private firestore: AngularFirestore
   ) { 
-      // this.auth.GuardLogin();
-      this.userData = JSON.parse(localStorage.getItem('user')!);
-      console.log(this.userData);
-      
-      this.users = this.firestore.collection('users', ref => ref.
-      where('uid', '==', auth.userUid)).valueChanges();
-
-      this.users.subscribe((res: User[]) => {
-
-        res.forEach((item) => {
-          this.userData['displayName'] = item.displayName;
-        });
-    })
-    console.log(this.userData);
+        this.auth.GuardLogin();
+        this.user = this.auth.userData;
+        this.user['name'] = this.user['displayName'].substring(0, this.user['displayName'].indexOf(' '));
   }
 
   async logout(){

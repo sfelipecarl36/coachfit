@@ -14,17 +14,17 @@ export class AppComponent{
     private router: Router,
     private fireAuth: AngularFireAuth
   ) {
-    this.initializeApp();
+    // this.initializeApp();
   }
 
-  initializeApp() {
-      this.fireAuth.onAuthStateChanged(user => {
-        if (user) {
-          this.router.navigate(['/home']);
-        }
-        else {
-          this.router.navigate(['/login']);
-        }
-      });
-    };
+  // initializeApp() {
+      // this.fireAuth.onAuthStateChanged(user => {
+        // if (user) {
+          // this.router.navigate(['/home']);
+        // }
+        // else {
+         // this.router.navigate(['/login']);
+       // }
+      // });
+    // };
   }

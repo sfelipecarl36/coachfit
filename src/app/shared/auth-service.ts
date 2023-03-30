@@ -25,15 +25,27 @@ export class AuthService {
     public afs: AngularFirestore,
   ) {
 
-
-
     this.ngFireAuth.authState.subscribe((user) => {
       if (user) { 
         this.userUid = user.uid
         this.userData = user;
+        this.users = this.afs.collection('users', ref => ref.
+        where('uid', '==', this.userUid)).valueChanges();
         localStorage.setItem('user', JSON.stringify(this.userData));
         JSON.parse(localStorage.getItem('user')!);
-        console.log(this.userData);
+        this.userData = JSON.parse(localStorage.getItem('user')!);
+        
+        this.users.subscribe((res: User[]) => {
+        
+          res.forEach((item) => {
+            console.log('item.displayName',item.displayName);
+            this.userData['displayName'] = item.displayName;
+          });
+        })
+      console.log(this.userData);
+      console.log('UserUid:', this.userUid);
+      console.log('UserData:', this.userData);
+
       } else {
         localStorage.setItem('user', '');
         JSON.parse(localStorage.getItem('user')!);
@@ -89,8 +101,9 @@ export class AuthService {
   }
 
   GuardLogin() {
-    console.log('Está logado?',this.isLoggedIn);
-    if (!this.isLoggedIn){
+    console.log('Está logado?');
+    if (!this.userData){
+      console.log(this.userData);
       this.router.navigate(['login']);
     }
   }
