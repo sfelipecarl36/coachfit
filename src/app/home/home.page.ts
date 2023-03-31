@@ -12,6 +12,13 @@ import { User } from '../shared/user';
 export class HomePage {
   user: any;
 
+  slideOpts = { 
+    initialSlide: 1, 
+    slidesPerView: 2.4,
+    speed: 350, 
+    effect: 'flip', 
+    }; 
+
   constructor(
     private auth: AuthService,
     private router: Router,

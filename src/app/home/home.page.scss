@@ -38,13 +38,49 @@
 
   }
 
+ion-slides {
+  
+  margin: 0;
+
+  ion-slide {
+  
+  width: auto !important;
+  margin-left: 0;
+  margin-right: 18px;
+
   .ficha {
+
+    min-width: 180px;
+    min-height: 230px;
+    border-radius: 10px;
+    background-color: #95EAFF;
+    padding: 12px;
+    
 
     .ficha-title {
       display: flex;
       flex-direction: row;
+      align-items: center;
+
+      h3 {
+        font-family: 'Ubuntu';
+      }
+
+      h5 {
+        font-family: 'Ubuntu';
+        border-radius: 50%;
+        background-color: #4D42FF;
+        color: white;
+        width: 25px;
+        height: 25px;
+        margin: 0px 5px;
+        font-size: 19px;
+        margin-top: 6px;
+      }
     }
   }
+}
+}
 }
 
 

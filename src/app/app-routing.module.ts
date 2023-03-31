@@ -15,6 +15,11 @@ const routes: Routes = [
   },
 
   {
+    path: 'slideshow',
+    loadChildren: () => import('./slideshow/slideshow.module').then( m => m.SlideshowPageModule)
+  },
+
+  {
     path: 'home',
     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
   },
@@ -47,10 +52,6 @@ const routes: Routes = [
     path: 'meutreino',
     loadChildren: () => import('./meutreino/meutreino.module').then( m => m.MeutreinoPageModule)
   },
-  {
-    path: 'slideshow',
-    loadChildren: () => import('./slideshow/slideshow.module').then( m => m.SlideshowPageModule)
-  }
 
 
 ];
