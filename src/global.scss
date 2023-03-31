@@ -47,7 +47,12 @@ h1 {
     font-family: 'Fugaz One';
     font-size: 20px;
     text-align: center;
+    margin-top: 10px;
     align-self: start;
+}
+
+h1.top {
+    margin-left: 15px;
 }
 
 ion-content {
@@ -61,6 +66,30 @@ strong {
 
 p {
     margin: 2px 0px;
+}
+
+.fundo {
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+    padding-top: 70px;
+}
+
+div.container-lr {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+div.container-left {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
 }
 
 ion-item {
@@ -108,6 +137,10 @@ ion-input:hover {
 ion-button {
     font-family: 'Fugaz One';
     font-size: 20px;
+}
+
+ion-back-button {
+    --color: black
 }
 
 ion-ripple-effect{

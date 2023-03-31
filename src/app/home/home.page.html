@@ -29,14 +29,29 @@
       <ion-slide>
         <div class="ficha">
           <div class="ficha-title">
-            <h3>TREINO</h3><h5>A</h5>
+            <h3>TREINO</h3><h5>B</h5>
           </div>
         </div>
       </ion-slide>
     
     </ion-slides>
 
-    <ion-button (click)="logout()">Sair</ion-button>
+    <div class="container-lr">
+      <h1>CATEGORIAS</h1>
+      <h6>Ver Mais</h6>
+    </div>
+
+    <ion-slides [options]="slideOptsCat">
+
+      <ion-slide *ngFor="let cat of categorias | async">
+        <div class="categoria">
+          <img referrerpolicy=“no-referrer” src="{{ cat.img }}" />
+        </div>
+      </ion-slide>
+  
+    </ion-slides>
+
+    <ion-button id="sair" (click)="logout()">Sair</ion-button>
 
 
   </div>
