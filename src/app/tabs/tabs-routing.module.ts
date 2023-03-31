@@ -12,6 +12,11 @@ const routes: Routes = [
         path: 'home',
         loadChildren: () => import('../home/home.module').then( m => m.HomePageModule)
       },
+
+      {
+        path: 'meutreino',
+        loadChildren: () => import('../meutreino/meutreino.module').then( m => m.MeutreinoPageModule)
+      },
     ]
   }
 ];

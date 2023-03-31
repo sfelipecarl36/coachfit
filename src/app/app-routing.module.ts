@@ -5,7 +5,7 @@ const routes: Routes = [
 
   {
     path: '',
-    redirectTo: 'slide1',
+    redirectTo: 'slideshow',
     pathMatch: 'full'
   },
 
@@ -42,7 +42,16 @@ const routes: Routes = [
   {
     path: 'verify-email',
     loadChildren: () => import('./verify-email/verify-email.module').then( m => m.VerifyEmailPageModule)
+  },
+  {
+    path: 'meutreino',
+    loadChildren: () => import('./meutreino/meutreino.module').then( m => m.MeutreinoPageModule)
+  },
+  {
+    path: 'slideshow',
+    loadChildren: () => import('./slideshow/slideshow.module').then( m => m.SlideshowPageModule)
   }
+
 
 ];
 
