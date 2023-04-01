@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
+import { AuthService } from './shared/auth-service';
 
 @Component({
   selector: 'app-root',
@@ -12,19 +13,14 @@ export class AppComponent{
   
   constructor(
     private router: Router,
-    private fireAuth: AngularFireAuth
+    private fireAuth: AngularFireAuth,
+    private auth: AuthService,
   ) {
-    // this.initializeApp();
+    this.auth.GuardLogin();
   }
 
-  // initializeApp() {
-      // this.fireAuth.onAuthStateChanged(user => {
-        // if (user) {
-          // this.router.navigate(['/home']);
-        // }
-        // else {
-         // this.router.navigate(['/login']);
-       // }
-      // });
-    // };
+  navegar(url: string) {
+    this.router.navigateByUrl(url);
+  }
+
   }

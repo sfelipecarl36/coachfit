@@ -51,7 +51,11 @@ const routes: Routes = [
   {
     path: 'meutreino',
     loadChildren: () => import('./meutreino/meutreino.module').then( m => m.MeutreinoPageModule)
+  },  {
+    path: 'exercicios',
+    loadChildren: () => import('./exercicios/exercicios.module').then( m => m.ExerciciosPageModule)
   },
+
 
 
 ];

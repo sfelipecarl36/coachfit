@@ -15,4 +15,9 @@ export class SlideshowPage {
     },
   ];
 
-}
+  slideOpts = {
+      paginationClickable: true
+    }
+  }
+
+

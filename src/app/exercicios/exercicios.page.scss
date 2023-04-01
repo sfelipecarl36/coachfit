@@ -1,0 +1,122 @@
+.fundo {
+    align-items: center;
+}
+
+.container-categorias {
+    width: 100%;
+    margin-top: 10px;
+}
+
+hr {margin-bottom: 5px;}
+
+.popContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.popOption{
+    width: 100%;
+    min-height: 40px;
+    max-height: 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 3px;
+    border-bottom: 1px solid #CDCDCD;
+    color: #686868;
+    font-size: 14px;
+
+    ion-icon {
+        margin: 0px 5px;
+    }
+}
+
+.categoria {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 150px;
+    min-height: 160px;
+    max-width: 150px;
+    max-height: 160px;
+    background-color: #FEFEFE;
+    margin: 10px;
+    border-radius: 15px;
+    box-shadow: 3px 5px 15px 0px #c0c0c0;
+    float: left;
+
+    h5 {
+        font-size: 15px;
+    }
+
+    img {
+        min-width: 90px;
+        max-width: 90px;
+    }
+}
+
+.container-exercicios {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 15px 0px;
+
+    .exercicio {
+
+        width: 100%;
+        min-height: 90px;
+        max-height: 90px;
+        background-color: #F5F5F5;
+        margin: 5px 0px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 0;
+        border-radius: 12px;
+
+        img {
+            border-radius: 12px 0px 0px 12px;
+            min-height: 90px;
+            max-height: 90px;
+        }
+
+        .exercicio-info {
+            margin-left: 20px;
+            display: flex;
+            min-width: 180px;
+            max-width: 180px;
+            flex-direction: column;
+            justify-content: center;
+            
+            h1 {
+                font-size: 13px;
+                margin: 3px 0px;
+            }
+
+            h4 {
+                font-size: 12px;
+                margin: 3px 0px;
+                color: var(--ion-color-primary);
+            }
+
+            h5 {
+                font-size: 11px;
+                margin: 3px 0px;
+                color: #8C8C8C;
+            }
+            
+        }
+
+        ion-icon {
+            min-width: 25px;
+            margin: 0px 15px;
+            color: #C5C5C5;
+        }
+    }
+}

@@ -1,6 +1,6 @@
 <ion-content class="tutorial-page">
   
-  <ion-slides pager>
+  <ion-slides pager [options]="slideOpts">
     <ion-slide *ngFor="let slide of slides">
       <button ion-button class="bt-pular" color="primary" [routerLink]="['/login']">Pular</button> 
       <img [src]="slide.image" class="slide-image"/>

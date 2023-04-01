@@ -2,7 +2,6 @@
 
   <div class="fundo">
     <div class="container-lr">
-
         <div class="top-perfil">
             <ion-avatar><img referrerpolicy=“no-referrer” id="fotoperfil" src="https://firebasestorage.googleapis.com/v0/b/coachfit-app.appspot.com/o/perfil.png?alt=media&token=49cf5e31-07c6-4306-988a-96e80cd2f482"/></ion-avatar>
             <div class="bemvindo">
@@ -10,45 +9,55 @@
                 <h6>Bem-vindo ao seu <strong>CoachFit</strong></h6>
             </div>
         </div>
-
       <ion-icon name="notifications"></ion-icon>
     </div>
 
-    <h1>SUAS FICHAS</h1>
-
-    <ion-slides [options]="slideOpts">
-
-      <ion-slide>
-        <div class="ficha">
-          <div class="ficha-title">
-            <h3>TREINO</h3><h5>A</h5>
-          </div>
-        </div>
-      </ion-slide>
-
-      <ion-slide>
-        <div class="ficha">
-          <div class="ficha-title">
-            <h3>TREINO</h3><h5>B</h5>
-          </div>
-        </div>
-      </ion-slide>
-    
-    </ion-slides>
+    <div class="container-banner ion-activatable">
+    <img class="banner" (click)="service.navegar('meutreino')" referrerpolicy=“no-referrer” src="https://firebasestorage.googleapis.com/v0/b/coachfit-app.appspot.com/o/banner01.png?alt=media&token=f431d1df-1b18-435b-be89-133dff5d2341" />
+    <ion-ripple-effect></ion-ripple-effect>
+    </div>
 
     <div class="container-lr">
       <h1>CATEGORIAS</h1>
-      <h6>Ver Mais</h6>
+      <h6 class="ion-activatable">Ver Mais<ion-ripple-effect></ion-ripple-effect></h6>
     </div>
 
     <ion-slides [options]="slideOptsCat">
 
       <ion-slide *ngFor="let cat of categorias | async">
-        <div class="categoria">
+        <div class="categoria ion-activatable">
           <img referrerpolicy=“no-referrer” src="{{ cat.img }}" />
+          <ion-ripple-effect></ion-ripple-effect>
         </div>
       </ion-slide>
   
+    </ion-slides>
+
+    <div class="container-lr">
+      <h1>SUAS FICHAS</h1>
+      <h6 class="ion-activatable">Ver Tudo<ion-ripple-effect></ion-ripple-effect></h6>
+    </div>
+
+    <ion-slides [options]="slideOpts">
+
+      <ion-slide>
+        <div class="ficha ion-activatable">
+          <div class="ficha-title">
+            <h3>TREINO</h3><h5>A</h5>
+          </div>
+          <ion-ripple-effect></ion-ripple-effect>
+        </div>
+      </ion-slide>
+
+      <ion-slide>
+        <div class="ficha ion-activatable">
+          <div class="ficha-title">
+            <h3>TREINO</h3><h5>B</h5>
+          </div>
+          <ion-ripple-effect></ion-ripple-effect>
+        </div>
+      </ion-slide>
+    
     </ion-slides>
 
     <ion-button id="sair" (click)="logout()">Sair</ion-button>

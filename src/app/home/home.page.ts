@@ -3,6 +3,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../shared/auth-service';
+import { Services } from '../shared/services';
 
 @Component({
   selector: 'app-home',
@@ -20,7 +21,7 @@ export class HomePage {
     slidesPerView: 2.4,
     speed: 350, 
     effect: 'flip', 
-    spaceBetween: 20
+    spaceBetween: 20,
     }; 
 
   slideOptsCat = { 
@@ -33,10 +34,10 @@ export class HomePage {
 
   constructor(
     private auth: AuthService,
+    public service: Services,
     private router: Router,
     private firestore: AngularFirestore
   ) { 
-        this.auth.GuardLogin();
         this.user = this.auth.userData;
         this.user['name'] = this.user['displayName'].substring(0, this.user['displayName'].indexOf(' '));
         

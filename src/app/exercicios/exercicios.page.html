@@ -1,0 +1,60 @@
+<ion-content>
+  
+  <div class="fundo">
+    <div class="container-left">
+        <ion-back-button text="" defaultHref="home"></ion-back-button>
+        <h1 class="top">Exercícios</h1>
+      <p></p>
+    </div>
+
+    
+
+    <div class="container-categorias">
+      <div class="categoria ion-activatable" *ngFor="let cat of categorias | async">
+        <img [src]="cat.img"/>
+        <h5>{{cat.nome}}</h5>
+        <ion-ripple-effect></ion-ripple-effect>
+      </div>
+    </div>
+
+    <hr>
+    <h6 class="ion-activatable">Ver todas<ion-ripple-effect></ion-ripple-effect></h6>
+
+    <div class="container-exercicios">
+      <div class="exercicio ion-activatable" *ngFor="let exe of exercicios | async">
+        <img [src]="exe.img"/>
+        <div class="exercicio-info">
+          <h1>{{exe.nome}}</h1>
+          <span *ngFor="let catexe of categorias | async"><h4 *ngIf="catexe.uid==exe.categoria">{{catexe.nome}}</h4></span>
+          <h5>{{exe.regiao}}</h5>
+        </div>
+        <ion-icon id="{{exe.uid}}" name="ellipsis-horizontal-circle-outline"></ion-icon>
+        <ion-popover trigger="{{exe.uid}}" triggerAction="click">
+          <ng-template>
+            <div class="popContainer">
+              <div class="popOption ion-activatable">
+                <ion-icon name="document-text-outline"></ion-icon>
+                <p>Ver Detalhes</p>
+                <ion-ripple-effect></ion-ripple-effect>
+              </div>
+              <div class="popOption ion-activatable">
+                <ion-icon name="heart-outline"></ion-icon>
+                <p>Favoritar Exercício</p>
+                <ion-ripple-effect></ion-ripple-effect>
+              </div>
+            </div>
+          </ng-template>
+        </ion-popover>
+        
+        <ion-ripple-effect></ion-ripple-effect>
+      </div>
+    </div>
+
+
+
+
+
+  </div>
+  
+  </ion-content>
+  

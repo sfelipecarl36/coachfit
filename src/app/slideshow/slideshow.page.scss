@@ -19,10 +19,9 @@ ion-slide {
     top: 30px;
 }
 
-div.swiper-pagination-bullets span.swiper-pagination-bullet {
-    background: #60646B !important;
-    opacity: 1;
-    margin-bottom: 5px;
+*{
+--bullet-background: black;
+--bullet-background-active: #4D42FF;
 }
 
 .tutorial-page {
