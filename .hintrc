@@ -22,6 +22,14 @@
           "img[referrerpolicy]"
         ]
       }
+    ],
+    "compat-api/css": [
+      "default",
+      {
+        "ignore": [
+          "border-inline"
+        ]
+      }
     ]
   }
 }

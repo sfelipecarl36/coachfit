@@ -1,0 +1,34 @@
+<ion-content>
+  
+  <div class="fundo">
+    <div class="container-left">
+        <ion-back-button text="" defaultHref="meutreino"></ion-back-button>
+        <h1 class="top">Criar Ficha</h1>
+      <p></p>
+    </div>
+  
+    <h2 class="textformficha">Qual o Rótulo da Ficha?</h2>
+
+    <ion-radio-group required
+      [(ngModel)]="rotulo"
+      (ionChange)="checkValue($event)">
+        <ion-radio *ngFor="let rot of rotulos" class="rotulo" value="{{rot}}" mark="A" mode="md"><ion-label>{{rot}}</ion-label></ion-radio>
+    </ion-radio-group>
+
+    <h1 class="textformficha">DESCANSO</h1>
+
+    <ion-datetime
+        presentation="time"
+        hourCycle="h23"
+        hourValues="0,1,2,3,4,5"
+        minuteValues="10,20,30,40,50"
+        displayFormat="HH:mm"
+        value="00:10">
+    </ion-datetime>
+  
+    <ion-button>Criar Ficha</ion-button>
+  
+  </div>
+  
+  </ion-content>
+  

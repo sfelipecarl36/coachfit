@@ -55,6 +55,10 @@ const routes: Routes = [
     path: 'exercicios',
     loadChildren: () => import('./exercicios/exercicios.module').then( m => m.ExerciciosPageModule)
   },
+  {
+    path: 'criaficha',
+    loadChildren: () => import('./criaficha/criaficha.module').then( m => m.CriafichaPageModule)
+  },
 
 
 

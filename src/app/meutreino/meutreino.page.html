@@ -9,7 +9,7 @@
 
   <p class="noficha">Você ainda não possui ficha de treino. Crie agora mesmo uma!</p>
 
-  <div class="container-novaficha ion-activatable">
+  <div class="container-novaficha ion-activatable" (click)="service.navegar('criaficha')">
       <h2>Criar nova Ficha de Treino</h2>
       <ion-icon name="add-circle"></ion-icon>
       <ion-ripple-effect class="primary"></ion-ripple-effect>

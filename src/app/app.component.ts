@@ -19,7 +19,7 @@ export class AppComponent{
     this.auth.GuardLogin();
   }
 
-  navegar(url: string) {
+  public navegar(url: string) {
     this.router.navigateByUrl(url);
   }
 

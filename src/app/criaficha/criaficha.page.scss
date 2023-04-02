@@ -1,0 +1,58 @@
+.fundo {
+    justify-content: center;
+    align-items: center;
+}
+
+h2.textformficha {
+    font-size: 22px;
+    font-family: "Ubuntu";
+}
+
+h1.textformficha {
+    font-size: 22px;
+    margin: 30px auto;
+}
+
+.rotulo {
+    font-size: 22px;
+    font-family: "Ubuntu";
+}
+
+ion-radio-group {
+
+    display: flex;
+    transform: translateX(-20px);
+    flex-direction: row;
+
+    ion-radio {
+        margin: 35px 35px;
+    }
+
+
+    ion-radio::part(container) {
+        min-width: 60px;
+        min-height: 60px;
+        
+        border-radius: 50%;
+        border: 2px solid #ddd;
+      }
+      
+      ion-radio::part(mark) {
+        background: none;
+        transition: none;
+        transform: none;
+        border-radius: 0;
+      }
+      
+      ion-radio.radio-checked::part(container) {
+        background: var(--ion-color-primary);
+        border-color: transparent;
+      }
+      
+      ion-radio.radio-checked::part(mark) {
+        width: 12px;
+        height: 20px;
+      }
+
+
+}

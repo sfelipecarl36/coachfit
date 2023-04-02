@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Services } from '../shared/services';
 
 @Component({
   selector: 'app-meutreino',
@@ -7,7 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MeutreinoPage implements OnInit {
 
-  constructor() { }
+  constructor(
+    public service: Services
+  ) { }
 
   ngOnInit() {
   }
