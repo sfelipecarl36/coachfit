@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import { AuthService } from '../shared/auth-service';
-import { User } from '../shared/user';
+import { getAuth, setPersistence, browserSessionPersistence } from 'firebase/auth';
 
 @Component({
   selector: 'app-login',
@@ -27,6 +27,8 @@ export class LoginPage implements OnInit {
   async logar(email: any, senha: any){
     const userVal = this.auth.SignIn(email.value, senha.value);
     if (await userVal){
+      const autenticacao = getAuth()
+      setPersistence(autenticacao, browserSessionPersistence)
       this.router.navigateByUrl('home');
     }
   }

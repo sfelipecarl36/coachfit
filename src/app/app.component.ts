@@ -10,17 +10,13 @@ import { AuthService } from './shared/auth-service';
 })
 export class AppComponent{
   public selectedIndex = 0;
+  public user: any;
   
   constructor(
     private router: Router,
     private fireAuth: AngularFireAuth,
     private auth: AuthService,
   ) {
-    this.auth.GuardLogin();
-  }
-
-  public navegar(url: string) {
-    this.router.navigateByUrl(url);
   }
 
   }

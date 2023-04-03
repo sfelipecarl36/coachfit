@@ -29,6 +29,7 @@ export class AuthService {
       if (user) { 
         this.userUid = user.uid
         this.userData = user;
+
         this.users = this.afs.collection('users', ref => ref.
         where('uid', '==', this.userUid)).valueChanges();
         localStorage.setItem('user', JSON.stringify(this.userData));
@@ -40,15 +41,17 @@ export class AuthService {
           res.forEach((item) => {
             console.log('item.displayName',item.displayName);
             this.userData['displayName'] = item.displayName;
+            this.userData['name'] = this.userData['displayName'].substring(0, this.userData['displayName'].indexOf(' '));
           });
         })
-      console.log(this.userData);
+        
       console.log('UserUid:', this.userUid);
       console.log('UserData:', this.userData);
 
       } else {
         localStorage.setItem('user', '');
         JSON.parse(localStorage.getItem('user')!);
+        this.router.navigate(['slideshow']);
       }
     });
   }
