@@ -43,6 +43,8 @@
 
 *{font-family: 'Inder';}
 
+span{width: 100%;}
+
 h1 {
     font-family: 'Fugaz One';
     font-size: 20px;
@@ -74,6 +76,10 @@ strong {
 
 p {
     margin: 2px 0px;
+}
+
+.w-auto {
+    width: auto;
 }
 
 .fundo {
@@ -121,7 +127,7 @@ ion-item {
     --inner-padding-end: 0px;
 }
 
-hr{width: 90%; height: 1px;background-color: #CDCDCD;margin: 25px 0px;}
+hr{width: 90%; height: 1px;background-color: #CDCDCD;margin: 25px auto;}
 
 
 .ion-activatable {  

@@ -7,13 +7,63 @@
     <p></p>
   </div>
 
-  <p class="noficha">Você ainda não possui ficha de treino. Crie agora mesmo uma!</p>
+  <div class="container-fichas" *ngIf="(fichas | async)?.length ; else nofichas">
+      <div class="ficha ion-activatable" *ngFor="let ficha of fichas | async">
+
+        <div class="rotulo-box">{{ficha.rotulo}}</div>
+
+        <h2>FICHA DE TREINO</h2>
+        
+        <span *ngIf="(exercicios | async)?.length ; else noexercicios">
+          <h5>Com exercícios</h5>
+
+          <div class="container-exercicios">
+            <div class="container-lr container-exercicio" *ngFor="let exe of exercicios | async ; let i = index" [attr.data-index]="i">
+
+              <div class="exercicio-info" *ngIf="exe.ficha==ficha.uid">
+                <div class="exercicio-title">
+                  <strong>A{{i+1}}</strong>
+                  <span class="w-auto" *ngFor="let exercicio of exerciciosBanco | async"><h1 *ngIf="exe.exercicio==exercicio.uid">{{exercicio.nome}}</h1></span>
+                </div>
+                <div class="exercicio-categoria">
+                  <span *ngFor="let exercicio of exerciciosBanco | async"><span *ngIf="exe.exercicio==exercicio.uid"><span *ngFor="let cat of categorias | async"><p *ngIf="exercicio.categoria==cat.uid">{{cat.nome}}</p></span></span></span>
+                </div>
+              </div>
+
+              <div class="exercicio-info2">                
+                <span><strong *ngIf="exe.ficha==ficha.uid">{{ficha.series}}x{{ficha.repeticoes}}</strong></span>
+                <span><h1 *ngIf="exe.ficha==ficha.uid">{{exe.peso}}KG/B</h1></span>
+              </div>
+            </div>
+
+          </div>
+
+        </span>
+        <ion-ripple-effect></ion-ripple-effect>
+      </div>
+  </div>
+
+  <hr>
 
   <div class="container-novaficha ion-activatable" (click)="service.navegar('criaficha')">
-      <h2>Criar nova Ficha de Treino</h2>
-      <ion-icon name="add-circle"></ion-icon>
-      <ion-ripple-effect class="primary"></ion-ripple-effect>
+    <h2>Criar nova Ficha de Treino</h2>
+    <ion-icon name="add-circle"></ion-icon>
+    <ion-ripple-effect class="primary"></ion-ripple-effect>
   </div>
+
+  <ng-template #nofichas>
+      <p class="noficha">Você ainda não possui ficha de treino. Crie agora mesmo uma!</p>      
+  </ng-template>
+
+  <ng-template #noexercicios>
+      <h5>Sem exercícios</h5>
+        <div class="container-novoexercicio ion-activatable" (click)="service.navegar('exercicios')">
+          <h2>Adicionar Exercícios à Ficha</h2>
+          <ion-icon name="add-circle"></ion-icon>
+          <ion-ripple-effect class="primary"></ion-ripple-effect>
+        </div>
+        <ion-ripple-effect></ion-ripple-effect>
+  </ng-template>
 
 
 

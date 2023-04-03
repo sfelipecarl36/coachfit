@@ -12,21 +12,40 @@
     <ion-radio-group required
       [(ngModel)]="rotulo"
       (ionChange)="checkValue($event)">
-        <ion-radio *ngFor="let rot of rotulos" class="rotulo" value="{{rot}}" mark="A" mode="md"><ion-label>{{rot}}</ion-label></ion-radio>
+    <div *ngFor="let rot of rotulos">
+        <ion-radio class="rotulo" value="{{rot}}" id="{{rot}}" mode="md">
+        </ion-radio>
+        <ion-label for="rot">{{rot}}</ion-label>
+    </div>
     </ion-radio-group>
 
     <h1 class="textformficha">DESCANSO</h1>
 
     <ion-datetime
+        [(ngModel)]="descanso"
+        (ionChange)="checkValue2($event)"
         presentation="time"
         hourCycle="h23"
         hourValues="0,1,2,3,4,5"
         minuteValues="10,20,30,40,50"
-        displayFormat="HH:mm"
-        value="00:10">
+        locale="pt-BR" displayFormat="HH:mm">
     </ion-datetime>
   
-    <ion-button>Criar Ficha</ion-button>
+    <div class="container-lr">
+      <div class="container-input">
+        <h1>SÉRIES</h1>
+        <ion-input type="text" pattern="[0-9]+" maxlength="2" [(ngModel)]="series" placeholder="3" (ionChange)="checkValue3($event)"></ion-input>
+      </div>
+
+      <div class="container-input"><h1>X</h1></div>
+
+      <div class="container-input">
+        <h1>REPETIÇÕES</h1>
+        <ion-input type="text" pattern="[0-9]" maxlength="2" [(ngModel)]="repeticoes" placeholder="12" (ionChange)="checkValue3($event)"></ion-input>
+      </div>
+    </div>
+
+    <ion-button (click)="criarFicha()">Criar Ficha</ion-button>
   
   </div>
   
