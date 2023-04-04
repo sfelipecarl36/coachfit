@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
+import { AuthService } from '../shared/auth-service';
 import { PopoverController } from '@ionic/angular';
 
 @Component({
@@ -17,26 +18,28 @@ export class ExerciciosPage implements OnInit {
   constructor(
     private firestore: AngularFirestore,
     private router: Router,
-    private popoverCtrl: PopoverController
+    private popoverCtrl: PopoverController,
+    private auth: AuthService
   ) { 
     this.categorias = this.firestore.collection('categorias').valueChanges();
     this.exercicios = this.firestore.collection('exercicios').valueChanges();
-    this.fichas = this.firestore.collection('fichas').valueChanges();
+    this.fichas = this.firestore.collection('fichas', ref => ref.where('usuario', '==', this.auth.userData['uid'])).valueChanges();
   }
 
   ngOnInit() {
   }
 
+  async DismissClick() {
+    this.popoverCtrl.dismiss();
+}
+
   addExercicio(exercicio: any, ficha: any) {
     
     console.log(ficha);
-      this.firestore.collection('fichas').doc(ficha).collection('exercicio').add({ exercicio: exercicio, peso: 5, ficha: ficha}).then(() => {
+      this.firestore.collection('fichas', ref => ref.where('usuario', '==', this.auth.userData['uid'])).doc(ficha).collection('exercicio').add({ exercicio: exercicio, peso: 5, ficha: ficha}).then(() => {
         console.log('Exercicio Adicionado a Ficha',ficha);
       });
-  }
-
-  async DismissClick() {
-      this.popoverCtrl.dismiss();
+      this.DismissClick();
   }
 
   detalharExercicio(exercicio: any) {
