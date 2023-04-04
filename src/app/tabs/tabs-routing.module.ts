@@ -27,6 +27,10 @@ const routes: Routes = [
         path: 'criaficha',
         loadChildren: () => import('../criaficha/criaficha.module').then( m => m.CriafichaPageModule)
       },
+      {
+        path: 'detalhesexercicio',
+        loadChildren: () => import('../detalhesexercicio/detalhesexercicio.module').then( m => m.DetalhesexercicioPageModule)
+      },
     ]
   }
 ];

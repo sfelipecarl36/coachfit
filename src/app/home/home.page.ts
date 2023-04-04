@@ -12,7 +12,7 @@ import { Services } from '../shared/services';
 })
 export class HomePage {
   user: any;
-  nome: any;
+  nome: any = '';
   categorias: any;
   localCat: any;
 
@@ -39,7 +39,13 @@ export class HomePage {
     private router: Router,
     private firestore: AngularFirestore
   ) { 
-        this.nome = this.auth.userData['name']
+        if(this.auth.userData['name'].length>0){
+          this.nome = this.auth!.userData['name'];
+        }
+
+        else{
+          this.router.navigate(['login']);
+        }
         
         this.categorias = this.firestore.collection('categorias').valueChanges();
 

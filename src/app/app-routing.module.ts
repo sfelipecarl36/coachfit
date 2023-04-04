@@ -23,19 +23,6 @@ const routes: Routes = [
     path: 'home',
     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
   },
-
-  {
-    path: 'slide1',
-    loadChildren: () => import('./slideshows/slide1/slide1.module').then( m => m.Slide1PageModule)
-  },
-  {
-    path: 'slide2',
-    loadChildren: () => import('./slideshows/slide2/slide2.module').then( m => m.Slide2PageModule)
-  },
-  {
-    path: 'slide3',
-    loadChildren: () => import('./slideshows/slide3/slide3.module').then( m => m.Slide3PageModule)
-  },
   {
     path: 'login',
     loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
@@ -51,13 +38,18 @@ const routes: Routes = [
   {
     path: 'meutreino',
     loadChildren: () => import('./meutreino/meutreino.module').then( m => m.MeutreinoPageModule)
-  },  {
+  },
+  {
     path: 'exercicios',
     loadChildren: () => import('./exercicios/exercicios.module').then( m => m.ExerciciosPageModule)
   },
   {
     path: 'criaficha',
     loadChildren: () => import('./criaficha/criaficha.module').then( m => m.CriafichaPageModule)
+  },
+  {
+    path: 'detalhesexercicio',
+    loadChildren: () => import('./detalhesexercicio/detalhesexercicio.module').then( m => m.DetalhesexercicioPageModule)
   },
 
 

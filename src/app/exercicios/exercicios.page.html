@@ -23,7 +23,7 @@
     <div class="container-exercicios">
       <div class="exercicio ion-activatable" *ngFor="let exe of exercicios | async">
         <img [src]="exe.img"/>
-        <div class="exercicio-info">
+        <div class="exercicio-info" (click)="detalharExercicio(exe.uid)">
           <h1>{{exe.nome}}</h1>
           <span *ngFor="let catexe of categorias | async"><h4 *ngIf="catexe.uid==exe.categoria">{{catexe.nome}}</h4></span>
           <h5>{{exe.regiao}}</h5>
@@ -36,7 +36,7 @@
                 <p>Adicionar a Ficha <em>{{ficha.rotulo}}</em></p>
                 <ion-ripple-effect></ion-ripple-effect>
               </div>
-              <div class="popOption ion-activatable">
+              <div class="popOption ion-activatable" (click)="detalharExercicio(exe.uid)">
                 <ion-icon name="document-text-outline"></ion-icon>
                 <p>Ver Detalhes</p>
                 <ion-ripple-effect></ion-ripple-effect>
