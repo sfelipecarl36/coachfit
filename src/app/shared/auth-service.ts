@@ -9,13 +9,16 @@ import {
   AngularFirestoreDocument,
 } from '@angular/fire/compat/firestore';
 import firebase from 'firebase/compat';
+import { getAuth } from 'firebase/auth';
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   users: any
   userData: any;
+  name: string = '';
   public userUid: string = '';
+  userDados: any;
   constructor(
     public afStore: AngularFirestore,
     private afStorage: AngularFireStorage,
@@ -30,23 +33,9 @@ export class AuthService {
         this.userUid = user.uid
         this.userData = user;
 
-        this.users = this.afs.collection('users', ref => ref.
-        where('uid', '==', this.userUid)).valueChanges();
         localStorage.setItem('user', JSON.stringify(this.userData));
         JSON.parse(localStorage.getItem('user')!);
         this.userData = JSON.parse(localStorage.getItem('user')!);
-        
-        this.users.subscribe((res: User[]) => {
-        
-          res.forEach((item) => {
-            console.log('item.displayName',item.displayName);
-            this.userData['displayName'] = item.displayName;
-            this.userData['name'] = this.userData['displayName'].substring(0, this.userData['displayName'].indexOf(' '));
-          });
-        })
-        
-      console.log('UserUid:', this.userUid);
-      console.log('UserData:', this.userData);
 
       } else {
         localStorage.setItem('user', '');
@@ -57,10 +46,32 @@ export class AuthService {
   }
   // Login in with email/password
   async SignIn(email: string, senha: string) {
-          const user = await this.ngFireAuth.signInWithEmailAndPassword(email, senha)
-          this.userUid = user.user!.uid
-          return user;
+
+          await this.ngFireAuth.signInWithEmailAndPassword(email, senha).then( user => {
+            console.log('Logado como:',user.user?.uid);
+            this.userUid = String(user.user?.uid);
+            return user;
+ 
+          })
+          
 }
+
+  // async getName() {
+  //   const autenticacao = getAuth();
+  //           this.userDados = this.afs.collection('users', ref => ref.
+  //           where('uid', '==', autenticacao.currentUser!.uid)).valueChanges();
+  //           this.userDados.subscribe((res: User[]) => {
+        
+  //             res.forEach((item) => {
+  //               this.name = item.displayName;
+  //               this.userData['displayName'] = item.displayName;
+  //               this.userData['name'] = item.displayName.substring(0, item.displayName.indexOf(' '));
+  //               return item.displayName;
+  //             });
+              
+  //           })
+  // }
+
   // Register user with email/password
   RegisterUser(nome: any, usuario: any, email: string, senha: string) {
     
@@ -71,6 +82,9 @@ export class AuthService {
         this.afs.collection('users').doc(newUser.user!.uid).update({photoURL: url})
       });
       this.userUid = newUser.user!.uid
+      newUser.user!.sendEmailVerification().then(() => {
+        this.router.navigate(['verify-email']);
+      });
       
     })
     

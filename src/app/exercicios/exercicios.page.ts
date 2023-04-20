@@ -32,6 +32,10 @@ export class ExerciciosPage implements OnInit {
     this.categorias = this.database.categoriasLocal
   }
 
+  ionViewWillEnter () {
+    this.database.atualizaValores(this.auth.userUid);
+  }
+
   async DismissClick() {
     this.popoverCtrl.dismiss();
 }

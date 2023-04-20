@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { Router } from '@angular/router';
+import { Data, Router } from '@angular/router';
 import { AuthService } from '../shared/auth-service';
-import { getAuth, setPersistence, browserSessionPersistence } from 'firebase/auth';
+import { getAuth, setPersistence, browserSessionPersistence, onAuthStateChanged } from 'firebase/auth';
+import { Database } from '../shared/database';
 
 @Component({
   selector: 'app-login',
@@ -16,21 +17,36 @@ export class LoginPage implements OnInit {
   constructor(
     private auth: AuthService,
     private router: Router,
-    private firestore: AngularFirestore
+    private firestore: AngularFirestore,
+    private database: Database
   ) {
-
+    const autenticacao = getAuth();
+    onAuthStateChanged(autenticacao, (user) => {
+      if (user) {
+        console.log('Logado');
+        this.router.navigateByUrl('home');
+        console.log('UserUid2:',this.auth.userUid);
+    }
+      else{ 
+        console.log('Não logado');
+        console.log('UserUid:',this.auth.userUid);
+    }
+  })
    }
 
   ngOnInit() {
   }
 
   async logar(email: any, senha: any){
-    const userVal = this.auth.SignIn(email.value, senha.value);
-    if (await userVal){
+    this.auth.SignIn(email.value, senha.value)
+    .then((res) => {
       const autenticacao = getAuth();
       setPersistence(autenticacao, browserSessionPersistence);
+      this.database.atualizaValores(autenticacao.currentUser!.uid);
       this.router.navigateByUrl('home');
-    }
+    }).catch((error) => {
+      window.alert(error.message)
+    })
   }
 
 }

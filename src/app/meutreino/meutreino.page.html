@@ -14,7 +14,7 @@
 
         <h2>FICHA DE TREINO</h2>
         
-        <span *ngIf="(exercicios | async) ; else noexercicios">
+        <span *ngIf="(exercicios | async)!.length ; else noexercicios">
           <h5>Com exercícios</h5>
 
           <div class="container-exercicios">
@@ -22,7 +22,7 @@
 
               <div class="exercicio-info" *ngIf="exe.ficha==ficha.uid">
                 <div class="exercicio-title">
-                  <strong>A{{i+1}}</strong>
+                  <strong>{{ficha.rotulo}}{{i+1}}</strong>
                   <span class="w-auto" *ngFor="let exercicio of exerciciosBanco | async"><h1 *ngIf="exe.exercicio==exercicio.uid">{{exercicio.nome}}</h1></span>
                 </div>
                 <div class="exercicio-categoria">
