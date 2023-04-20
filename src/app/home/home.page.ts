@@ -39,13 +39,7 @@ export class HomePage {
     private router: Router,
     private firestore: AngularFirestore
   ) { 
-        if(this.auth.userData['name'].length>0){
-          this.nome = this.auth!.userData['name'];
-        }
-
-        else{
-          this.router.navigate(['login']);
-        }
+        this.nome = 'Name';
         
         this.categorias = this.firestore.collection('categorias').valueChanges();
 

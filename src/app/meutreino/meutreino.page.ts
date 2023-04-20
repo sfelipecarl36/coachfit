@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Services } from '../shared/services';
-import { AngularFirestore, AngularFirestoreCollectionGroup } from '@angular/fire/compat/firestore';
-import { Observable } from 'rxjs';
-import { AuthService } from '../shared/auth-service';
+import { Database } from '../shared/database';
 
 @Component({
   selector: 'app-meutreino',
@@ -11,24 +9,23 @@ import { AuthService } from '../shared/auth-service';
 })
 export class MeutreinoPage implements OnInit {
 
-  fichas: Observable<any>
-  categorias: Observable<any>;
-  exercicios: Observable<any>;
-  exerciciosBanco: Observable<any>;
+  fichas!: any
+  categorias!: any;
+  exercicios!: any;
+  exerciciosBanco!: any;
 
   constructor(
     public service: Services,
-    private firestore: AngularFirestore,
-    private auth: AuthService
-  ) { 
-    this.fichas = firestore.collection('fichas', ref => ref.where('usuario', '==', this.auth.userData['uid'])).valueChanges();
-    this.categorias = firestore.collection('categorias').valueChanges();
-    this.exerciciosBanco = firestore.collection('exercicios').valueChanges();
-    this.exercicios = firestore.collectionGroup('exercicio').valueChanges();
-    console.log(this.exercicios);
+    private database: Database
+  ) {
+
   }
 
   ngOnInit() {
+    this.exerciciosBanco = this.database.exerciciosLocal
+    this.fichas = this.database.fichasLocal
+    this.categorias = this.database.categoriasLocal
+    this.exercicios = this.database.subexerciciosLocal
   }
 
 }

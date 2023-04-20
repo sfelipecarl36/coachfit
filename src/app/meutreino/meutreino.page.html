@@ -7,14 +7,14 @@
     <p></p>
   </div>
 
-  <div class="container-fichas" *ngIf="(fichas | async)?.length ; else nofichas">
+  <div class="container-fichas" *ngIf="(fichas | async) ; else nofichas">
       <div class="ficha ion-activatable" *ngFor="let ficha of fichas | async">
 
         <div class="rotulo-box">{{ficha.rotulo}}</div>
 
         <h2>FICHA DE TREINO</h2>
         
-        <span *ngIf="(exercicios | async)?.length ; else noexercicios">
+        <span *ngIf="(exercicios | async) ; else noexercicios">
           <h5>Com exercícios</h5>
 
           <div class="container-exercicios">

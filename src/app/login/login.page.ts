@@ -27,8 +27,8 @@ export class LoginPage implements OnInit {
   async logar(email: any, senha: any){
     const userVal = this.auth.SignIn(email.value, senha.value);
     if (await userVal){
-      const autenticacao = getAuth()
-      setPersistence(autenticacao, browserSessionPersistence)
+      const autenticacao = getAuth();
+      setPersistence(autenticacao, browserSessionPersistence);
       this.router.navigateByUrl('home');
     }
   }
