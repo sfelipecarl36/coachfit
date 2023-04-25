@@ -3,12 +3,17 @@
   <div class="fundo" *ngFor="let exercicio of exercicios | async">
     <div class="container-left">
         <ion-back-button text="" defaultHref="exercicios"></ion-back-button>
-        <h1 class="top">{{exercicio.nome}}</h1>
+        <h1 class="top">Detalhes</h1>
       <p></p>
     </div>
 
+    <img referrerpolicy=“no-referrer” id="fotoperfil" src="{{exercicio.img2}}"/>
+    <h2>{{exercicio.nome}}</h2>
+    <span *ngFor="let cat of categorias | async"><h5 *ngIf="exercicio.categoria==cat.uid">Tipo de Exercício: {{cat.nome}}</h5></span>
+    <h4>Área de Treino: {{exercicio.regiao}}</h4>
+    <p>{{exercicio.descricao}}</p>
 
-
+    <ion-button id="addExeFicha">Adicionar para Ficha</ion-button>
 
   </div>
   
