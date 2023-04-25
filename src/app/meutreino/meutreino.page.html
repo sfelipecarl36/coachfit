@@ -18,23 +18,28 @@
           <h5>Com exercícios</h5>
 
           <div class="container-exercicios">
-            <div class="container-lr container-exercicio" *ngFor="let exe of exercicios | async ; let i = index" [attr.data-index]="i">
+            <ng-container *ngFor="let exe of exercicios | async ; let i = index">
 
-              <div class="exercicio-info" *ngIf="exe.ficha==ficha.uid">
-                <div class="exercicio-title">
-                  <strong>{{ficha.rotulo}}{{i+1}}</strong>
-                  <span class="w-auto" *ngFor="let exercicio of exerciciosBanco | async"><h1 *ngIf="exe.exercicio==exercicio.uid">{{exercicio.nome}}</h1></span>
+              <div class="container-lr container-exercicio" *ngIf="exe.ficha==ficha.uid" [attr.data-index]="i">
+
+                <div class="exercicio-info" >
+                  <div class="exercicio-title">
+                    <strong>{{ficha.rotulo}}{{i+1}}</strong>
+                    <span class="w-auto" *ngFor="let exercicio of exerciciosBanco | async"><h1 *ngIf="exe.exercicio==exercicio.uid">{{exercicio.nome}}</h1></span>
+                  </div>
+                  <div class="exercicio-categoria">
+                    <span *ngFor="let exercicio of exerciciosBanco | async"><span *ngIf="exe.exercicio==exercicio.uid"><span *ngFor="let cat of categorias | async"><p *ngIf="exercicio.categoria==cat.uid">{{cat.nome}}</p></span></span></span>
+                  </div>
                 </div>
-                <div class="exercicio-categoria">
-                  <span *ngFor="let exercicio of exerciciosBanco | async"><span *ngIf="exe.exercicio==exercicio.uid"><span *ngFor="let cat of categorias | async"><p *ngIf="exercicio.categoria==cat.uid">{{cat.nome}}</p></span></span></span>
+  
+                <div class="exercicio-info2">                
+                  <span><strong *ngIf="exe.ficha==ficha.uid">{{ficha.series}}x{{ficha.repeticoes}}</strong></span>
+                  <span><h1 *ngIf="exe.ficha==ficha.uid">{{exe.peso}}KG/B</h1></span>
                 </div>
               </div>
 
-              <div class="exercicio-info2">                
-                <span><strong *ngIf="exe.ficha==ficha.uid">{{ficha.series}}x{{ficha.repeticoes}}</strong></span>
-                <span><h1 *ngIf="exe.ficha==ficha.uid">{{exe.peso}}KG/B</h1></span>
-              </div>
-            </div>
+            </ng-container>
+            
 
           </div>
 

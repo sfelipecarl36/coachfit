@@ -17,8 +17,6 @@ export class MeutreinoPage implements OnInit {
   exercicios!: Observable<Array<subexercicioI>>;
   categorias!: any;
   exerciciosBanco!: any;
-  subexerciciosConj: any;
-  subexerciciosArray: any;
 
   constructor(
     public service: Services,
@@ -33,8 +31,6 @@ export class MeutreinoPage implements OnInit {
     this.categorias = this.database!.categoriasLocal
     this.fichas = this.database!.fichasLocal
     this.exercicios = this.database!.subexerciciosLocal
-    this.subexerciciosConj = this.database!.subexerciciosConj
-    this.subexerciciosArray = this.database!.subexerciciosArray
   }
 
   ionViewWillEnter () {
