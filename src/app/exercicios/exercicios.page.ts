@@ -28,12 +28,14 @@ export class ExerciciosPage implements OnInit {
 
   ngOnInit() {
     this.exercicios = this.database.exerciciosLocal
-    this.fichas = this.database.fichasLocal
     this.categorias = this.database.categoriasLocal
+    setTimeout(() => {
+      this.fichas = this.database.fichasLocal
+    },1200);
   }
 
   ionViewWillEnter () {
-    this.database.atualizaValores(this.auth.userUid);
+    this.database.atualizaValores();
   }
 
   async DismissClick() {

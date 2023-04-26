@@ -119,6 +119,31 @@ p.noficha {
     }
 }
 
+.ficha-info-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: 10px auto;
+
+    .ficha-info {
+        font-size: 14px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+
+        ion-icon {
+            margin: 0px 2px;
+        }
+
+        P {
+            font-family: 'Ubuntu';
+            font-weight: bold;
+        }
+    }
+}
+
 .container-fichas {
     display: flex;
     flex-direction: column;
@@ -135,6 +160,7 @@ p.noficha {
         width: 100%;
         min-height: 350px;
         margin: 60px 0px;
+        margin-bottom: 10px;
         padding: 20px;
         border-radius: 15px;
         display: flex;

@@ -62,7 +62,9 @@ export class HomePage {
   }
 
   async logout(){
-      this.auth.SignOut();
+      this.auth.SignOut().then(() => {
+        window.location.reload();
+      });
     }
 
     async getName() {

@@ -25,16 +25,20 @@ export class MeutreinoPage implements OnInit {
   ) {
 
   }
+  
 
   ngOnInit() {
-    this.exerciciosBanco = this.database!.exerciciosLocal
-    this.categorias = this.database!.categoriasLocal
-    this.fichas = this.database!.fichasLocal
-    this.exercicios = this.database!.subexerciciosLocal
+      this.exerciciosBanco = this.database!.exerciciosLocal
+      this.categorias = this.database!.categoriasLocal
+      setTimeout(() => {
+        this.fichas = this.database.fichasLocal
+        this.exercicios = this.database!.subexerciciosLocal
+      },1200);
+      
   }
 
   ionViewWillEnter () {
-    this.database.atualizaValores(this.auth.userUid);
+      this.database.atualizaValores()
   }
 
 }

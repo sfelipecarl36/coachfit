@@ -4,8 +4,9 @@ import { subexercicioI } from '../model/subexercicios';
 import { categoriaI } from '../model/categorias';
 import { Observable } from 'rxjs';
 import { fichaI } from '../model/fichas';
+import { Router } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { abort } from 'process';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +17,8 @@ export class Database {
     public categoriasLocal: Observable<Array<categoriaI>>;
     public subexerciciosLocal!: Observable<Array<subexercicioI>>;
     public fichasLocal!: Observable<Array<fichaI>>;
+    private router!: Router;
+    public user: any
 
   constructor(
     private firestore: AngularFirestore,
@@ -24,10 +27,21 @@ export class Database {
     this.categoriasLocal = this.firestore.collection<categoriaI>('categorias').valueChanges();
   }
 
-  public atualizaValores (userUid: string) {
-    this.subexerciciosLocal = this.firestore!.collectionGroup<subexercicioI>('exercicio', ref => ref.where('usuario', '==', userUid)).valueChanges();
-    this.fichasLocal = this.firestore.collection<fichaI>('fichas', ref => ref.where('usuario', '==', userUid)).valueChanges();
-    
+  public atualizaValores () {
+    const autenticacao = getAuth();
+        onAuthStateChanged(autenticacao, (user) => {
+          if(user) {
+              this.user = user.uid
+              console.log('getAuth():',this.user);
+              this.subexerciciosLocal = this.firestore!.collectionGroup<subexercicioI>('exercicio', ref => ref.where('usuario', '==', this.user)).valueChanges();
+              this.fichasLocal = this.firestore.collection<fichaI>('fichas', ref => ref.where('usuario', '==', this.user)).valueChanges();
+          }
+
+          else {
+            this.router.navigate(['login']);
+          }
+    })
   }
+
 
 }

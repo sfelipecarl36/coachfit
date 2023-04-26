@@ -42,7 +42,7 @@ export class LoginPage implements OnInit {
     .then((res) => {
       const autenticacao = getAuth();
       setPersistence(autenticacao, browserSessionPersistence);
-      this.database.atualizaValores(autenticacao.currentUser!.uid);
+      this.database.atualizaValores();
       this.router.navigateByUrl('home');
     }).catch((error) => {
       window.alert(error.message)

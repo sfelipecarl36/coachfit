@@ -7,15 +7,22 @@
     <p></p>
   </div>
 
-  <div class="container-fichas" *ngIf="(fichas | async) ; else nofichas">
+  <div class="container-fichas" *ngIf="(fichas | async)?.length ; else nofichas">
       <div class="ficha ion-activatable" *ngFor="let ficha of fichas | async">
 
         <div class="rotulo-box">{{ficha.rotulo}}</div>
 
         <h2>FICHA DE TREINO</h2>
+        <ng-container *ngIf="(exercicios | async)?.length"><h5>Com exercícios</h5></ng-container>
+
+        <div class="ficha-info-container">
+          <div class="ficha-info">
+            <ion-icon name="stopwatch-outline"></ion-icon>
+            <p>{{ficha.descanso}}</p>
+          </div>
+        </div>
         
-        <span *ngIf="(exercicios | async)!.length ; else noexercicios">
-          <h5>Com exercícios</h5>
+        <span *ngIf="(exercicios | async)?.length; else noexercicios">
 
           <div class="container-exercicios">
             <ng-container *ngFor="let exe of exercicios | async ; let i = index">
