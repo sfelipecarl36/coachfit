@@ -1,0 +1,31 @@
+<ion-content>
+  
+  <div class="fundo" *ngFor="let ficha of fichas | async">
+    <div class="container-left">
+        <ion-back-button text="" defaultHref="window.location" (click)="service.voltar()"></ion-back-button>
+        <h1 class="top">Treino {{ficha.rotulo}}</h1>
+      <p></p>
+    </div>
+
+    <div class="ficha-caixa">
+      <div class="container-info">
+
+        <div class="rotulo">{{ficha.rotulo}}</div>
+        
+        <div class="container-info-dados">
+          <div class="ficha-dado">
+            <ion-icon name="alarm-outline"></ion-icon>
+            <p>Tempo Descanso: {{ficha.descanso}}</p>
+          </div>
+          <div class="ficha-dado">
+            <ion-icon name="flame-outline"></ion-icon>
+            <p>Frequência: {{ficha.series}}x{{ficha.repeticoes}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  
+</ion-content>
+  

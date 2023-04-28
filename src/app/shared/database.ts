@@ -32,16 +32,13 @@ export class Database {
         onAuthStateChanged(autenticacao, (user) => {
           if(user) {
               this.user = user.uid
-              console.log('getAuth():',this.user);
               this.subexerciciosLocal = this.firestore!.collectionGroup<subexercicioI>('exercicio', ref => ref.where('usuario', '==', this.user)).valueChanges();
               this.fichasLocal = this.firestore.collection<fichaI>('fichas', ref => ref.where('usuario', '==', this.user)).valueChanges();
           }
 
           else {
-            this.router.navigate(['login']);
+            this.router.navigateByUrl('login');
           }
     })
   }
-
-
 }

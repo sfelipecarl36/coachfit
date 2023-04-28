@@ -5,6 +5,7 @@ import { AuthService } from '../shared/auth-service';
 import { Observable } from 'rxjs';
 import { subexercicioI } from '../model/subexercicios';
 import { fichaI } from '../model/fichas';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-meutreino',
@@ -20,6 +21,7 @@ export class MeutreinoPage implements OnInit {
 
   constructor(
     public service: Services,
+    private router: Router,
     public database: Database,
     private auth: AuthService
   ) {
@@ -39,6 +41,12 @@ export class MeutreinoPage implements OnInit {
 
   ionViewWillEnter () {
       this.database.atualizaValores()
+  }
+
+  detalharFicha(ficha: any) {
+    setTimeout(() => this.router.navigate(['detalhesficha'],{
+      queryParams: [ficha]
+      }),150);
   }
 
 }

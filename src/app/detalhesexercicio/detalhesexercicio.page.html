@@ -2,7 +2,7 @@
   
   <div class="fundo" *ngFor="let exercicio of exercicios | async">
     <div class="container-left">
-        <ion-back-button text="" defaultHref="exercicios"></ion-back-button>
+        <ion-back-button text="" defaultHref="window.location" (click)="service.voltar()"></ion-back-button>
         <h1 class="top">Detalhes</h1>
       <p></p>
     </div>

@@ -5,14 +5,14 @@ import { Database } from '../shared/database';
 import { Services } from '../shared/services';
 
 @Component({
-  selector: 'app-detalhesexercicio',
-  templateUrl: './detalhesexercicio.page.html',
-  styleUrls: ['./detalhesexercicio.page.scss'],
+  selector: 'app-detalhesficha',
+  templateUrl: './detalhesficha.page.html',
+  styleUrls: ['./detalhesficha.page.scss'],
 })
-export class DetalhesexercicioPage implements OnInit {
+export class DetalhesfichaPage implements OnInit {
 
-  exercicios: any;
-  exercicioId: any;
+  fichas: any;
+  fichaId: any;
   categorias: any;
 
   constructor(
@@ -22,18 +22,16 @@ export class DetalhesexercicioPage implements OnInit {
     public database: Database,
     public service: Services,
   ) {
-      
+
     this.activatedRoute.queryParams.subscribe(params => {
-        this.exercicioId = params[0];
-        this.exercicios = this.firestore.collection('exercicios', ref => ref.where('uid','==', this.exercicioId)).valueChanges();
-        this.categorias = this.database!.categoriasLocal
-    })
+      this.fichaId = params[0];
+      this.fichas = this.firestore.collection('fichas', ref => ref.where('uid','==', this.fichaId)).valueChanges();
+      this.categorias = this.database!.categoriasLocal
+  })
 
    }
 
   ngOnInit() {
   }
-
-
 
 }

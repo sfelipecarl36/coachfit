@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { AuthService } from './shared/auth-service';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 @Component({
   selector: 'app-root',

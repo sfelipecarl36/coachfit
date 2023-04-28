@@ -2,7 +2,7 @@
   
 <div class="fundo">
   <div class="container-left">
-      <ion-back-button text="" defaultHref="home"></ion-back-button>
+      <ion-back-button text="" defaultHref="window.location" (click)="service.voltar()"></ion-back-button>
       <h1 class="top">Meu Treino</h1>
     <p></p>
   </div>
@@ -51,6 +51,12 @@
           </div>
 
         </span>
+
+        <div class="button-ficha ion-activatable" (click)="detalharFicha(ficha.uid)">
+          <ion-icon name="document-outline"></ion-icon>
+          <p>Abrir Ficha</p>
+          
+        </div>
         <ion-ripple-effect></ion-ripple-effect>
       </div>
   </div>

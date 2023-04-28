@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../shared/auth-service';
 import { Database } from '../shared/database';
 import { PopoverController } from '@ionic/angular';
+import { Services } from '../shared/services';
 
 @Component({
   selector: 'app-exercicios',
@@ -21,7 +22,8 @@ export class ExerciciosPage implements OnInit {
     private router: Router,
     private popoverCtrl: PopoverController,
     private auth: AuthService,
-    private database: Database
+    private database: Database,
+    public service: Services,
   ) { 
 
   }
