@@ -44,10 +44,10 @@ export class ExerciciosPage implements OnInit {
     this.popoverCtrl.dismiss();
 }
 
-  addExercicio(exercicio: any, ficha: any) {
+  addExercicio(exercicio: any, categoria: any, ficha: any) {
     
     console.log(ficha);
-      this.firestore.collection('fichas', ref => ref.where('usuario', '==', this.auth.userData['uid'])).doc(ficha).collection('exercicio').add({ exercicio: exercicio, peso: 5, ficha: ficha, usuario: this.auth.userUid}).then(() => {
+      this.firestore.collection('fichas', ref => ref.where('usuario', '==', this.auth.userData['uid'])).doc(ficha).collection('exercicio').add({ exercicio: exercicio, categoria: categoria, peso: 5, ficha: ficha, usuario: this.auth.userUid}).then(() => {
         console.log('Exercicio Adicionado a Ficha',ficha);
       });
       this.DismissClick();

@@ -4,7 +4,18 @@
     <div class="container-left">
         <ion-back-button text="" defaultHref="window.location" (click)="service.voltar()"></ion-back-button>
         <h1 class="top">Treino {{ficha.rotulo}}</h1>
-      <p></p>
+      <div class="ficha-control">
+        <div class="caixa-icon ion-activatable">
+          <ion-icon name="pencil-outline"></ion-icon>
+          <ion-ripple-effect></ion-ripple-effect>
+        </div>
+        <div class="caixa-icon ion-activatable">
+          <ion-icon name="trash"></ion-icon>
+          <ion-ripple-effect></ion-ripple-effect>
+        </div>
+        
+      </div>
+
     </div>
 
     <div class="ficha-caixa">
@@ -23,7 +34,43 @@
           </div>
         </div>
       </div>
-    </div>
+
+      <ng-container *ngFor="let cat of categoriasList">
+        <ng-container *ngFor="let categoria of categorias | async">
+      <div class="container-categoria" *ngIf="cat==categoria.uid">
+        <ion-icon mode="md" name="barbell"></ion-icon>
+        <h1>{{categoria.nome}}</h1>
+      <p></p>
+      </div>
+        </ng-container>
+
+      <ng-container *ngFor="let exe of exercicios | async">
+      <div class="container-exercicio ion-activatable" *ngIf="exe.categoria==cat" (click)="detalharExercicio(exe.exercicio)">
+        <div class="exercicio-info" >
+          <div class="exercicio-title">
+            <strong>{{ficha.rotulo}}</strong>
+            <ng-container class="w-auto" *ngFor="let exercicio of exerciciosBanco | async"><h1 *ngIf="exe.exercicio==exercicio.uid">{{exercicio.nome}}</h1></ng-container>
+          </div>
+          <div class="exercicio-categoria">
+            <span *ngFor="let exercicio of exerciciosBanco | async"><span *ngIf="exe.exercicio==exercicio.uid" class="flex-row"><ion-icon name="accessibility-outline"></ion-icon><p>{{exercicio.regiao}}</p></span></span>
+          </div>
+        </div>
+
+        <div class="exercicio-info2">                
+          <strong *ngIf="exe.ficha==ficha.uid">{{ficha.series}}x{{ficha.repeticoes}}</strong>
+          <h1>{{exe.peso}}KG/B</h1>
+        </div>
+        <ion-ripple-effect></ion-ripple-effect>
+      </div>
+
+        </ng-container>
+    </ng-container>
+      <p></p>
+
+
+
+
+      </div>
 
   </div>
   

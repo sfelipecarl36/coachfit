@@ -1,28 +1,83 @@
 .fundo {
-    background-color: #EBEBEB;
+    background-color: #3225FF;
     min-height: 100%;
     padding: 0;
     padding-top: 70px;
 
+    .flex-row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-top: 7px;
+        margin-left: -4px;
+
+        ion-icon {
+            font-size: 18px;
+            margin-right: 5px;
+            color: #454545;
+        }
+    }
+
     div.container-left {
         margin-left: 25px;
+        width: auto;
+
+        h1 {
+            color: white;
+        }
+
+        ion-back-button {
+            color: white;
+        }
+
+        .ficha-control {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+            margin-right: 30px;
+    
+            .caixa-icon {
+
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-width: 40px;
+                min-height: 40px;
+                max-width: 40px;
+                max-height: 40px;
+                padding: 3px;
+                border-radius: 50%;
+
+                ion-icon {
+                    font-size: 22px;
+                    margin: 0px 5px;
+                    color: white;
+                }
+            }
+            
+        }
     }
 
     .ficha-caixa {
         width: 100%;
         min-height: calc(100vh - 233px);
+        transform: translateY(2px);
         box-sizing: border-box;
         background-color: white;
         margin-top: 30px;
-        border-radius: 30px 30px 0px 0px;
+        border-radius: 60px 60px 0px 0px;
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 20px;
+        padding: 20px 0px;
 
         .container-info {
             width: 100%;
-            margin: 10px 0px;
+            margin-top: 10px;
+            margin-bottom: 20px;
             padding: 0px 30px;
             display: flex;
             align-items: center;
@@ -77,6 +132,105 @@
                     }
                 }
             }
+        }
+
+        div.container-categoria {
+            width: 100%;
+            padding: 0px 30px;
+            min-height: 50px;
+            max-height: 50px;
+            background-color: #eee;
+            display: flex;
+            margin: 0;
+            flex-direction: row;
+            align-items: center;
+
+            ion-icon {
+                font-size: 30px;
+                color: #666666;
+                margin-right: 10px;
+            }
+
+            h1 {
+                font-size: 18px;
+                margin-top: 12px;
+                text-transform: uppercase;
+                color: #858585;
+                align-self: center;
+            }
+        }
+
+        div.container-exercicio {
+            width: 100%;
+            padding: 0px 25px;
+            min-height: 70px;
+            max-height: 70px;
+            background-color: #fff;
+            border-bottom: 1px solid #EEE;
+            display: flex;
+            margin: 0;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+
+            .exercicio-info {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                margin: 5px 0px;
+    
+                .exercicio-title {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+    
+                    h1 {
+                        font-size: 13px;
+                        margin: 0px 15px;
+                        margin-top: 2px;
+                        text-transform: uppercase;
+                        margin-left: 5px;
+                    }
+    
+                    strong {
+                        font-size: 13px;
+                    }
+                }
+    
+                .exercicio-categoria {
+    
+                    p {
+                        font-size: 12px;
+                    }
+                }
+            }
+    
+            .exercicio-info2 {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                font-size: 15px;
+    
+                strong {
+                    font-size: 15px;
+                    font-family: Arial;
+                    margin-top: 3px;
+                }
+
+                h1 {
+                    font-size: 15px;
+                    text-transform: uppercase;
+                    padding: 7px;
+                    border-radius: 11px;
+                    background-color: black;
+                    margin-top: 12px;
+                    margin-left: 10px;
+                    color: white;
+                }
+    
+                }
         }
     }
 }
