@@ -35,7 +35,7 @@ export class MeutreinoPage implements OnInit {
       setTimeout(() => {
         this.fichas = this.database.fichasLocal
         this.exercicios = this.database!.subexerciciosLocal
-      },1200);
+      },1300);
       
   }
 

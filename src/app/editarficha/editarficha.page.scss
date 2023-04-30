@@ -129,6 +129,17 @@ ion-toast.toast-delete {
                         font-size: 25px;
                         color: #454545;
                     }
+
+                    ion-input {
+                        text-align: center;
+                        width: 1px;
+                        height: 30px;
+                        min-height: 30px;
+                        min-width: 40px;
+                        margin: 0px 5px;
+                        font-weight: bold;
+                        --padding-start: 0px !important;
+                    }
                 
                     P {
                         font-size: 15px;
@@ -196,13 +207,15 @@ ion-toast.toast-delete {
                     h1 {
                         font-size: 13px;
                         margin: 0px 15px;
-                        margin-top: 2px;
+                        margin-top: 5px;
                         text-transform: uppercase;
                         margin-left: 5px;
                     }
     
-                    strong {
-                        font-size: 13px;
+                    ion-icon {
+                        color: #afafaf;
+                        max-width: 20px;
+                        min-width: 20px;
                     }
                 }
     
@@ -221,10 +234,19 @@ ion-toast.toast-delete {
                 align-items: center;
                 font-size: 15px;
     
-                strong {
+
+                ion-input {
+                    width: 50px;
+                    margin: 0px 5px;
+                    min-width: 50px;
+                    --padding-start: 0px !important;
                     font-size: 15px;
-                    font-family: Arial;
-                    margin-top: 3px;
+                    text-align: center;
+                }
+
+                p {
+                    font-size: 14px;
+                    font-weight: bold;
                 }
 
                 h1 {

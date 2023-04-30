@@ -58,6 +58,10 @@ const routes: Routes = [
     path: 'detalhesficha',
     loadChildren: () => import('./detalhesficha/detalhesficha.module').then( m => m.DetalhesfichaPageModule)
   },
+  {
+    path: 'editarficha',
+    loadChildren: () => import('./editarficha/editarficha.module').then( m => m.EditarfichaPageModule)
+  },
 
 
 

@@ -3,14 +3,16 @@
   <div class="fundo" *ngFor="let ficha of fichas | async">
     <div class="container-left">
         <ion-back-button text="" defaultHref="window.location" (click)="service.voltar()"></ion-back-button>
-        <h1 class="top">Treino {{ficha.rotulo}}</h1>
+        <h1 class="top">Editar Treino {{ficha.rotulo}}</h1>
       <div class="ficha-control">
-        <div class="caixa-icon ion-activatable" (click)="editarFicha(ficha.uid)">
-          <ion-icon name="pencil-outline"></ion-icon>
+
+        <div class="caixa-icon ion-activatable" (click)="modalEditFicha(ficha.rotulo, descansomin, descansoseg, fichaseries, ficharepeticoes)">
+          <ion-icon name="checkmark-outline"></ion-icon>
           <ion-ripple-effect></ion-ripple-effect>
         </div>
-        <div class="caixa-icon ion-activatable" (click)="modalDeleteFicha(ficha.rotulo)">
-          <ion-icon name="trash"></ion-icon>
+
+        <div class="caixa-icon ion-activatable">
+          <ion-icon name="close-outline"></ion-icon>
           <ion-ripple-effect></ion-ripple-effect>
         </div>
         
@@ -26,11 +28,11 @@
         <div class="container-info-dados">
           <div class="ficha-dado">
             <ion-icon name="alarm-outline"></ion-icon>
-            <p>Tempo Descanso: {{ficha.descanso}}</p>
+            <p>Descanso: </p><ion-input maxlength="2" placeholder="00" #descansomin value="{{ficha.descanso.substring(0,2)}}"></ion-input>:<ion-input maxlength="2" placeholder="00" #descansoseg value="{{ficha.descanso.substring(3,5)}}"></ion-input>
           </div>
           <div class="ficha-dado">
             <ion-icon name="flame-outline"></ion-icon>
-            <p>Frequência: {{ficha.series}}x{{ficha.repeticoes}}</p>
+            <p>Frequência: </p><ion-input maxlength="2" placeholder="3" #fichaseries value="{{ficha.series}}"></ion-input>x<ion-input maxlength="2" placeholder="12" #ficharepeticoes value="{{ficha.repeticoes}}"></ion-input>
           </div>
         </div>
       </div>
@@ -45,20 +47,17 @@
         </ng-container>
 
       <ng-container *ngFor="let exe of exercicios | async">
-      <div class="container-exercicio ion-activatable" *ngIf="exe.categoria==cat" (click)="detalharExercicio(exe.exercicio)">
+      <div class="container-exercicio ion-activatable" *ngIf="exe.categoria==cat">
         <div class="exercicio-info" >
           <div class="exercicio-title">
-            <strong>{{ficha.rotulo}}</strong>
+            <ion-icon name="close-circle" (click)="modalDeleteExe(exe.uid)"></ion-icon>
             <ng-container class="w-auto" *ngFor="let exercicio of exerciciosBanco | async"><h1 *ngIf="exe.exercicio==exercicio.uid">{{exercicio.nome}}</h1></ng-container>
-          </div>
-          <div class="exercicio-categoria">
-            <span *ngFor="let exercicio of exerciciosBanco | async"><span *ngIf="exe.exercicio==exercicio.uid" class="flex-row"><ion-icon name="accessibility-outline"></ion-icon><p>{{exercicio.regiao}}</p></span></span>
           </div>
         </div>
 
-        <div class="exercicio-info2">                
-          <strong *ngIf="exe.ficha==ficha.uid">{{exe.series}}x{{exe.repeticoes}}</strong>
-          <h1>{{exe.peso}}KG/B</h1>
+        <div class="exercicio-info2" *ngIf="exe.ficha==ficha.uid">
+          <ion-input pattern="[0-9]" maxlength="2" placeholder="S" #{{exe.uid}}series id="{{exe.uid}}series" value="{{exe.series}}"></ion-input>x<ion-input pattern="[0-9]" maxlength="3" placeholder="R" #{{exe.uid}}repeticoes id="{{exe.uid}}repeticoes" value="{{exe.repeticoes}}"></ion-input>
+          <ion-input pattern="[0-9]" maxlength="3" placeholder="Peso" #{{exe.uid}}peso id="{{exe.uid}}peso" value="{{exe.peso}}"></ion-input>Kg
         </div>
         <ion-ripple-effect></ion-ripple-effect>
       </div>
