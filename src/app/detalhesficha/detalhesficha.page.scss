@@ -2,7 +2,29 @@ ion-toast.toast-delete {
     --background: #F4F4FA;
     --box-shadow: 3px 3px 10px 0 rgba(0, 0, 0, 0.2);
     --color: #4b4a50;
-  }
+}
+
+.noexercicio-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 5px;
+    padding: 30px 30px;
+
+    p {
+        font-size: 17px;
+        text-align: center;
+        margin-top: 10px;
+    }
+    
+    img {
+        min-width: 150px;
+        max-width: 150px;
+        margin: 30px 0px;
+    }
+}
 
 .fundo {
     background-color: #3225FF;

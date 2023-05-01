@@ -6,6 +6,8 @@ import { Services } from '../shared/services';
 import { subexercicioI } from '../model/subexercicios';
 import { AlertController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
+import { LoadingController } from '@ionic/angular';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-detalhesficha',
@@ -21,8 +23,8 @@ export class DetalhesfichaPage implements OnInit {
   exercicios: any;
   exerciciosBanco: any;
   desfazer = false;
-
-  @ViewChildren('fichacaixa') fichacaixa?: HTMLElement;
+  subexerciciosLocal!: Observable<Array<subexercicioI>>;
+  lengthExercicios = 0
 
   constructor(
     private firestore: AngularFirestore,
@@ -32,7 +34,7 @@ export class DetalhesfichaPage implements OnInit {
     public service: Services,
     private alertController: AlertController,
     private toastController: ToastController,
-    private renderer: Renderer2
+    private loadingController: LoadingController,
   ) {
 
     
@@ -40,12 +42,14 @@ export class DetalhesfichaPage implements OnInit {
 
    ionViewWillEnter() { 
 
+    this.lengthExercicios = 0
     this.categoriasList = [];
 
     this.activatedRoute.queryParams.subscribe(params => {
       this.fichaId = params[0];
       this.fichas = this.firestore.collection('fichas', ref => ref.where('uid','==', this.fichaId)).valueChanges();
       this.exercicios = this.firestore.collection('fichas').doc(this.fichaId).collection('exercicio').valueChanges();
+      this.subexerciciosLocal = this.firestore!.collectionGroup<subexercicioI>('exercicio', ref => ref.where('ficha', '==', this.fichaId).orderBy('ficha')).valueChanges();
   })
     this.exerciciosBanco = this.database!.exerciciosLocal
     this.categorias = this.database!.categoriasLocal
@@ -65,6 +69,7 @@ export class DetalhesfichaPage implements OnInit {
             this.categoriasList.push(item.categoria)
           }
         }
+        this.lengthExercicios+=1;
       })
     })
 
@@ -89,11 +94,17 @@ export class DetalhesfichaPage implements OnInit {
       }),150);
   }
 
-  deletarFicha() {
-    this.firestore.collection('fichas').doc(this.fichaId).collection('exercicio').doc().delete();
-
+  async deletarFicha() {
     
-    this.firestore.collection('fichas').doc(this.fichaId).delete();
+    await this.subexerciciosLocal.subscribe(async (res: subexercicioI[]) => {
+
+      await res.forEach((item) => {
+        this.firestore.collection('fichas').doc(this.fichaId).collection('exercicio').doc(item.uid).delete();
+      });
+
+      this.firestore.collection('fichas').doc(this.fichaId).delete();
+    })
+
   }
 
   editarFicha(ficha: any) {
@@ -103,6 +114,12 @@ export class DetalhesfichaPage implements OnInit {
   }
 
   async modalDeleteFicha(ficha: any) {
+    const loading = await this.loadingController.create({
+      message: 'Deletando Treino'+ficha,
+      spinner: 'circular',
+      duration: 5000,
+    });
+
     const alert = await this.alertController.create({
       cssClass: 'modal-delete',
       header: 'Deseja mesmo deletar a ficha '+ficha+'?',
@@ -118,10 +135,12 @@ export class DetalhesfichaPage implements OnInit {
         },
         {
           text: 'Deletar',
-          handler: () => {
+          handler: async () => {
             console.log('Ficha sendo Deletada');
+            loading.present();
+            await this.deletarFicha();
             this.avisoDeletado();
-            this.deletarFicha();
+            loading.dismiss();
             this.router.navigateByUrl('meutreino');
           },
         },

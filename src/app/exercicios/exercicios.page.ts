@@ -34,7 +34,7 @@ export class ExerciciosPage implements OnInit {
     const toast = await this.toastController.create({
       cssClass: 'toast-delete',
       message: exercicio+' adicionado a ficha '+ficha,
-      duration: 1500,
+      duration: 1000,
       position: 'middle',
     });
 

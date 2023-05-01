@@ -6,7 +6,8 @@ import { Services } from '../shared/services';
 import { subexercicioI } from '../model/subexercicios';
 import { AlertController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
-import { exit } from 'process';
+import { LoadingController } from '@ionic/angular';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-editarficha',
@@ -22,8 +23,7 @@ export class EditarfichaPage implements OnInit {
   exercicios: any;
   exerciciosBanco: any;
   desfazer = false;
-
-  @ViewChildren('fichacaixa') fichacaixa?: HTMLElement;
+  subexerciciosLocal!: Observable<Array<subexercicioI>>;
 
   constructor(
     private firestore: AngularFirestore,
@@ -33,9 +33,9 @@ export class EditarfichaPage implements OnInit {
     public service: Services,
     private alertController: AlertController,
     private toastController: ToastController,
-    private renderer: Renderer2
-  ) {
+    private loadingController: LoadingController
 
+  ) {
     
    }
 
@@ -46,8 +46,8 @@ export class EditarfichaPage implements OnInit {
     this.activatedRoute.queryParams.subscribe(params => {
       this.fichaId = params[0];
       this.fichas = this.firestore.collection('fichas', ref => ref.where('uid','==', this.fichaId)).valueChanges();
-      this.exercicios = this.firestore.collection('fichas').doc(this.fichaId).collection('exercicio', ref => ref.limit(1)).valueChanges();
-      // this.exercicios = this.firestore.collectionGroup('exercicio', ref => ref.where('ficha', '==', this.fichaId)).valueChanges();
+      this.exercicios = this.firestore.collection('fichas').doc(this.fichaId).collection('exercicio').valueChanges();
+      this.subexerciciosLocal = this.firestore!.collectionGroup<subexercicioI>('exercicio', ref => ref.where('ficha', '==', this.fichaId)).valueChanges();
   })
     this.exerciciosBanco = this.database!.exerciciosLocal
     this.categorias = this.database!.categoriasLocal
@@ -76,7 +76,18 @@ export class EditarfichaPage implements OnInit {
     const toast = await this.toastController.create({
       cssClass: 'toast-edit-ficha',
       message: 'Ficha Editada com sucesso!',
-      duration: 1500,
+      duration: 2500,
+      position: 'bottom',
+    });
+
+    await toast.present();
+  }
+
+  async toastDeleteExe() {
+    const toast = await this.toastController.create({
+      cssClass: 'toast-delete-exe',
+      message: 'Exercício removido da ficha',
+      duration: 2000,
       position: 'middle',
     });
 
@@ -100,7 +111,9 @@ export class EditarfichaPage implements OnInit {
           text: 'Sim',
           handler: () => {
             console.log('Exercício Removido.');
-            this.firestore.collection('fichas').doc(this.fichaId).collection('exercicio').doc(exe).delete();
+            this.firestore.collection('fichas').doc(this.fichaId).collection('exercicio').doc(exe).delete().then( () => {
+              this.toastDeleteExe();
+            })
           },
         },
       ],
@@ -126,9 +139,10 @@ export class EditarfichaPage implements OnInit {
         },
         {
           text: 'Confirmar',
-          handler: () => {
+          handler: async () => {
             console.log('Ficha Atualizada');
-            this.salvarAlteracoes(descansomin, descansoseg, fichaseries, ficharepeticoes);
+            alert.dismiss();            
+            await this.salvarAlteracoes(descansomin, descansoseg, fichaseries, ficharepeticoes);
             this.toastFichaEditada()
           },
         },
@@ -141,18 +155,27 @@ export class EditarfichaPage implements OnInit {
   }
 
 
-  detalharFicha(ficha: any) {
+  detalharFicha() {
     setTimeout(() => this.router.navigate(['detalhesficha'],{
-      queryParams: [ficha]
+      queryParams: [this.fichaId]
       }),150);
   }
 
+  cancelarEditFicha() {
+    this.detalharFicha();
+  }
 
-  salvarAlteracoes(descansomin: any, descansoseg: any, fichaseries: any, ficharepeticoes: any) {
+  async salvarAlteracoes(descansomin: any, descansoseg: any, fichaseries: any, ficharepeticoes: any) {
 
-    
+    const loading = await this.loadingController.create({
+      message: 'Salvando Alterações',
+      spinner: 'circular',
+      duration: 8000,
+    });
 
-    this.exercicios.subscribe((res: subexercicioI[]) => {
+    loading.present();
+
+    await this.subexerciciosLocal.subscribe((res: subexercicioI[]) => {
 
       let i = 0;
 
@@ -167,9 +190,9 @@ export class EditarfichaPage implements OnInit {
 
         var inputPeso = (<HTMLInputElement>document.getElementById(exe.uid+"peso")).value;
 
-        console.log('inputSeries:',inputSeries);
-        console.log('inputRepeticoes:',inputRepeticoes);
-        console.log('inputPeso:',inputPeso);
+        console.log('inputSeries'+i+': '+inputSeries);
+        console.log('inputRepeticoes'+i+': '+inputRepeticoes);
+        console.log('inputPeso'+i+': '+inputPeso);
 
         this.firestore.collection('fichas').doc(this.fichaId).collection('exercicio').doc(exe.uid).update({series: inputSeries, repeticoes: inputRepeticoes, peso: inputPeso}).then ( () => {
           console.log('Exercicio atualizado.')
@@ -177,22 +200,17 @@ export class EditarfichaPage implements OnInit {
       
       })
     
-    }).then ( () => {
+    })
 
-      console.log(this.fichaId)
+            console.log(this.fichaId)
             console.log(descansomin.value)
             console.log(descansoseg.value)
             console.log(fichaseries.value)
             console.log(ficharepeticoes.value)
 
-    this.firestore.collection('fichas').doc(this.fichaId).update({descanso: descansomin.value+":"+descansoseg.value, series: fichaseries.value, repeticoes: ficharepeticoes.value}).then( res => {
-      this.router.navigate(['detalhesficha'],{
-        queryParams: [this.fichaId]
-        })
-    })
-    })  
-
-    this.detalharFicha(this.fichaId);
+    await this.firestore.collection('fichas').doc(this.fichaId).update({descanso: descansomin.value+":"+descansoseg.value, series: fichaseries.value, repeticoes: ficharepeticoes.value})
+    await loading.dismiss();
+    await this.detalharFicha();
 
   }
 

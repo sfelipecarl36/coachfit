@@ -35,6 +35,13 @@
         </div>
       </div>
 
+      <ng-container *ngIf="lengthExercicios==0">
+        <div class="noexercicio-div">
+        <p>Não há exercícios por aqui.</p>
+        <img src="../assets/img/noexercicioficha.png" />
+        </div>
+      </ng-container>
+
       <ng-container *ngFor="let cat of categoriasList">
         <ng-container *ngFor="let categoria of categorias | async">
       <div class="container-categoria" *ngIf="cat==categoria.uid">
@@ -62,8 +69,8 @@
         </div>
         <ion-ripple-effect></ion-ripple-effect>
       </div>
+      </ng-container>
 
-        </ng-container>
     </ng-container>
       <p></p>
 

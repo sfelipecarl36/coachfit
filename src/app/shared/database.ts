@@ -29,7 +29,7 @@ export class Database {
 
   public atualizaValores () {
     const autenticacao = getAuth();
-        onAuthStateChanged(autenticacao, (user) => {
+    onAuthStateChanged(autenticacao, (user) => {
           if(user) {
               this.user = user.uid
               this.subexerciciosLocal = this.firestore!.collectionGroup<subexercicioI>('exercicio', ref => ref.where('usuario', '==', this.user)).valueChanges();
@@ -40,5 +40,9 @@ export class Database {
             this.router.navigateByUrl('login');
           }
     })
+  }
+
+  ngOnInit() {
+    
   }
 }

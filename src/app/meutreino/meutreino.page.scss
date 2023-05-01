@@ -6,6 +6,31 @@ p.noficha {
     margin-top: 40%;
 }
 
+.noficha-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 30px;
+    padding: 30px 30px;
+    background-color: #3225ff;
+    border-radius: 15px;
+
+    p {
+        font-size: 17px;
+        text-align: center;
+        margin-top: 10px;
+        color: white;
+    }
+    
+    img {
+        min-width: 200px;
+        max-width: 200px;
+        margin: 30px 0px;
+    }
+}
+
 .container-novaficha {
 
     width: 100%;
@@ -193,6 +218,7 @@ p.noficha {
         display: flex;
         flex-direction: column;
         align-items: center;
+        position: relative;
         overflow: visible;
 
         ion-ripple-effect {

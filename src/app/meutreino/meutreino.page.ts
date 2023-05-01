@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { subexercicioI } from '../model/subexercicios';
 import { fichaI } from '../model/fichas';
 import { Router } from '@angular/router';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-meutreino',
@@ -23,19 +24,27 @@ export class MeutreinoPage implements OnInit {
     public service: Services,
     private router: Router,
     public database: Database,
-    private auth: AuthService
+    private auth: AuthService,
+    private loadingController: LoadingController
   ) {
 
   }
   
 
-  ngOnInit() {
+  async ngOnInit() {
       this.exerciciosBanco = this.database!.exerciciosLocal
       this.categorias = this.database!.categoriasLocal
+      const loading = await this.loadingController.create({
+        message: 'Carregando Fichas',
+        spinner: 'circular',
+        duration: 1500,
+      });
+  
+      loading.present();
       setTimeout(() => {
         this.fichas = this.database.fichasLocal
         this.exercicios = this.database!.subexerciciosLocal
-      },1300);
+      },1500);
       
   }
 

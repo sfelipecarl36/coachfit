@@ -8,7 +8,7 @@
   </div>
 
   <div class="container-fichas" *ngIf="(fichas | async)?.length ; else nofichas">
-      <div class="ficha ion-activatable" *ngFor="let ficha of fichas | async">
+      <div class="ficha" *ngFor="let ficha of fichas | async">
 
         <div class="rotulo-box">{{ficha.rotulo}}</div>
 
@@ -17,7 +17,7 @@
 
         <div class="ficha-info-container">
           <div class="ficha-info">
-            <ion-icon name="stopwatch-outline"></ion-icon>
+            <ion-icon name="alarm-outline"></ion-icon>
             <p>{{ficha.descanso}}</p>
           </div>
         </div>
@@ -55,7 +55,7 @@
         <div class="button-ficha ion-activatable" (click)="detalharFicha(ficha.uid)">
           <ion-icon name="document-outline"></ion-icon>
           <p>Abrir Ficha</p>
-          
+          <ion-ripple-effect></ion-ripple-effect>
         </div>
         <ion-ripple-effect></ion-ripple-effect>
       </div>
@@ -70,7 +70,11 @@
   </div>
 
   <ng-template #nofichas>
-      <p class="noficha">Você ainda não possui ficha de treino. Crie agora mesmo uma!</p>      
+    <div class="noficha-div ion-activatable" (click)="service.navegar('criaficha')">
+      <p class="noficha">Você ainda não possui ficha de treino. Crie agora mesmo uma!</p>
+      <img src="../assets/img/noficha.png" />
+      <ion-ripple-effect></ion-ripple-effect>
+    </div>
   </ng-template>
 
   <ng-template #noexercicios>
