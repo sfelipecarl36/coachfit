@@ -7,7 +7,8 @@ import { subexercicioI } from '../model/subexercicios';
 import { AlertController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
 import { LoadingController } from '@ionic/angular';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, timeout } from 'rxjs';
+import { exercicioI } from '../model/exercicios';
 
 @Component({
   selector: 'app-detalhesficha',
@@ -26,6 +27,18 @@ export class DetalhesfichaPage implements OnInit {
   subexerciciosLocal!: Observable<Array<subexercicioI>>;
   lengthExercicios = 0
 
+  time: BehaviorSubject<string> = new BehaviorSubject('00:00');
+  timeExe: BehaviorSubject<string> = new BehaviorSubject('00:00');
+  timer: any;
+  timerExe: any;
+  interval: any;
+  intervalExe: any;
+
+  state: 'start' | 'stop' = 'stop';
+  stateExe: 'start' | 'stop' = 'stop';
+
+  // 0.02 valor do segundo
+
   constructor(
     private firestore: AngularFirestore,
     private router: Router,
@@ -35,10 +48,76 @@ export class DetalhesfichaPage implements OnInit {
     private alertController: AlertController,
     private toastController: ToastController,
     private loadingController: LoadingController,
-  ) {
+  ) 
+    {}
 
-    
-   }
+    async startTimer() {
+      const loading = await this.loadingController.create({
+        spinner: 'circular',
+        duration: 1000,
+      });
+
+      loading.present();
+        this.state = 'start';
+        this.timer = 0;
+        this.interval = setInterval( () => {
+          this.updateTimeValue();
+        }, 1000)
+    }
+
+    stopTimer() {
+      clearInterval(this.interval);
+      this.time.next('00:00');
+      this.state = 'stop';
+    }
+
+    updateTimeValue() {
+        let minutes: any = this.timer / 60;
+        let seconds: any = this.timer % 60;
+
+        minutes = String('0' + Math.floor(minutes)).slice(-2);
+        seconds = String('0' + Math.floor(seconds)).slice(-2);
+
+        const text = minutes + ':' + seconds;
+        this.time.next(text);
+
+        ++this.timer;
+
+        if (this.timer < -1) {
+          this.stopTimer();
+        }
+    }
+
+    startTimerExe(duration: number) {
+      this.stateExe = 'start';
+      this.timerExe = duration * 60;
+      this.intervalExe = setInterval( () => {
+        this.updateTimeValueExe();
+      }, 1000)
+  }
+
+  stopTimerExe() {
+    clearInterval(this.intervalExe);
+    this.timeExe.next('00:00');
+    this.stateExe = 'stop';
+  }
+
+  updateTimeValueExe() {
+      let minutes: any = this.timerExe / 60;
+      let seconds: any = this.timerExe % 60;
+
+      minutes = String('0' + Math.floor(minutes)).slice(-2);
+      seconds = String('0' + Math.floor(seconds)).slice(-2);
+
+      const text = minutes + ':' + seconds;
+      this.timeExe.next(text);
+
+      --this.timerExe;
+
+      if (this.timerExe < -1) {
+        this.stopTimerExe();
+      }
+  }
 
    ionViewWillEnter() { 
 
@@ -92,6 +171,90 @@ export class DetalhesfichaPage implements OnInit {
     setTimeout(() => this.router.navigate(['detalhesexercicio'],{
       queryParams: [exercicio]
       }),150);
+  }
+
+  clickExercicio(exe: any, repeticoes: any) {
+    if (this.state=='stop') {
+        this.detalharExercicio(exe);
+    }
+
+    else if(this.state=='start') {
+      this.startTimerExe(repeticoes);
+      this.popUpExercicio(exe)
+    }
+  }
+
+  async alertPararTreino() {
+    const alert = await this.alertController.create({
+      cssClass: 'alert-ficha-stop',
+      header: 'Parar execução do Treino?',
+      buttons:[
+        {
+          text: 'Não',
+          role: 'cancel',
+          cssClass: 'alert-cancel',
+          handler: () => {
+            console.log('Treino Continua.');
+          },
+        },
+        {
+          text: 'Sim',
+          handler: () => {
+            console.log('Treino Interrompido.');
+            this.stopTimer();
+          },
+        },
+      ],
+
+      
+    });
+
+    await alert.present();
+  }
+
+  async popUpExercicio(exercicio: any) {
+
+    let nomeExe = ''
+    let tempoExe = 0
+    let imgExe = ''
+
+    let timerLocal: any
+
+    const exercicioBanco = this.firestore.collection<exercicioI>('exercicios', ref => ref.where('uid', '==', exercicio)).valueChanges();
+    exercicioBanco.subscribe((res: exercicioI[]) => {
+
+      res.forEach((item) => {
+        nomeExe = String(item.nome);
+        imgExe = String(item.img);
+        tempoExe = Number(item.tempo);
+      });
+    })
+
+    setTimeout(() => this.time.subscribe((time: any) => {
+      timerLocal = time;
+      console.log('foi')
+  })
+  ,1000);
+
+    const alert = await this.alertController.create({
+      cssClass: 'alert-exe-start',
+      header: nomeExe,
+      message: '<h1>'+this.time.pipe+'</h1>',
+      buttons:[
+        {
+          text: 'PULAR EXERCÍCIO',
+          role: 'cancel',
+          cssClass: 'alert-cancel',
+          handler: () => {
+            console.log('Exercício Pulado.');
+            this.stopTimerExe();
+          },
+        },
+      ],
+      
+    });
+
+    await alert.present();
   }
 
   async deletarFicha() {

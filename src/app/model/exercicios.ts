@@ -6,4 +6,5 @@ export interface exercicioI {
     img?: string;
     img2?: string;
     categoria?: string;
+    tempo?: number;
   }

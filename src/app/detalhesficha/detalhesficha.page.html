@@ -4,6 +4,8 @@
     <div class="container-left">
         <ion-back-button text="" defaultHref="window.location" (click)="service.voltar()"></ion-back-button>
         <h1 class="top">Treino {{ficha.rotulo}}</h1>
+
+      <ng-container *ngIf="state == 'stop'; else timerStart">
       <div class="ficha-control">
         <div class="caixa-icon ion-activatable" (click)="editarFicha(ficha.uid)">
           <ion-icon name="pencil-outline"></ion-icon>
@@ -13,8 +15,14 @@
           <ion-icon name="trash"></ion-icon>
           <ion-ripple-effect></ion-ripple-effect>
         </div>
-        
       </div>
+    </ng-container>
+
+    <ng-template #timerStart>
+      <div class="ficha-control">
+      <ion-button (click)="alertPararTreino()">{{ time | async }}</ion-button>
+      </div>
+    </ng-template>
 
     </div>
 
@@ -42,6 +50,10 @@
         </div>
       </ng-container>
 
+      <ng-container *ngIf="state == 'stop'">
+      <ion-button (click)="startTimer()">COMEÇAR</ion-button>
+      </ng-container>
+
       <ng-container *ngFor="let cat of categoriasList">
         <ng-container *ngFor="let categoria of categorias | async">
       <div class="container-categoria" *ngIf="cat==categoria.uid">
@@ -52,7 +64,7 @@
         </ng-container>
 
       <ng-container *ngFor="let exe of exercicios | async">
-      <div class="container-exercicio ion-activatable" *ngIf="exe.categoria==cat" (click)="detalharExercicio(exe.exercicio)">
+      <div class="container-exercicio ion-activatable" *ngIf="exe.categoria==cat" (click)="clickExercicio(exe.exercicio, exe.repeticoes)">
         <div class="exercicio-info" >
           <div class="exercicio-title">
             <strong>{{ficha.rotulo}}</strong>
