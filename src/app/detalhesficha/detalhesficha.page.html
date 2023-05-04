@@ -2,7 +2,7 @@
   
   <div class="fundo" *ngFor="let ficha of fichas | async">
     <div class="container-left">
-        <ion-back-button text="" defaultHref="window.location" (click)="service.voltar()"></ion-back-button>
+        <ion-back-button text="" defaultHref="meutreino"></ion-back-button>
         <h1 class="top">Treino {{ficha.rotulo}}</h1>
 
       <ng-container *ngIf="state == 'stop'; else timerStart">
@@ -50,7 +50,7 @@
         </div>
       </ng-container>
 
-      <ng-container *ngIf="state == 'stop'">
+      <ng-container *ngIf="state == 'stop' && lengthExercicios>0">
       <ion-button (click)="startTimer()">COMEÇAR</ion-button>
       </ng-container>
 
@@ -64,7 +64,7 @@
         </ng-container>
 
       <ng-container *ngFor="let exe of exercicios | async">
-      <div class="container-exercicio ion-activatable" *ngIf="exe.categoria==cat" (click)="clickExercicio(exe.exercicio, exe.repeticoes)">
+      <div class="container-exercicio ion-activatable" *ngIf="exe.categoria==cat" (click)="clickExercicio(exe.exercicio, exe.series, exe.repeticoes, ficha.descanso)">
         <div class="exercicio-info" >
           <div class="exercicio-title">
             <strong>{{ficha.rotulo}}</strong>
@@ -95,7 +95,7 @@
   
 </ion-content>
   
-<ng-template #circleElement id="circleElement">
+<!-- <ng-template #circleElement id="circleElement">
   <svg
   id="progress-circle"
   width="90%"
@@ -130,4 +130,4 @@
   />
   <text x="50%" y="55%" class="timer-text">timerLocal</text>
 </svg>
-</ng-template>
+</ng-template> -->

@@ -9,9 +9,8 @@ import { ToastController } from '@ionic/angular';
 import { LoadingController } from '@ionic/angular';
 import { BehaviorSubject, Observable, timeout, timer } from 'rxjs';
 import { exercicioI } from '../model/exercicios';
-
-const circleR = 80;
-const circleDasharray = 2 * Math.PI * circleR;
+import { ModalController } from '@ionic/angular';
+import { CircleComponentComponent } from '../modal/circle-component/circle-component.component';
 
 @Component({
   selector: 'app-detalhesficha',
@@ -31,8 +30,6 @@ export class DetalhesfichaPage implements OnInit {
   lengthExercicios = 0
 
   time: BehaviorSubject<string> = new BehaviorSubject('00:00');
-  timeExe: BehaviorSubject<string> = new BehaviorSubject('00:00');
-  percent: BehaviorSubject<number> = new BehaviorSubject(100);
 
   conteudoAlert: any
   
@@ -41,11 +38,7 @@ export class DetalhesfichaPage implements OnInit {
   interval: any;
   intervalExe: any;
 
-  circleR = circleR;
-  circleDasharray = circleDasharray
-
   state: 'start' | 'stop' = 'stop';
-  stateExe: 'start' | 'stop' = 'stop';
   intervalPopUp: any
   timerExeInitial!: number;
 
@@ -61,8 +54,23 @@ export class DetalhesfichaPage implements OnInit {
     private alertController: AlertController,
     private toastController: ToastController,
     private loadingController: LoadingController,
+    private modalCtrl: ModalController
   ) 
     {}
+
+    async presentModal(exe: any, series: any, repeticoes: any, descanso: any) {
+      const modal = await this.modalCtrl.create({
+        component: CircleComponentComponent,
+        id: 'modalCircle',
+        componentProps: { 
+          exe: exe,
+          series: series,
+          repeticoes: repeticoes,
+          descanso: descanso
+        }
+      });
+      return await modal.present();
+    }
 
     ngAfterViewInit(){
       this.conteudoAlert = this.circleElement;
@@ -108,56 +116,6 @@ export class DetalhesfichaPage implements OnInit {
           this.stopTimer();
         }
     }
-
-    startTimerExe(exe:any , repeticoes: any) {
-      this.stateExe = 'start';
-      this.firestore.collection<exercicioI>('exercicios', ref => ref.where('uid', '==', exe)).valueChanges().subscribe((res: exercicioI[]) => {
-
-        res.forEach((item) => {
-          if (item.tempo) {
-          this.timerExe = (repeticoes * item.tempo)+5;
-          this.timerExeInitial = Number((repeticoes * item.tempo)+5);
-        }
-          return
-        });
-
-      })
-      this.intervalExe = setInterval( () => {
-        this.updateTimeValueExe();
-      }, 1000)
-  }
-
-  stopTimerExe() {
-    clearInterval(this.intervalExe);
-    this.timeExe.next('00:00');
-    this.stateExe = 'stop';
-  }
-
-  percentageOffset(percent: any) {
-    const percentFloat = percent / 100;
-    return circleDasharray * (1 - percentFloat);
-  }
-
-  updateTimeValueExe() {
-      let minutes: any = this.timerExe / 60;
-      let seconds: any = this.timerExe % 60;
-
-      minutes = String('0' + Math.floor(minutes)).slice(-2);
-      seconds = String('0' + Math.floor(seconds)).slice(-2);
-
-      const text = minutes + ':' + seconds;
-      this.timeExe.next(text);
-
-      const totalTime = this.timerExeInitial
-      const percentage = ((totalTime - this.timerExe) / totalTime) * 100;
-      this.percent.next(percentage)
-
-      --this.timerExe;
-
-      if (this.timerExe < -1) {
-        this.stopTimerExe();
-      }
-  }
 
    ionViewWillEnter() { 
 
@@ -213,14 +171,13 @@ export class DetalhesfichaPage implements OnInit {
       }),150);
   }
 
-  clickExercicio(exe: any, repeticoes: any) {
+  clickExercicio(exe: any, series:any, repeticoes: any, descanso: any) {
     if (this.state=='stop') {
         this.detalharExercicio(exe);
     }
 
     else if(this.state=='start') {
-      this.startTimerExe(exe, repeticoes);
-      this.popUpExercicio(exe);
+      this.presentModal(exe, series, repeticoes, descanso);
     }
   }
 
@@ -246,94 +203,6 @@ export class DetalhesfichaPage implements OnInit {
         },
       ],
 
-      
-    });
-
-    await alert.present();
-  }
-
-  async popUpExercicio(exercicio: any) {
-
-    let nomeExe = ''
-    let tempoExe = 0
-    let imgExe = ''
-
-    let timerLocal: any
-    timerLocal = this.timeExe.getValue();
-
-    const exercicioBanco = this.firestore.collection<exercicioI>('exercicios', ref => ref.where('uid', '==', exercicio)).valueChanges();
-    exercicioBanco.subscribe((res: exercicioI[]) => {
-
-      res.forEach((item) => {
-        nomeExe = String(item.nome);
-        imgExe = String(item.img);
-        tempoExe = Number(item.tempo);
-      });
-    })
-
-    
-    this.intervalPopUp = setTimeout(() => this.time.subscribe( () => {
-      timerLocal = this.timeExe.getValue();
-      console.log(this.conteudoAlert)
-      alert.header = nomeExe
-      alert.message = '<h1>'+timerLocal+'</h1>'
-      // '<svg '+
-      //   'id="progress-circle" '+
-      //   'width="90%" '+
-      //   'height="90% " '+
-      //   'viewBox="0 0 200 200" '+
-      //   '> '+
-  
-      //   '<linearGradient id="linearColors1" '+ 
-      //   'x1="0" '+
-      //   'y1="0" '+
-      //   'x2="1" '+
-      //   'y2="1"> '+
-      //   '<stop offset="0%" stop-color="#ddd6f3"></stop> '+
-      //   '<stop offset="100%" stop-color="#faaca8"></stop> '+
-      //   '</linearGradient> '+
-  
-      //   '<circle '+
-      //   'cx="50%" '+
-      //   'cy="50%" '+
-      //   '[attr.r]="circleR" '+
-      //   'fill="none" '+
-      //   'stroke="#f3f3f3" '+
-      //   'stroke-width="12" '+
-      //   '/> '+
-  
-      //   '<circle '+
-      //   'cx="50%" '+
-      //   'cy="50%" '+
-      //   '[attr.r]="circleR" '+
-      //   'fill="none" '+
-      //   'stroke="url(#linearColors1)" '+
-      //   'stroke-width="12" '+
-      //   'stroke-linecap="round" '+
-      //   '[attr.stroke-dasharray]="circleDasharray" '+
-      //   '[attr.stroke-dashoffset]="percentageOffset(percent | async)" '+
-      //   '/> '+
-      //   '<text x="50%" y="55%" class="timer-text">'+timerLocal+'</text> '+
-      // '</svg>'
-  })
-  ,1000);
-
-    const alert = await this.alertController.create({
-      cssClass: 'alert-exe-start',
-      header: nomeExe,
-      message: '<h1>'+timerLocal+'</h1>',
-      buttons:[
-        {
-          text: 'PULAR EXERCÍCIO',
-          role: 'cancel',
-          cssClass: 'alert-cancel',
-          handler: () => {
-            console.log('Exercício Pulado.');
-            this.stopTimerExe();
-            clearInterval(this.intervalPopUp);
-          },
-        },
-      ],
       
     });
 

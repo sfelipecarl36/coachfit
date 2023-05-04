@@ -1,6 +1,8 @@
 .fundo {
     justify-content: center;
     background-color: #f3f4f5;
+    position: relative;
+    z-index: -9;
 }
 
 p.noficha {
@@ -210,7 +212,7 @@ p.noficha {
 
     .ficha {
         background: #fff;
-        box-shadow: 0px 0px 30px 0px #c3c3c3;
+        box-shadow: 0px 20px 30px 0px #c3c3c3;
         width: 100%;
         min-height: 350px;
         margin: 60px 0px;

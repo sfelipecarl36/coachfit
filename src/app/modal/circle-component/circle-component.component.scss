@@ -1,0 +1,68 @@
+* {
+    color: black;
+    text-align: center;
+}
+
+h1 {
+    font-family: 'Ubuntu';
+    width: 100%;
+    margin-bottom: 0px;
+}
+
+h2 {    
+    text-transform: uppercase;
+    font-family: 'Fugaz One';
+    font-size: 18px;
+}
+
+h3 {
+    font-size: 19px;
+    margin-bottom: 19px;
+    margin-top: 0px;
+    font-family: 'Ubuntu';
+}
+
+img {
+    min-width: 120px;
+    max-width: 120px;
+    margin-top: 10px;
+}
+
+svg {
+    width: 100%;
+    height: 100%;
+    margin-top: -5px;
+    margin-bottom: 15px;
+}
+
+#progress-circle {
+
+}
+
+.pula-exe {
+    text-transform: uppercase;
+    padding: 12px;
+    background-color: #d9d9d9;
+    font-size: 15px;
+    border-radius: 10px;
+    font-family: 'Fugaz One';   
+    color: #555;
+}
+
+.next-exe {    
+    text-transform: uppercase;
+    padding: 12px;
+    margin-top: 12px;
+    background-color: #3225FF;
+    font-size: 15px;
+    border-radius: 10px;
+    font-family: 'Fugaz One';   
+    color: white;
+}
+
+.timer-text {
+    font-size: 36px;
+    text-anchor: middle;
+    font-weight: 600;
+    fill: #444;
+}

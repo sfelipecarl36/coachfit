@@ -127,6 +127,31 @@ ion-item {
     --inner-padding-end: 0px;
 }
 
+ion-modal {
+    --width: 80%;
+    --height: auto;
+    --border-radius: 30px;
+    --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+ion-modal > .ion-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+}
+
+ion-modal::part(backdrop) {
+    background: rgba(209, 213, 219);
+    opacity: 1;
+  }
+
+ion-modal ion-toolbar {
+    --background: rgb(14 116 144);
+    --color: white;
+}
+
 hr{width: 90%; height: 1px;background-color: #CDCDCD;margin: 25px auto;}
 
 

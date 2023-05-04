@@ -1,0 +1,90 @@
+<ng-container *ngIf="timerExe>-1; else circleDescanso">
+
+<h1>{{nomeExe}}</h1>
+<img src="{{imgExe}}"/>
+<h4>Série {{totalSeries}}</h4>
+
+<svg
+  id="progress-circle"
+  width="90%"
+  height="90%"
+  viewBox="0 0 200 200"
+  >
+
+  <linearGradient id="linearColors1" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0%" stop-color="#ddd6f3"></stop>
+  <stop offset="100%" stop-color="#3225FF"></stop>
+  </linearGradient>
+
+  <circle
+  cx="50%"
+  cy="50%"
+  [attr.r]="circleR"
+  fill="none"
+  stroke="#f3f3f3"
+  stroke-width="12"
+  />
+
+  <circle
+  cx="50%"
+  cy="50%"
+  [attr.r]="circleR"
+  fill="none"
+  stroke="url(#linearColors1)"
+  stroke-width="12"
+  stroke-linecap="round"
+  [attr.stroke-dasharray]="circleDasharray"
+  [attr.stroke-dashoffset]="percentageOffset(percent | async)"
+  />
+  <text x="50%" y="55%" class="timer-text">{{ timeExe | async }}</text>
+</svg>
+</ng-container>
+
+<ng-template #circleDescanso>
+
+  <h2 *ngIf="numeroSeries>0">Descanse</h2>
+  <img *ngIf="numeroSeries==0" src="{{imgExe}}"/>
+
+  <svg *ngIf="numeroSeries>0"
+  id="progress-circle"
+  width="90%"
+  height="90%"
+  viewBox="0 0 200 200"
+  >
+
+  <linearGradient id="linearColors1" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0%" stop-color="#ddd6f3"></stop>
+  <stop offset="100%" stop-color="#2CCA5E"></stop>
+  </linearGradient>
+
+  <circle
+  cx="50%"
+  cy="50%"
+  [attr.r]="circleR"
+  fill="none"
+  stroke="#f3f3f3"
+  stroke-width="12"
+  />
+
+  <circle
+  cx="50%"
+  cy="50%"
+  [attr.r]="circleR"
+  fill="none"
+  stroke="url(#linearColors1)"
+  stroke-width="12"
+  stroke-linecap="round"
+  [attr.stroke-dasharray]="circleDasharray"
+  [attr.stroke-dashoffset]="percentageOffsetDescanso(percentDescanso | async)"
+  />
+  <text x="50%" y="55%" class="timer-text">{{ timeDescanso | async }}</text>
+</svg>
+</ng-template>
+
+<ng-container *ngIf="timerExe>-1; else execoncluido"><button class="pula-exe" (click)="pararExercicio()">Pular Exercício</button></ng-container>
+<ng-template #execoncluido>
+  <h2 *ngIf="numeroSeries==0">Exercício Concluído</h2>
+  <h3 *ngIf="numeroSeries>0">Prepare-se para a próxima série</h3>
+  <button class="next-exe" *ngIf="numeroSeries>0" (click)="pularDescanso()">Pular Descanso</button>
+  <button class="next-exe" *ngIf="numeroSeries==0" (click)="fecharModal()">Concluir</button>
+</ng-template>
