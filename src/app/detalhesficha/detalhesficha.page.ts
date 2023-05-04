@@ -27,6 +27,7 @@ export class DetalhesfichaPage implements OnInit {
   exerciciosBanco: any;
   desfazer = false;
   subexerciciosLocal!: Observable<Array<subexercicioI>>;
+  fichaHistorico!: Observable<Array<any>>;
   lengthExercicios = 0
 
   time: BehaviorSubject<string> = new BehaviorSubject('00:00');

@@ -114,6 +114,7 @@ updateTimeValueDescanso() {
 
     const totalTime = this.timerDescansoInitial
     const percentage = ((totalTime - this.timerDescanso) / totalTime) * 100;
+    this.percentDescanso.next(percentage)
 
     --this.timerDescanso;
 
@@ -153,6 +154,9 @@ stopTimerExe() {
   this.stateExe = 'stop';
   if(this.numeroSeries>0) {
     this.startTimerDescanso();
+  }
+  else{
+    console.log('Exercício terminou!')
   }
 }
 
