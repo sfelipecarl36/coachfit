@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, ViewChildren, Renderer2 } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, ViewChildren, Renderer2, TemplateRef, ContentChild } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Database } from '../shared/database';
@@ -7,8 +7,11 @@ import { subexercicioI } from '../model/subexercicios';
 import { AlertController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
 import { LoadingController } from '@ionic/angular';
-import { BehaviorSubject, Observable, timeout } from 'rxjs';
+import { BehaviorSubject, Observable, timeout, timer } from 'rxjs';
 import { exercicioI } from '../model/exercicios';
+
+const circleR = 80;
+const circleDasharray = 2 * Math.PI * circleR;
 
 @Component({
   selector: 'app-detalhesficha',
@@ -29,16 +32,26 @@ export class DetalhesfichaPage implements OnInit {
 
   time: BehaviorSubject<string> = new BehaviorSubject('00:00');
   timeExe: BehaviorSubject<string> = new BehaviorSubject('00:00');
+  percent: BehaviorSubject<number> = new BehaviorSubject(100);
+
+  conteudoAlert: any
+  
   timer: any;
   timerExe: any;
   interval: any;
   intervalExe: any;
 
+  circleR = circleR;
+  circleDasharray = circleDasharray
+
   state: 'start' | 'stop' = 'stop';
   stateExe: 'start' | 'stop' = 'stop';
+  intervalPopUp: any
+  timerExeInitial!: number;
 
-  // 0.02 valor do segundo
-
+  @ViewChildren ('circleElement') circleElement!: TemplateRef<any>;
+  circleElements: any;
+  
   constructor(
     private firestore: AngularFirestore,
     private router: Router,
@@ -50,6 +63,14 @@ export class DetalhesfichaPage implements OnInit {
     private loadingController: LoadingController,
   ) 
     {}
+
+    ngAfterViewInit(){
+      this.conteudoAlert = this.circleElement;
+      let tempoAfter = setInterval( () => {
+        console.log(this.conteudoAlert)
+        clearInterval(tempoAfter)
+      }, 4000)
+    }
 
     async startTimer() {
       const loading = await this.loadingController.create({
@@ -88,9 +109,19 @@ export class DetalhesfichaPage implements OnInit {
         }
     }
 
-    startTimerExe(duration: number) {
+    startTimerExe(exe:any , repeticoes: any) {
       this.stateExe = 'start';
-      this.timerExe = duration * 60;
+      this.firestore.collection<exercicioI>('exercicios', ref => ref.where('uid', '==', exe)).valueChanges().subscribe((res: exercicioI[]) => {
+
+        res.forEach((item) => {
+          if (item.tempo) {
+          this.timerExe = (repeticoes * item.tempo)+5;
+          this.timerExeInitial = Number((repeticoes * item.tempo)+5);
+        }
+          return
+        });
+
+      })
       this.intervalExe = setInterval( () => {
         this.updateTimeValueExe();
       }, 1000)
@@ -102,6 +133,11 @@ export class DetalhesfichaPage implements OnInit {
     this.stateExe = 'stop';
   }
 
+  percentageOffset(percent: any) {
+    const percentFloat = percent / 100;
+    return circleDasharray * (1 - percentFloat);
+  }
+
   updateTimeValueExe() {
       let minutes: any = this.timerExe / 60;
       let seconds: any = this.timerExe % 60;
@@ -111,6 +147,10 @@ export class DetalhesfichaPage implements OnInit {
 
       const text = minutes + ':' + seconds;
       this.timeExe.next(text);
+
+      const totalTime = this.timerExeInitial
+      const percentage = ((totalTime - this.timerExe) / totalTime) * 100;
+      this.percent.next(percentage)
 
       --this.timerExe;
 
@@ -179,8 +219,8 @@ export class DetalhesfichaPage implements OnInit {
     }
 
     else if(this.state=='start') {
-      this.startTimerExe(repeticoes);
-      this.popUpExercicio(exe)
+      this.startTimerExe(exe, repeticoes);
+      this.popUpExercicio(exe);
     }
   }
 
@@ -219,6 +259,7 @@ export class DetalhesfichaPage implements OnInit {
     let imgExe = ''
 
     let timerLocal: any
+    timerLocal = this.timeExe.getValue();
 
     const exercicioBanco = this.firestore.collection<exercicioI>('exercicios', ref => ref.where('uid', '==', exercicio)).valueChanges();
     exercicioBanco.subscribe((res: exercicioI[]) => {
@@ -230,16 +271,57 @@ export class DetalhesfichaPage implements OnInit {
       });
     })
 
-    setTimeout(() => this.time.subscribe((time: any) => {
-      timerLocal = time;
-      console.log('foi')
+    
+    this.intervalPopUp = setTimeout(() => this.time.subscribe( () => {
+      timerLocal = this.timeExe.getValue();
+      console.log(this.conteudoAlert)
+      alert.header = nomeExe
+      alert.message = '<h1>'+timerLocal+'</h1>'
+      // '<svg '+
+      //   'id="progress-circle" '+
+      //   'width="90%" '+
+      //   'height="90% " '+
+      //   'viewBox="0 0 200 200" '+
+      //   '> '+
+  
+      //   '<linearGradient id="linearColors1" '+ 
+      //   'x1="0" '+
+      //   'y1="0" '+
+      //   'x2="1" '+
+      //   'y2="1"> '+
+      //   '<stop offset="0%" stop-color="#ddd6f3"></stop> '+
+      //   '<stop offset="100%" stop-color="#faaca8"></stop> '+
+      //   '</linearGradient> '+
+  
+      //   '<circle '+
+      //   'cx="50%" '+
+      //   'cy="50%" '+
+      //   '[attr.r]="circleR" '+
+      //   'fill="none" '+
+      //   'stroke="#f3f3f3" '+
+      //   'stroke-width="12" '+
+      //   '/> '+
+  
+      //   '<circle '+
+      //   'cx="50%" '+
+      //   'cy="50%" '+
+      //   '[attr.r]="circleR" '+
+      //   'fill="none" '+
+      //   'stroke="url(#linearColors1)" '+
+      //   'stroke-width="12" '+
+      //   'stroke-linecap="round" '+
+      //   '[attr.stroke-dasharray]="circleDasharray" '+
+      //   '[attr.stroke-dashoffset]="percentageOffset(percent | async)" '+
+      //   '/> '+
+      //   '<text x="50%" y="55%" class="timer-text">'+timerLocal+'</text> '+
+      // '</svg>'
   })
   ,1000);
 
     const alert = await this.alertController.create({
       cssClass: 'alert-exe-start',
       header: nomeExe,
-      message: '<h1>'+this.time.pipe+'</h1>',
+      message: '<h1>'+timerLocal+'</h1>',
       buttons:[
         {
           text: 'PULAR EXERCÍCIO',
@@ -248,6 +330,7 @@ export class DetalhesfichaPage implements OnInit {
           handler: () => {
             console.log('Exercício Pulado.');
             this.stopTimerExe();
+            clearInterval(this.intervalPopUp);
           },
         },
       ],
