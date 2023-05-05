@@ -1,8 +1,9 @@
 export interface fichaHistoricoI {
     descanso?: string;
     repeticoes?: string;
-    rotulo?: string;
+    ficha?: string;
     series?: string;
     uid?: string;
     usuario?: string;
+    data?: string;
   }

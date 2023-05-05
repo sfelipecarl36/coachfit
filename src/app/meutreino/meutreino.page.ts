@@ -52,9 +52,9 @@ export class MeutreinoPage implements OnInit {
       this.database.atualizaValores()
   }
 
-  detalharFicha(ficha: any) {
+  detalharFicha(ficha: any, ficharotulo: any) {
     setTimeout(() => this.router.navigate(['detalhesficha'],{
-      queryParams: [ficha]
+      queryParams: [ficha, ficharotulo]
       }),150);
   }
 

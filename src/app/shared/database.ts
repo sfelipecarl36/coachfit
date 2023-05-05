@@ -7,6 +7,7 @@ import { fichaI } from '../model/fichas';
 import { Router } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { subexercicioHistI } from '../model/subexerciciosHist';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +20,7 @@ export class Database {
     public fichasLocal!: Observable<Array<fichaI>>;
     private router!: Router;
     public user: any
+    public subexerciciosHist!: Observable<Array<subexercicioHistI>>;
 
   constructor(
     private firestore: AngularFirestore,
@@ -33,6 +35,7 @@ export class Database {
           if(user) {
               this.user = user.uid
               this.subexerciciosLocal = this.firestore!.collectionGroup<subexercicioI>('exercicio', ref => ref.where('usuario', '==', this.user)).valueChanges();
+              this.subexerciciosHist = this.firestore!.collectionGroup<subexercicioHistI>('exercicioHist', ref => ref.where('usuario', '==', this.user)).valueChanges();
               this.fichasLocal = this.firestore.collection<fichaI>('fichas', ref => ref.where('usuario', '==', this.user)).valueChanges();
           }
 

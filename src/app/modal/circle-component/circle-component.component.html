@@ -42,7 +42,8 @@
 
 <ng-template #circleDescanso>
 
-  <h2 *ngIf="numeroSeries>0">Descanse</h2>
+  <h2 *ngIf="numeroSeries>0">Intervalo</h2>
+  <p *ngIf="numeroSeries>0">Tempo de espera para a próxima atividade</p>
   <img *ngIf="numeroSeries==0" src="{{imgExe}}"/>
 
   <svg *ngIf="numeroSeries>0"

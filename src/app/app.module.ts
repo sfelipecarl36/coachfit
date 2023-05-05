@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { environment } from '../environments/environment';
 import { Services } from './shared/services';
+import { CommonModule, DatePipe } from '@angular/common';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
@@ -25,7 +26,7 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth';
     AngularFireDatabaseModule,
     AppRoutingModule,
     AppRoutingModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },Services],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },Services, DatePipe, CommonModule],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

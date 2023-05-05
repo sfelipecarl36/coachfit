@@ -118,7 +118,7 @@ export class DetalhesexercicioPage implements OnInit {
               value: item.uid,
             })
           }
-            console.log('Ficha: ',item.rotulo)
+            console.log('Ficha:',item.rotulo)
         });
       })
     },1200);

@@ -36,8 +36,8 @@ export class CircleComponentComponent  implements OnInit {
 
   timeExe: BehaviorSubject<string> = new BehaviorSubject('00:00');
   timeDescanso: BehaviorSubject<string> = new BehaviorSubject('00:00');
-  percent: BehaviorSubject<number> = new BehaviorSubject(100);
-  percentDescanso: BehaviorSubject<number> = new BehaviorSubject(100);
+  percent: BehaviorSubject<number> = new BehaviorSubject(0);
+  percentDescanso: BehaviorSubject<number> = new BehaviorSubject(0);
 
   timerExe: any;
   timerDescanso: any;
