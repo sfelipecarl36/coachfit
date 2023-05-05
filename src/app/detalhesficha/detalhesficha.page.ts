@@ -7,10 +7,11 @@ import { subexercicioI } from '../model/subexercicios';
 import { AlertController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
 import { LoadingController } from '@ionic/angular';
-import { BehaviorSubject, Observable, timeout, timer } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, timeout, timer } from 'rxjs';
 import { exercicioI } from '../model/exercicios';
 import { ModalController } from '@ionic/angular';
 import { CircleComponentComponent } from '../modal/circle-component/circle-component.component';
+import { fichaHistoricoI } from '../model/fichaHistorico';
 
 @Component({
   selector: 'app-detalhesficha',
@@ -27,7 +28,7 @@ export class DetalhesfichaPage implements OnInit {
   exerciciosBanco: any;
   desfazer = false;
   subexerciciosLocal!: Observable<Array<subexercicioI>>;
-  fichaHistorico!: Observable<Array<any>>;
+  fichaHistorico!: Observable<Array<fichaHistoricoI>>;
   lengthExercicios = 0
 
   time: BehaviorSubject<string> = new BehaviorSubject('00:00');
@@ -59,7 +60,7 @@ export class DetalhesfichaPage implements OnInit {
   ) 
     {}
 
-    async presentModal(exe: any, series: any, repeticoes: any, descanso: any) {
+    async presentModal(exe: any, series: any, repeticoes: any,  peso: any, descanso: any) {
       const modal = await this.modalCtrl.create({
         component: CircleComponentComponent,
         id: 'modalCircle',
@@ -67,10 +68,13 @@ export class DetalhesfichaPage implements OnInit {
           exe: exe,
           series: series,
           repeticoes: repeticoes,
+          peso: peso,
           descanso: descanso
         }
       });
-      return await modal.present();
+      await modal.present();
+      const { data } = await modal.onDidDismiss();
+      console.log(data);
     }
 
     ngAfterViewInit(){
@@ -172,13 +176,13 @@ export class DetalhesfichaPage implements OnInit {
       }),150);
   }
 
-  clickExercicio(exe: any, series:any, repeticoes: any, descanso: any) {
+  clickExercicio(exe: any, series:any, repeticoes: any, peso: any, descanso: any) {
     if (this.state=='stop') {
         this.detalharExercicio(exe);
     }
 
     else if(this.state=='start') {
-      this.presentModal(exe, series, repeticoes, descanso);
+      this.presentModal(exe, series, repeticoes, peso, descanso);
     }
   }
 

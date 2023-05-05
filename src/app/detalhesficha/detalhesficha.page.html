@@ -64,7 +64,7 @@
         </ng-container>
 
       <ng-container *ngFor="let exe of exercicios | async">
-      <div class="container-exercicio ion-activatable" *ngIf="exe.categoria==cat" (click)="clickExercicio(exe.exercicio, exe.series, exe.repeticoes, ficha.descanso)">
+      <div class="container-exercicio ion-activatable" *ngIf="exe.categoria==cat" (click)="clickExercicio(exe.exercicio, exe.series, exe.repeticoes, exe.peso, ficha.descanso)">
         <div class="exercicio-info" >
           <div class="exercicio-title">
             <strong>{{ficha.rotulo}}</strong>

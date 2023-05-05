@@ -21,6 +21,7 @@ export class CircleComponentComponent  implements OnInit {
   @Input("exe") exe: any;
   @Input("series") series: any;
   @Input("repeticoes") repeticoes: any;
+  @Input("peso") peso: any;
   @Input("descanso") descanso: any;
 
   circleR = circleR;
@@ -58,7 +59,13 @@ export class CircleComponentComponent  implements OnInit {
   }
 
   async fecharModal() {
-    await this.modalCtrl.dismiss();
+    const dataToReturn = {
+      exercicio: this.exe,
+      series: this.series,
+      repeticoes: this.repeticoes,
+      peso: this.peso
+    };
+    await this.modalCtrl.dismiss(dataToReturn);
   }
 
   ionViewWillEnter() {
@@ -160,9 +167,9 @@ stopTimerExe() {
   }
 }
 
-pararExercicio() {  
+async pararExercicio() {  
   this.stopTimerExe();
-  this.fecharModal();
+  await this.modalCtrl.dismiss();
 }
 
 updateTimeValueExe() {
