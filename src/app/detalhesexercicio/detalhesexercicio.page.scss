@@ -19,6 +19,13 @@ p {
     margin: 15px auto;
 }
 
+.span-button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
 ion-button {
     margin: 30px auto;
 }

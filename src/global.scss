@@ -130,6 +130,8 @@ ion-item {
 ion-modal {
     --width: 80%;
     --height: auto;
+    max-width: 570px;
+    margin: 0px auto;
     --border-radius: 30px;
     --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
@@ -144,6 +146,7 @@ ion-modal > .ion-page {
 
 ion-modal::part(backdrop) {
     background: rgba(209, 213, 219);
+    width: 100vw;
     opacity: 1;
   }
 

@@ -106,18 +106,18 @@ export class DetalhesexercicioPage implements OnInit {
   }
 
   ngOnInit() {
+    this.alertInputs = []
     setTimeout(() => {
       this.fichas = this.database.fichasLocal
       this.fichas.subscribe((res: fichaI[]) => {
         res.forEach((item) => {
-          if (this.alertInputs.length==0) {
+          
             this.alertInputs.push({
               name: item.rotulo,
               label: 'Ficha '+item.rotulo,
               type: 'radio',
               value: item.uid,
             })
-          }
             console.log('Ficha:',item.rotulo)
         });
       })

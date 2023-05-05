@@ -5,6 +5,7 @@ export interface subexercicioHistI {
     data?: string;
     series?: string;
     repeticoes?: string;
+    feito?: boolean;
     peso?: number
     usuario?: string
   }

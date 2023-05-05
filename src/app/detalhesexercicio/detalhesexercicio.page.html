@@ -13,7 +13,7 @@
     <h4>Área de Treino: {{exercicio.regiao}}</h4>
     <p>{{exercicio.descricao}}</p>
 
-    <span *ngFor="let cat of categorias | async"><ion-button *ngIf="exercicio.categoria==cat.uid" id="addExeFicha" (click)="presentAlertAdd(exercicio.uid, cat.uid)">Adicionar para Ficha</ion-button></span>
+    <span class="span-button" *ngFor="let cat of categorias | async"><ion-button *ngIf="exercicio.categoria==cat.uid" id="addExeFicha" (click)="presentAlertAdd(exercicio.uid, cat.uid)">Adicionar para Ficha</ion-button></span>
 
   </div>
   

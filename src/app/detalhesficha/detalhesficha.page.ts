@@ -9,7 +9,7 @@ import { subexercicioI } from '../model/subexercicios';
 import { AlertController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
 import { LoadingController } from '@ionic/angular';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, take } from 'rxjs';
 import { ModalController } from '@ionic/angular';
 import { CircleComponentComponent } from '../modal/circle-component/circle-component.component';
 import { fichaHistoricoI } from '../model/fichaHistorico';
@@ -35,21 +35,21 @@ export class DetalhesfichaPage implements OnInit {
   lengthExercicios = 0
 
   time: BehaviorSubject<string> = new BehaviorSubject('00:00');
-
-  conteudoAlert: any
   
   timer: any;
   timerExe: any;
   interval: any;
   intervalExe: any;
 
+  today = new Date();
+  date = this.datePipe.transform(this.today, 'dd/MM/yyyy');
+  
   state: 'start' | 'stop' = 'stop';
   intervalPopUp: any
   timerExeInitial!: number;
 
-  @ViewChildren ('circleElement') circleElement!: TemplateRef<any>;
-  circleElements: any;
   fichaRotulo: any;
+  exerciciosHistList: Array<any> = [];
   
   constructor(
     private firestore: AngularFirestore,
@@ -68,12 +68,11 @@ export class DetalhesfichaPage implements OnInit {
 
     async presentModal(ficha: any, fichaseries: any, ficharepeticoes: any, fichadescanso: any, exeuid: any, exe: any, series: any, repeticoes: any,  peso: any, descanso: any) {
       let i = 0
-      const today = new Date();
-      const date = this.datePipe.transform(today, 'dd/MM/yyyy');
-      console.log(date)
+      console.log(this.date)
       const modal = await this.modalCtrl.create({
         component: CircleComponentComponent,
         id: 'modalCircle',
+        backdropDismiss: false,
         componentProps: {
           exe: exe,
           series: series,
@@ -86,64 +85,41 @@ export class DetalhesfichaPage implements OnInit {
       const { data } = await modal.onDidDismiss();
       console.log(data)
       if(data) {
-        this.firestore.collection<fichaHistoricoI>('fichaHistorico', ref => ref.where('data', '==', date).where('ficha', '==', ficha)).valueChanges().subscribe( (historico: fichaHistoricoI[]) => {
+        this.firestore.collection<fichaHistoricoI>('fichaHistorico', ref => ref.where('data', '==', this.date).where('ficha', '==', ficha)).valueChanges().subscribe( (historico: fichaHistoricoI[]) => {
           if(i==0) {
           i+=1;
           console.log('executei, ó!')
           if (historico.length!=0) {
             historico.forEach((item) => {
-              this.firestore.collection('fichaHistorico').doc(item.uid).collection('exercicioHist').add({ exeuid: exeuid, exercicio: data.exercicio, peso: data.peso, series: data.series, repeticoes: data.repeticoes, usuario: this.auth.userUid, data: date, ficha: this.fichaRotulo })
+              this.firestore.collection('fichaHistorico').doc(item.uid).collection('exercicioHist').add({ exeuid: exeuid, exercicio: data.exercicio, peso: data.peso, series: data.series, repeticoes: data.repeticoes, usuario: this.auth.userUid, data: this.date, ficha: this.fichaRotulo })
               console.log('Exercício adicionado ao Histórico')
               return
             })
           }
           else {
-            this.firestore.collection('fichaHistorico').add({ uid: '', usuario: this.auth.userUid, ficha: ficha, series: fichaseries, repeticoes: ficharepeticoes, descanso: fichadescanso, data: date, concluido: false}).
+            this.firestore.collection('fichaHistorico').add({ uid: '', usuario: this.auth.userUid, ficha: ficha, series: fichaseries, repeticoes: ficharepeticoes, descanso: fichadescanso, data: this.date, concluido: false}).
         then( async (novaFichaHistorico: { id: any; }) => {
           await this.firestore.collection('fichaHistorico').doc(novaFichaHistorico.id).update({uid: novaFichaHistorico.id})
           console.log('Ficha Histórico Criada!');
-          this.firestore.collection('fichaHistorico').doc(novaFichaHistorico.id).collection('exercicioHist').add({ exeuid: exeuid, exercicio: data.exercicio, peso: data.peso, series: data.series, repeticoes: data.repeticoes, usuario: this.auth.userUid, data: date, ficha: this.fichaRotulo })
+          this.firestore.collection('fichaHistorico').doc(novaFichaHistorico.id).collection('exercicioHist').add({ exeuid: exeuid, exercicio: data.exercicio, peso: data.peso, series: data.series, repeticoes: data.repeticoes, usuario: this.auth.userUid, data: this.date, ficha: this.fichaRotulo })
           return;
           });
           }
         }
         })
-        this.checkExecutado(this.fichaRotulo)
       }
     }
 
-    ngAfterViewInit(){
-      
-      this.conteudoAlert = this.circleElement;
-      let tempoAfter = setInterval( () => {
-        console.log(this.conteudoAlert)
-        clearInterval(tempoAfter)
-      }, 4000)
-    }
-
-    ionViewDidEnter() {
-    }
-
-    async checkExecutado(ficha: any){
-      const today = new Date();
-      const date = this.datePipe.transform(today, 'dd/MM/yyyy');
-      console.log('executou Check Container')
-      console.log('ficha:',ficha)
-      console.log('date:',date)
-      this.subexerciciosHist = this.firestore!.collectionGroup<subexercicioHistI>('exercicioHist', ref => ref.where('data', '==', date).where('ficha', '==', ficha)).valueChanges().subscribe( (res: subexercicioHistI[]) => {
-        console.log('executou Subscribe Container')
-        res.forEach(async (item) => {
-          console.log('executou forEach Container')
-          console.log('item.exeuid:',item.exeuid)
-          var divContainerExe = await (<HTMLInputElement>document.getElementById(String(await item.exeuid)));
-          await divContainerExe.classList.add('executado');
-        });
+    async ionViewDidEnter(){
+      console.log(this.exerciciosHistList)
+      this.exerciciosHistList.forEach( (element) => {
+        console.log(element)
+        element.classList.add('executado');
       })
-  
     }
 
     async startTimer() {
-      this.checkExecutado(this.fichaRotulo)
+      
       const loading = await this.loadingController.create({
         spinner: 'circular',
         duration: 1000,
@@ -183,8 +159,10 @@ export class DetalhesfichaPage implements OnInit {
 
    ionViewWillEnter() { 
 
+    console.log(this.date)
     this.lengthExercicios = 0
     this.categoriasList = [];
+    this.exerciciosHistList = [];
 
     this.activatedRoute.queryParams.subscribe(params => {
       this.fichaId = params[0];
@@ -237,13 +215,42 @@ export class DetalhesfichaPage implements OnInit {
       }),150);
   }
 
-  clickExercicio(ficha: any, fichaseries: any, ficharepeticoes: any, fichadescanso: any, exeuid: any, exe: any, series:any, repeticoes: any, peso: any, descanso: any) {
+  async contarRegistros(exeuid: any) {
+    const query = this.firestore!.collectionGroup<subexercicioHistI>('exercicioHist', ref => ref.where('data', '==', this.date).where('exeuid', '==', exeuid).where('ficha', '==', this.fichaRotulo))
+    const querySnapshot = await query.get().toPromise();
+    const numDocumentos = querySnapshot!.size;
+    console.log(`Número de registros: ${numDocumentos}`);
+    return numDocumentos
+  }
+
+  async contarRegistrosBooleano(exeuid: any) {
+    console.log('executei')
+    return true
+  }
+
+  async clickExercicio(ficha: any, fichaseries: any, ficharepeticoes: any, fichadescanso: any, exeuid: any, exe: any, series:any, repeticoes: any, peso: any, descanso: any) {
+
+    const toast = await this.toastController.create({
+      message: 'Você já concluiu essa atividade hoje',
+      duration: 1000,
+      position: 'bottom',
+    });
+
     if (this.state=='stop') {
         this.detalharExercicio(exe);
     }
 
     else if(this.state=='start') {
-      this.presentModal(ficha, fichaseries, ficharepeticoes, fichadescanso, exeuid, exe, series, repeticoes, peso, descanso);
+      
+      if(await this.contarRegistros(exeuid)==0){
+        this.presentModal(ficha, fichaseries, ficharepeticoes, fichadescanso, exeuid, exe, series, repeticoes, peso, descanso);
+      }
+      else {
+        await toast.present();
+      }
+
+      
+      
     }
   }
 
