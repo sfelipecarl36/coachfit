@@ -7,18 +7,13 @@
       <p></p>
     </div>
 
-    
-
-    <div class="container-categorias">
-      <div class="categoria ion-activatable" *ngFor="let cat of categorias | async">
-        <img [src]="cat.img"/>
-        <h5>{{cat.nome}}</h5>
-        <ion-ripple-effect></ion-ripple-effect>
-      </div>
-    </div>
-
-    <hr>
-    <h6 class="ion-activatable">Ver todas<ion-ripple-effect></ion-ripple-effect></h6>
+    <ion-searchbar 
+    animated="true"
+    placeholder="Pesquise no CoachFit"
+    clear-icon="trash-bin"
+    [debounce]="100"
+    (ionInput)="handleInput($event)"
+    ></ion-searchbar>
 
     <div class="container-exercicios">
       <div class="exercicio ion-activatable" *ngFor="let exe of exercicios | async">
@@ -53,6 +48,17 @@
         <ion-ripple-effect></ion-ripple-effect>
       </div>
     </div>
+
+    <div class="container-categorias">
+      <div class="categoria ion-activatable" *ngFor="let cat of categorias | async">
+        <img [src]="cat.img"/>
+        <h5>{{cat.nome}}</h5>
+        <ion-ripple-effect></ion-ripple-effect>
+      </div>
+    </div>
+
+    <hr>
+    <h6 class="ion-activatable">Ver todas<ion-ripple-effect></ion-ripple-effect></h6>
 
 
 

@@ -127,6 +127,15 @@ ion-item {
     --inner-padding-end: 0px;
 }
 
+ion-searchbar {
+    --border-radius: 20px !important;
+    --box-shadow: none !important;
+    padding: 2px 0px !important;
+    --background: #EEE !important;
+    margin: 10px 0px !important;
+    margin-bottom: 2px !important;
+}
+
 ion-modal {
     --width: 80%;
     --height: auto;

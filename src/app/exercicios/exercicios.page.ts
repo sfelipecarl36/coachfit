@@ -6,6 +6,8 @@ import { Database } from '../shared/database';
 import { PopoverController } from '@ionic/angular';
 import { Services } from '../shared/services';
 import { ToastController } from '@ionic/angular';
+import { exercicioI } from '../model/exercicios';
+import { debounceTime, first } from 'rxjs';
 
 @Component({
   selector: 'app-exercicios',
@@ -17,6 +19,7 @@ export class ExerciciosPage implements OnInit {
   exercicios!: any;
   fichas!: any;
   categorias!: any;
+  textSearch: any;
 
   constructor(
     private firestore: AngularFirestore,
@@ -28,6 +31,13 @@ export class ExerciciosPage implements OnInit {
     private toastController: ToastController
   ) { 
 
+  }
+
+  handleInput(event: any) {
+    const query = event.target.value.replace(/\s/g, '');
+    console.log(query)
+    this.textSearch = query
+    this.exercicios = this.firestore.collection<exercicioI>('exercicios', ref => ref.orderBy('nome').startAt(query).endAt(query + '~')).valueChanges();
   }
 
   async addExercicioToast(exercicio: any, ficha: any) {
@@ -42,7 +52,7 @@ export class ExerciciosPage implements OnInit {
   }
 
   ngOnInit() {
-    this.exercicios = this.database.exerciciosLocal
+    this.exercicios = this.firestore.collection<exercicioI>('exercicios').valueChanges();
     this.categorias = this.database.categoriasLocal
     setTimeout(() => {
       this.fichas = this.database.fichasLocal
