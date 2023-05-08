@@ -1,0 +1,287 @@
+ion-toast.toast-delete {
+    --background: #F4F4FA;
+    --box-shadow: 3px 3px 10px 0 rgba(0, 0, 0, 0.2);
+    --color: #4b4a50;
+}
+
+.noexercicio-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 5px;
+    padding: 30px 30px;
+
+    p {
+        font-size: 17px;
+        text-align: center;
+        margin-top: 10px;
+    }
+    
+    img {
+        min-width: 150px;
+        max-width: 150px;
+        margin: 30px 0px;
+    }
+}
+
+.executado {
+    opacity: 0.3;
+}
+
+.fundo {
+    background-color: #3225FF;
+    min-height: 100%;
+    padding: 0;
+    padding-top: 70px;
+
+    .flex-row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-top: 7px;
+        margin-left: -4px;
+
+        ion-icon {
+            font-size: 18px;
+            margin-right: 5px;
+            color: #454545;
+        }
+    }
+
+    div.container-left {
+        margin: 0px auto;
+        padding: 0px 15px;
+        width: 100%;
+        max-width: 820px;
+
+        h1 {
+            color: white;
+        }
+
+        ion-back-button {
+            color: white;
+        }
+
+        .ficha-control {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+            margin-right: 10px;
+    
+            .caixa-icon {
+
+                display: flex;
+                background-color: rgba(255,255,255,0.07);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-width: 40px;
+                min-height: 40px;
+                max-width: 40px;
+                max-height: 40px;
+                padding: 3px;
+                margin-left: 10px;
+                border-radius: 50%;
+
+                ion-icon {
+                    font-size: 22px;
+                    margin: 0px 5px;
+                    color: white;
+                }
+            }
+
+            ion-button {
+                --background: rgba(255,255,255,.1);
+            }
+            
+        }
+    }
+
+    .perfil-caixa {
+        width: 100%;
+        max-width: 820px;
+        min-height: calc(100vh - 233px);
+        transform: translateY(2px);
+        box-sizing: border-box;
+        background-color: white;
+        margin: 0px auto;
+        margin-top: 30px;
+        border-radius: 60px 60px 0px 0px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 0px;
+        transition: ease-in 200ms;
+
+        .container-info {
+            width: 100%;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            padding: 0px 30px;
+            display: flex;
+            align-items: center;
+            flex-direction: row;
+
+            .rotulo {
+                min-width: 60px;
+                min-height: 60px;
+                max-width: 60px;
+                max-height: 60px;
+                border-radius: 50%;
+                font-size: 30px;
+                font-weight: bold;
+                padding-bottom: 3px;
+                color: white;
+                background-color: #3225FF;
+                margin: 0px 5px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .container-info-dados {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+
+                .ficha-dado {
+    
+                    display: flex;                    
+                    flex-direction: row;
+                    align-items: center;
+                    background-color: #f7f7f7;
+                    border-radius: 20px;
+                    margin: 5px 10px;
+                    padding: 10px 15px;
+                
+                    ion-icon {
+                        margin-right: 8px;
+                        font-size: 25px;
+                        color: #454545;
+                    }
+                
+                    P {
+                        font-size: 15px;
+                        color: #454545;
+                        margin-bottom: 2px;
+                        font-family: 'Ubuntu';
+                        font-weight: normal;
+                        white-space: nowrap;
+                    }
+                }
+            }
+        }
+
+        ion-button {
+            border-radius: 15px;
+            --background: #3225FF;
+            margin-top: -10px;
+            margin-bottom: 20px;
+            font-size: 17px;
+        }
+
+        div.container-categoria {
+            width: 100%;
+            padding: 0px 30px;
+            min-height: 50px;
+            max-height: 50px;
+            background-color: #eee;
+            display: flex;
+            margin: 0;
+            flex-direction: row;
+            align-items: center;
+
+            ion-icon {
+                font-size: 30px;
+                color: #666666;
+                margin-right: 10px;
+            }
+
+            h1 {
+                font-size: 18px;
+                margin-top: 12px;
+                text-transform: uppercase;
+                color: #858585;
+                align-self: center;
+            }
+        }
+
+        div.container-exercicio {
+            width: 100%;
+            padding: 0px 25px;
+            min-height: 70px;
+            max-height: 70px;
+            background-color: #fff;
+            border-bottom: 1px solid #EEE;
+            display: flex;
+            margin: 0;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+
+            .exercicio-info {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                margin: 5px 0px;
+    
+                .exercicio-title {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+    
+                    h1 {
+                        font-size: 13px;
+                        margin: 0px 15px;
+                        margin-top: 2px;
+                        text-transform: uppercase;
+                        margin-left: 5px;
+                    }
+    
+                    strong {
+                        font-size: 13px;
+                    }
+                }
+    
+                .exercicio-categoria {
+    
+                    p {
+                        font-size: 12px;
+                    }
+                }
+            }
+    
+            .exercicio-info2 {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                font-size: 15px;
+    
+                strong {
+                    font-size: 15px;
+                    font-family: Arial;
+                    margin-top: 3px;
+                }
+
+                h1 {
+                    font-size: 15px;
+                    text-transform: uppercase;
+                    padding: 7px;
+                    border-radius: 11px;
+                    background-color: black;
+                    margin-top: 12px;
+                    margin-left: 10px;
+                    color: white;
+                }
+    
+                }
+        }
+    }
+}
