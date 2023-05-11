@@ -50,6 +50,8 @@ export class DetalhesfichaPage implements OnInit {
   intervalPopUp: any
   timerExeInitial!: number;
 
+  alertExecucaoBol = false
+
   fichaRotulo: any;
   exerciciosHistList: Array<any> = [];
   
@@ -149,6 +151,21 @@ export class DetalhesfichaPage implements OnInit {
       });
     }
 
+    async alertExecucao() {
+      if(this.alertExecucaoBol==false){
+      this.alertController.dismiss()
+      const alert = await this.alertController.create({
+        header: 'Você tem outro treino em execução!',
+        buttons: [
+          {
+            text: 'Ok',
+          },
+        ],
+      });
+      alert.present()
+      }
+    }
+
     updateTimeValue() {
         let minutes: any = this.timer / 60;
         let seconds: any = this.timer % 60;
@@ -169,6 +186,8 @@ export class DetalhesfichaPage implements OnInit {
 
    async ionViewWillEnter() { 
 
+    this.alertExecucaoBol = false
+
     if(this.state == 'start'){
       const loading = await this.loadingController.create({
         message: 'Carregando',
@@ -188,16 +207,9 @@ export class DetalhesfichaPage implements OnInit {
       this.fichaRotulo = params[1];
       if(this.fichaState!=''){
         if(this.fichaState!=this.fichaRotulo) {
-          const alert = this.alertController.create({
-            header: 'Você tem outro treino em execução!',
-            buttons: [
-              {
-                text: 'Ok',
-              },
-            ],
-          });
-          this.router.navigateByUrl('meutreino');
-          (await alert).present();
+          this.alertExecucao()
+          this.alertExecucaoBol = true
+          this.router.navigateByUrl('meutreino')
         }
       }
       this.fichas = this.firestore.collection('fichas', ref => ref.where('uid','==', this.fichaId)).valueChanges();
@@ -206,10 +218,6 @@ export class DetalhesfichaPage implements OnInit {
   })
     this.exerciciosBanco = this.database!.exerciciosLocal
     this.categorias = this.database!.categoriasLocal
-
-    console.log('this.fichaId:',this.fichaId)
-    console.log('this.fichaRotulo:',this.fichaRotulo)
-    console.log('this.categoriasList:',this.categoriasList)
 
     this.exercicios.subscribe((res: subexercicioI[]) => {
 
