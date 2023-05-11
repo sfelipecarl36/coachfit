@@ -44,7 +44,6 @@
 
   <h2 *ngIf="numeroSeries>0">Intervalo</h2>
   <p *ngIf="numeroSeries>0">Tempo de espera para a próxima atividade</p>
-  <img *ngIf="numeroSeries==0" src="{{imgExe}}"/>
 
   <svg *ngIf="numeroSeries>0"
   id="progress-circle"
@@ -84,6 +83,7 @@
 
 <ng-container *ngIf="timerExe>-1; else execoncluido"><button class="pula-exe" (click)="pararExercicio()">Pular Exercício</button></ng-container>
 <ng-template #execoncluido>
+  <ion-icon *ngIf="numeroSeries==0" id="checkmarkExe" name="checkmark-circle-outline"></ion-icon>
   <h2 *ngIf="numeroSeries==0">Exercício Concluído</h2>
   <h3 *ngIf="numeroSeries>0">Prepare-se para a próxima série</h3>
   <button class="next-exe" *ngIf="numeroSeries>0" (click)="pularDescanso()">Pular Descanso</button>

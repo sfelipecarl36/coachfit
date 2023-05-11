@@ -24,6 +24,7 @@ export class EditarfichaPage implements OnInit {
   exerciciosBanco: any;
   desfazer = false;
   subexerciciosLocal!: Observable<Array<subexercicioI>>;
+  fichaRotulo: any;
 
   constructor(
     private firestore: AngularFirestore,
@@ -45,6 +46,7 @@ export class EditarfichaPage implements OnInit {
 
     this.activatedRoute.queryParams.subscribe(params => {
       this.fichaId = params[0];
+      this.fichaRotulo = params[1];
       this.fichas = this.firestore.collection('fichas', ref => ref.where('uid','==', this.fichaId)).valueChanges();
       this.exercicios = this.firestore.collection('fichas').doc(this.fichaId).collection('exercicio').valueChanges();
       this.subexerciciosLocal = this.firestore!.collectionGroup<subexercicioI>('exercicio', ref => ref.where('ficha', '==', this.fichaId)).valueChanges();
@@ -157,7 +159,7 @@ export class EditarfichaPage implements OnInit {
 
   detalharFicha() {
     setTimeout(() => this.router.navigate(['detalhesficha'],{
-      queryParams: [this.fichaId]
+      queryParams: [this.fichaId, this.fichaRotulo]
       }),150);
   }
 

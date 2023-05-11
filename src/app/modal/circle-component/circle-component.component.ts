@@ -4,6 +4,7 @@ import { exercicioI } from '../../model/exercicios';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { CommonModule } from '@angular/common';
 import { ModalController } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
 
 const circleR = 80;
 const circleDasharray = 2 * Math.PI * circleR;
@@ -13,7 +14,8 @@ const circleDasharray = 2 * Math.PI * circleR;
   selector: 'app-circle-component',
   templateUrl: './circle-component.component.html',
   styleUrls: ['./circle-component.component.scss'],
-  imports: [CommonModule],
+  imports: [CommonModule,
+  IonicModule],
 })
 
 export class CircleComponentComponent  implements OnInit {

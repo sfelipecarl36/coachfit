@@ -13,7 +13,7 @@
         <div class="rotulo-box">{{ficha.rotulo}}</div>
 
         <h2>FICHA DE TREINO</h2>
-        <ng-container *ngIf="(exercicios | async)?.length"><h5>Com exercícios</h5></ng-container>
+        <ng-container *ngIf="(exercicios | async)?.length; else noexercicios"><h5>Com exercícios</h5></ng-container>
 
         <div class="ficha-info-container">
           <div class="ficha-info">

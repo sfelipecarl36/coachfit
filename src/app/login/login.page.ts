@@ -4,7 +4,7 @@ import { Data, Router } from '@angular/router';
 import { AuthService } from '../shared/auth-service';
 import { getAuth, setPersistence, browserSessionPersistence, onAuthStateChanged } from 'firebase/auth';
 import { Database } from '../shared/database';
-import { LoadingController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -20,6 +20,7 @@ export class LoginPage implements OnInit {
     private router: Router,
     private firestore: AngularFirestore,
     private database: Database,
+    private alertController: AlertController,
     private loadingController: LoadingController
   ) {
     const autenticacao = getAuth();
@@ -40,6 +41,7 @@ export class LoginPage implements OnInit {
   }
 
   async logar(email: any, senha: any){
+
     this.auth.SignIn(email.value, senha.value)
     .then(async (res) => {
       const autenticacao = getAuth();
@@ -52,8 +54,22 @@ export class LoginPage implements OnInit {
       });
   
       loading.present();
-    }).catch((error) => {
-      window.alert(error.message)
+    }).catch(async (error) => {
+      const alert = await this.alertController.create({
+        header: 'Erro ao autenticar',
+        message: error.message,
+        buttons:[
+          {
+            text: 'Ok',
+            role: 'cancel',
+            cssClass: 'alert-cancel',
+            handler: () => {
+              console.log('Ok');
+            }
+          }
+        ]
+      })
+      await alert.present()
     })
   }
 

@@ -111,13 +111,27 @@ export class DetalhesexercicioPage implements OnInit {
       this.fichas = this.database.fichasLocal
       this.fichas.subscribe((res: fichaI[]) => {
         res.forEach((item) => {
-          
+          if(this.alertInputs.length==0){
             this.alertInputs.push({
               name: item.rotulo,
               label: 'Ficha '+item.rotulo,
               type: 'radio',
               value: item.uid,
             })
+          }
+          else {
+            if(this.alertInputs.filter(e => e.name === item.rotulo).length > 0){
+              console.log('ficha repetida')
+            }
+            else {
+              this.alertInputs.push({
+                name: item.rotulo,
+                label: 'Ficha '+item.rotulo,
+                type: 'radio',
+                value: item.uid,
+              })
+            }
+          }
             console.log('Ficha:',item.rotulo)
         });
       })

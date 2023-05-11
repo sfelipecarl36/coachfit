@@ -3,6 +3,7 @@ import { Services } from '../shared/services';
 import { Database } from '../shared/database';
 import { AuthService } from '../shared/auth-service';
 import { Observable } from 'rxjs';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { subexercicioI } from '../model/subexercicios';
 import { fichaI } from '../model/fichas';
 import { Router } from '@angular/router';
@@ -23,13 +24,13 @@ export class MeutreinoPage implements OnInit {
   constructor(
     public service: Services,
     private router: Router,
+    private firestore: AngularFirestore,
     public database: Database,
     private auth: AuthService,
     private loadingController: LoadingController
   ) {
 
   }
-  
 
   async ngOnInit() {
       this.exerciciosBanco = this.database!.exerciciosLocal

@@ -9,7 +9,7 @@ import { subexercicioI } from '../model/subexercicios';
 import { AlertController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
 import { LoadingController } from '@ionic/angular';
-import { BehaviorSubject, Observable, take } from 'rxjs';
+import { BehaviorSubject, Observable, from, lastValueFrom, take } from 'rxjs';
 import { ModalController } from '@ionic/angular';
 import { CircleComponentComponent } from '../modal/circle-component/circle-component.component';
 import { fichaHistoricoI } from '../model/fichaHistorico';
@@ -26,6 +26,7 @@ export class DetalhesfichaPage implements OnInit {
   fichaId: any;
   categorias: any;
   categoriasList: Array<any> = [];
+  executadosList: Array<any> = [];
   exercicios: any;
   exerciciosBanco: any;
   desfazer = false;
@@ -45,6 +46,7 @@ export class DetalhesfichaPage implements OnInit {
   date = this.datePipe.transform(this.today, 'dd/MM/yyyy');
   
   state: 'start' | 'stop' = 'stop';
+  fichaState = ''
   intervalPopUp: any
   timerExeInitial!: number;
 
@@ -93,6 +95,7 @@ export class DetalhesfichaPage implements OnInit {
             historico.forEach((item) => {
               this.firestore.collection('fichaHistorico').doc(item.uid).collection('exercicioHist').add({ exeuid: exeuid, exercicio: data.exercicio, peso: data.peso, series: data.series, repeticoes: data.repeticoes, usuario: this.auth.userUid, data: this.date, ficha: this.fichaRotulo })
               console.log('Exercício adicionado ao Histórico')
+              this.checkExe();
               return
             })
           }
@@ -102,6 +105,7 @@ export class DetalhesfichaPage implements OnInit {
           await this.firestore.collection('fichaHistorico').doc(novaFichaHistorico.id).update({uid: novaFichaHistorico.id})
           console.log('Ficha Histórico Criada!');
           this.firestore.collection('fichaHistorico').doc(novaFichaHistorico.id).collection('exercicioHist').add({ exeuid: exeuid, exercicio: data.exercicio, peso: data.peso, series: data.series, repeticoes: data.repeticoes, usuario: this.auth.userUid, data: this.date, ficha: this.fichaRotulo })
+          this.checkExe();
           return;
           });
           }
@@ -111,15 +115,14 @@ export class DetalhesfichaPage implements OnInit {
     }
 
     async ionViewDidEnter(){
-      console.log(this.exerciciosHistList)
-      this.exerciciosHistList.forEach( (element) => {
-        console.log(element)
-        element.classList.add('executado');
-      })
+      const int = setInterval( () => {
+        this.checkExe();
+        clearInterval(int)
+      }, 1000)
     }
 
     async startTimer() {
-      
+
       const loading = await this.loadingController.create({
         spinner: 'circular',
         duration: 1000,
@@ -128,6 +131,8 @@ export class DetalhesfichaPage implements OnInit {
 
       loading.present();
         this.state = 'start';
+        this.fichaState = this.fichaRotulo;
+        this.checkExe();
         this.timer = 0;
         this.interval = setInterval( () => {
           this.updateTimeValue();
@@ -138,6 +143,10 @@ export class DetalhesfichaPage implements OnInit {
       clearInterval(this.interval);
       this.time.next('00:00');
       this.state = 'stop';
+      const elementos = document.querySelectorAll('.executado');
+      elementos.forEach((elemento) => {
+        elemento.classList.remove('executado');
+      });
     }
 
     updateTimeValue() {
@@ -157,16 +166,40 @@ export class DetalhesfichaPage implements OnInit {
         }
     }
 
-   ionViewWillEnter() { 
+
+   async ionViewWillEnter() { 
+
+    if(this.state == 'start'){
+      const loading = await this.loadingController.create({
+        message: 'Carregando',
+        spinner: 'circular',
+        duration: 900,
+      });
+      loading.present();
+    }
 
     console.log(this.date)
     this.lengthExercicios = 0
     this.categoriasList = [];
     this.exerciciosHistList = [];
 
-    this.activatedRoute.queryParams.subscribe(params => {
+    this.activatedRoute.queryParams.subscribe(async params => {
       this.fichaId = params[0];
       this.fichaRotulo = params[1];
+      if(this.fichaState!=''){
+        if(this.fichaState!=this.fichaRotulo) {
+          const alert = this.alertController.create({
+            header: 'Você tem outro treino em execução!',
+            buttons: [
+              {
+                text: 'Ok',
+              },
+            ],
+          });
+          this.router.navigateByUrl('meutreino');
+          (await alert).present();
+        }
+      }
       this.fichas = this.firestore.collection('fichas', ref => ref.where('uid','==', this.fichaId)).valueChanges();
       this.exercicios = this.firestore.collection('fichas').doc(this.fichaId).collection('exercicio').valueChanges();
       this.subexerciciosLocal = this.firestore!.collectionGroup<subexercicioI>('exercicio', ref => ref.where('ficha', '==', this.fichaId).orderBy('ficha')).valueChanges();
@@ -196,6 +229,53 @@ export class DetalhesfichaPage implements OnInit {
 
   }
 
+  async contarSubExercicios() {
+    const query = this.firestore!.collectionGroup<subexercicioHistI>('exercicioHist', ref => ref.where('data', '==', this.date).where('ficha', '==', this.fichaRotulo))
+    const querySnapshot = await query.get().toPromise();
+    const numDocumentos = querySnapshot!.size;
+    console.log(`Número de registros: ${numDocumentos}`);
+    return numDocumentos
+  }
+
+  async contarExercicios() {
+    const query = this.firestore!.collectionGroup<subexercicioI>('exercicio', ref => ref.where('ficha', '==', this.fichaId))
+    const querySnapshot = await query.get().toPromise();
+    const numDocumentos = querySnapshot!.size;
+    console.log(`Número de registros: ${numDocumentos}`);
+    return numDocumentos
+  }
+
+  async checkFicha() {
+    if(this.state == 'start'){
+      const exeCount = await this.contarExercicios()
+      const subexeCount = await this.contarExercicios()
+      if(subexeCount>=exeCount){
+        this.firestore!.collection<fichaHistoricoI>('fichaHistorico', ref => ref.where('data', '==', this.date).where('ficha', '==', this.fichaRotulo)).valueChanges().subscribe((res: fichaHistoricoI[]) => {
+          res.forEach((item) => {    
+              this.firestore.collection('fichaHistorico').doc(item.uid).update({ concluido: true })
+          })
+        })
+      }
+    }
+  }
+
+  async checkExe() {
+    if(this.state == 'start'){
+    console.log('checkExe rodando...')
+    this.firestore.collectionGroup<subexercicioHistI>('exercicioHist', ref => ref.where('data', '==', this.date).where('ficha', '==', this.fichaRotulo)).valueChanges().subscribe((res: subexercicioHistI[]) => {
+      res.forEach((item) => {    
+        const element = (<HTMLElement>document.getElementById(String(item.exeuid)))
+        if(element!=undefined || element!=null){
+          element.classList.add('executado');
+        }
+        else{
+          console.log('não encontrou elementos executados')
+        }
+      })
+    })
+    }
+    this.checkFicha();
+  }
 
   async avisoDeletado() {
     const toast = await this.toastController.create({
@@ -207,7 +287,6 @@ export class DetalhesfichaPage implements OnInit {
 
     await toast.present();
   }
-
 
   detalharExercicio(exercicio: any) {
     setTimeout(() => this.router.navigate(['detalhesexercicio'],{
@@ -223,17 +302,12 @@ export class DetalhesfichaPage implements OnInit {
     return numDocumentos
   }
 
-  async contarRegistrosBooleano(exeuid: any) {
-    console.log('executei')
-    return true
-  }
-
   async clickExercicio(ficha: any, fichaseries: any, ficharepeticoes: any, fichadescanso: any, exeuid: any, exe: any, series:any, repeticoes: any, peso: any, descanso: any) {
 
     const toast = await this.toastController.create({
       message: 'Você já concluiu essa atividade hoje',
       duration: 1000,
-      position: 'bottom',
+      position: 'middle',
     });
 
     if (this.state=='stop') {
@@ -297,7 +371,7 @@ export class DetalhesfichaPage implements OnInit {
 
   editarFicha(ficha: any) {
     setTimeout(() => this.router.navigate(['editarficha'],{
-      queryParams: [ficha]
+      queryParams: [ficha, this.fichaRotulo]
       }),150);
   }
 
