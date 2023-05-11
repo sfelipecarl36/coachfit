@@ -51,6 +51,7 @@ export class DetalhesfichaPage implements OnInit {
   timerExeInitial!: number;
 
   alertExecucaoBol = false
+  alertConcluidoBol = false
 
   fichaRotulo: any;
   exerciciosHistList: Array<any> = [];
@@ -125,6 +126,21 @@ export class DetalhesfichaPage implements OnInit {
 
     async startTimer() {
 
+      if(await this.contarTreinosConcluidos()>0){
+        const alertConcluido = await this.alertController.create({
+          header: 'Você já concluiu esse Treino Hoje',
+          message: 'Tente treinar outra ficha',
+          buttons: [
+            {
+              text: 'Ok',
+            }
+          ]
+        })
+        alertConcluido.present()
+      }
+
+      else {
+
       const loading = await this.loadingController.create({
         spinner: 'circular',
         duration: 1000,
@@ -140,6 +156,7 @@ export class DetalhesfichaPage implements OnInit {
           this.updateTimeValue();
         }, 1000)
     }
+  }
 
     stopTimer() {
       clearInterval(this.interval);
@@ -159,6 +176,24 @@ export class DetalhesfichaPage implements OnInit {
         buttons: [
           {
             text: 'Ok',
+          },
+        ],
+      });
+      alert.present()
+      }
+    }
+
+    async alertConcluido() {
+      if(this.alertConcluidoBol==false){
+      this.alertController.dismiss()
+      const alert = await this.alertController.create({
+        header: 'Você concluiu o treino de hoje',
+        buttons: [
+          {
+            text: 'Finalizar',
+            handler:() => {
+               this.router.navigateByUrl('meutreino')
+            },
           },
         ],
       });
@@ -245,6 +280,14 @@ export class DetalhesfichaPage implements OnInit {
     return numDocumentos
   }
 
+  async contarTreinosConcluidos() {
+    const query = this.firestore.collection<fichaHistoricoI>('fichaHistorico', ref => ref.where('data', '==', this.date).where('ficha', '==', this.fichaRotulo).where('concluido', '==', true))
+    const querySnapshot = await query.get().toPromise();
+    const numDocumentos = querySnapshot!.size;
+    console.log(`Número de registros: ${numDocumentos}`);
+    return numDocumentos
+  }
+
   async contarExercicios() {
     const query = this.firestore!.collectionGroup<subexercicioI>('exercicio', ref => ref.where('ficha', '==', this.fichaId))
     const querySnapshot = await query.get().toPromise();
@@ -261,6 +304,8 @@ export class DetalhesfichaPage implements OnInit {
         this.firestore!.collection<fichaHistoricoI>('fichaHistorico', ref => ref.where('data', '==', this.date).where('ficha', '==', this.fichaRotulo)).valueChanges().subscribe((res: fichaHistoricoI[]) => {
           res.forEach((item) => {    
               this.firestore.collection('fichaHistorico').doc(item.uid).update({ concluido: true })
+              this.stopTimer()
+              this.alertConcluido()
           })
         })
       }
