@@ -5,5 +5,6 @@ export interface fichaHistoricoI {
     series?: string;
     uid?: string;
     usuario?: string;
+    fichaId?: string;
     data?: string;
   }

@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { subexercicioI } from '../model/subexercicios';
 import { fichaI } from '../model/fichas';
+import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 

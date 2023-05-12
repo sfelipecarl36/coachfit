@@ -35,9 +35,9 @@ export class ExerciciosPage implements OnInit {
 
   handleInput(event: any) {
     const query = event.target.value.replace(/\s/g, '');
-    console.log(query)
-    this.textSearch = query
-    this.exercicios = this.firestore.collection<exercicioI>('exercicios', ref => ref.orderBy('nome').startAt(query).endAt(query + '~')).valueChanges();
+    const formattedQuery = query.charAt(0).toUpperCase() + query.slice(1);
+    this.textSearch = formattedQuery;
+    this.exercicios = this.firestore.collection<exercicioI>('exercicios', ref => ref.orderBy('nome').startAt(this.textSearch).endAt(this.textSearch + '~')).valueChanges();
   }
 
   async addExercicioToast(exercicio: any, ficha: any) {

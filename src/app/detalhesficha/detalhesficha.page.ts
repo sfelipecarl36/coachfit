@@ -90,24 +90,24 @@ export class DetalhesfichaPage implements OnInit {
       const { data } = await modal.onDidDismiss();
       console.log(data)
       if(data) {
-        this.firestore.collection<fichaHistoricoI>('fichaHistorico', ref => ref.where('data', '==', this.date).where('ficha', '==', ficha)).valueChanges().subscribe( (historico: fichaHistoricoI[]) => {
+        this.firestore.collection<fichaHistoricoI>('fichaHistorico', ref => ref.where('data', '==', this.date).where('fichaId', '==', this.fichaId)).valueChanges().subscribe( (historico: fichaHistoricoI[]) => {
           if(i==0) {
           i+=1;
           console.log('executei, ó!')
           if (historico.length!=0) {
             historico.forEach((item) => {
-              this.firestore.collection('fichaHistorico').doc(item.uid).collection('exercicioHist').add({ exeuid: exeuid, exercicio: data.exercicio, peso: data.peso, series: data.series, repeticoes: data.repeticoes, usuario: this.auth.userUid, data: this.date, ficha: this.fichaRotulo })
+              this.firestore.collection('fichaHistorico').doc(item.uid).collection('exercicioHist').add({ exeuid: exeuid, exercicio: data.exercicio, peso: data.peso, series: data.series, repeticoes: data.repeticoes, usuario: this.auth.userUid, data: this.date, fichaId: this.fichaId })
               console.log('Exercício adicionado ao Histórico')
               this.checkExe();
               return
             })
           }
           else {
-            this.firestore.collection('fichaHistorico').add({ uid: '', usuario: this.auth.userUid, ficha: ficha, series: fichaseries, repeticoes: ficharepeticoes, descanso: fichadescanso, data: this.date, concluido: false}).
+            this.firestore.collection('fichaHistorico').add({ uid: '', fichaId: this.fichaId, usuario: this.auth.userUid, ficha: ficha, series: fichaseries, repeticoes: ficharepeticoes, descanso: fichadescanso, data: this.date, concluido: false}).
         then( async (novaFichaHistorico: { id: any; }) => {
           await this.firestore.collection('fichaHistorico').doc(novaFichaHistorico.id).update({uid: novaFichaHistorico.id})
           console.log('Ficha Histórico Criada!');
-          this.firestore.collection('fichaHistorico').doc(novaFichaHistorico.id).collection('exercicioHist').add({ exeuid: exeuid, exercicio: data.exercicio, peso: data.peso, series: data.series, repeticoes: data.repeticoes, usuario: this.auth.userUid, data: this.date, ficha: this.fichaRotulo })
+          this.firestore.collection('fichaHistorico').doc(novaFichaHistorico.id).collection('exercicioHist').add({ exeuid: exeuid, exercicio: data.exercicio, peso: data.peso, series: data.series, repeticoes: data.repeticoes, usuario: this.auth.userUid, data: this.date, fichaId: this.fichaId })
           this.checkExe();
           return;
           });
@@ -126,6 +126,13 @@ export class DetalhesfichaPage implements OnInit {
 
     async startTimer() {
 
+      const loading = await this.loadingController.create({
+        spinner: 'circular',
+        duration: 1000,
+        message: 'Iniciando'
+      });
+      loading.present();
+
       if(await this.contarTreinosConcluidos()>0){
         const alertConcluido = await this.alertController.create({
           header: 'Você já concluiu esse Treino Hoje',
@@ -141,15 +148,8 @@ export class DetalhesfichaPage implements OnInit {
 
       else {
 
-      const loading = await this.loadingController.create({
-        spinner: 'circular',
-        duration: 1000,
-        message: 'Iniciando'
-      });
-
-      loading.present();
         this.state = 'start';
-        this.fichaState = this.fichaRotulo;
+        this.fichaState = this.fichaRotulo; 
         this.checkExe();
         this.timer = 0;
         this.interval = setInterval( () => {
@@ -162,6 +162,7 @@ export class DetalhesfichaPage implements OnInit {
       clearInterval(this.interval);
       this.time.next('00:00');
       this.state = 'stop';
+      this.fichaState = '';
       const elementos = document.querySelectorAll('.executado');
       elementos.forEach((elemento) => {
         elemento.classList.remove('executado');
@@ -273,7 +274,7 @@ export class DetalhesfichaPage implements OnInit {
   }
 
   async contarSubExercicios() {
-    const query = this.firestore!.collectionGroup<subexercicioHistI>('exercicioHist', ref => ref.where('data', '==', this.date).where('ficha', '==', this.fichaRotulo))
+    const query = this.firestore!.collectionGroup<subexercicioHistI>('exercicioHist', ref => ref.where('data', '==', this.date).where('fichaId', '==', this.fichaId))
     const querySnapshot = await query.get().toPromise();
     const numDocumentos = querySnapshot!.size;
     console.log(`Número de registros: ${numDocumentos}`);
@@ -281,7 +282,7 @@ export class DetalhesfichaPage implements OnInit {
   }
 
   async contarTreinosConcluidos() {
-    const query = this.firestore.collection<fichaHistoricoI>('fichaHistorico', ref => ref.where('data', '==', this.date).where('ficha', '==', this.fichaRotulo).where('concluido', '==', true))
+    const query = this.firestore.collection<fichaHistoricoI>('fichaHistorico', ref => ref.where('data', '==', this.date).where('concluido', '==', true).where('fichaId', '==', this.fichaId))
     const querySnapshot = await query.get().toPromise();
     const numDocumentos = querySnapshot!.size;
     console.log(`Número de registros: ${numDocumentos}`);
@@ -297,16 +298,39 @@ export class DetalhesfichaPage implements OnInit {
   }
 
   async checkFicha() {
+    let i = 0
     if(this.state == 'start'){
       const exeCount = await this.contarExercicios()
-      const subexeCount = await this.contarExercicios()
+      const subexeCount = await this.contarSubExercicios()
       if(subexeCount>=exeCount){
-        this.firestore!.collection<fichaHistoricoI>('fichaHistorico', ref => ref.where('data', '==', this.date).where('ficha', '==', this.fichaRotulo)).valueChanges().subscribe((res: fichaHistoricoI[]) => {
-          res.forEach((item) => {    
+        this.firestore!.collection<fichaHistoricoI>('fichaHistorico', ref => ref.where('data', '==', this.date).where('fichaId', '==', this.fichaId)).valueChanges().subscribe((res: fichaHistoricoI[]) => {
+          res.forEach(async (item) => {    
+            if(i==0) {
+              i+=1
               this.firestore.collection('fichaHistorico').doc(item.uid).update({ concluido: true })
               this.stopTimer()
-              this.alertConcluido()
+              this.fichaState = ''
+              const alert = await this.alertController.create({
+                header: 'Parabéns, você concluiu o Treino '+this.fichaRotulo,
+                message: '<img src="../assets/img/fichaconcluido.jpg" />',
+                buttons:[
+                  {
+                    text: 'Ok',
+                    role: 'ok',
+                    handler: () => {
+                      this.router.navigateByUrl('meutreino')
+                    },
+                  },
+                ]
+              })
+              alert.present()
+              await alert.onDidDismiss().then(() => {
+                this.router.navigateByUrl('meutreino')   
+              });
+              return
+            }
           })
+        
         })
       }
     }
@@ -315,7 +339,7 @@ export class DetalhesfichaPage implements OnInit {
   async checkExe() {
     if(this.state == 'start'){
     console.log('checkExe rodando...')
-    this.firestore.collectionGroup<subexercicioHistI>('exercicioHist', ref => ref.where('data', '==', this.date).where('ficha', '==', this.fichaRotulo)).valueChanges().subscribe((res: subexercicioHistI[]) => {
+    this.firestore.collectionGroup<subexercicioHistI>('exercicioHist', ref => ref.where('data', '==', this.date).where('fichaId', '==', this.fichaId)).valueChanges().subscribe((res: subexercicioHistI[]) => {
       res.forEach((item) => {    
         const element = (<HTMLElement>document.getElementById(String(item.exeuid)))
         if(element!=undefined || element!=null){
@@ -326,8 +350,10 @@ export class DetalhesfichaPage implements OnInit {
         }
       })
     })
-    }
+    if(this.fichaState==this.fichaRotulo) {
     this.checkFicha();
+    }
+    }
   }
 
   async avisoDeletado() {
@@ -348,7 +374,7 @@ export class DetalhesfichaPage implements OnInit {
   }
 
   async contarRegistros(exeuid: any) {
-    const query = this.firestore!.collectionGroup<subexercicioHistI>('exercicioHist', ref => ref.where('data', '==', this.date).where('exeuid', '==', exeuid).where('ficha', '==', this.fichaRotulo))
+    const query = this.firestore!.collectionGroup<subexercicioHistI>('exercicioHist', ref => ref.where('data', '==', this.date).where('exeuid', '==', exeuid).where('fichaId', '==', this.fichaId))
     const querySnapshot = await query.get().toPromise();
     const numDocumentos = querySnapshot!.size;
     console.log(`Número de registros: ${numDocumentos}`);
