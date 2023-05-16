@@ -19,7 +19,7 @@
 
     <div class="container-lr">
       <h1>CATEGORIAS</h1>
-      <h6 class="ion-activatable">Ver Mais<ion-ripple-effect></ion-ripple-effect></h6>
+      <h6 class="ion-activatable" (click)="service.navegar('exercicios')">Ver Mais<ion-ripple-effect></ion-ripple-effect></h6>
     </div>
 
     <ion-slides [options]="slideOptsCat">
@@ -44,6 +44,11 @@
         <div class="ficha ion-activatable">
           <div class="ficha-title">
             <h3>TREINO</h3><h5>A</h5>
+          </div>
+          <h5 class="regiao">Membros Superiores</h5>
+          <p>Exercícios que fortalecem os músculos superiores</p>
+          <div class="containerFichaInfo">
+            <div class="fichainfo"><ion-icon name="alarm-outline"></ion-icon>00:30</div>
           </div>
           <ion-ripple-effect></ion-ripple-effect>
         </div>

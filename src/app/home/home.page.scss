@@ -20,7 +20,7 @@ h6 {
   display: flex;
   flex-direction: column;
   padding: 25px;
-  padding-top: 70px;
+  padding-top: 60px;
 
   div.container-lr {
       width: 100%;
@@ -79,20 +79,24 @@ ion-slides {
 
   .ficha {
 
-    min-width: 180px;
-    min-height: 230px;
+    min-width: 200px;
+    max-width: 200px;
+    min-height: 260px;
+    max-height: 260px;
     border-radius: 10px;
     background-color: #95EAFF;
-    padding: 12px;
+    padding: 12px 15px;
     
 
     .ficha-title {
       display: flex;
       flex-direction: row;
       align-items: center;
+      height: 40px;
 
       h3 {
         font-family: 'Ubuntu';
+        margin-left: -1px;
       }
 
       h5 {
@@ -103,10 +107,55 @@ ion-slides {
         width: 25px;
         height: 25px;
         margin: 0px 5px;
+        padding-left: 1px;
         font-size: 19px;
         margin-top: 6px;
       }
     }
+
+    h5.regiao {
+      font-size: 15px;
+      text-align: left;
+      font-size: 17px;
+      text-align: left;
+      font-weight: bold;
+      margin-bottom: 0px;
+      margin-top: 10px;
+    }
+
+    p{
+      font-size: 12px;
+      text-align: left;
+    }
+
+    div.containerFichaInfo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 20px 0px;
+      width: 100px;
+
+      div.fichainfo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #fff;
+        padding: 7px 12px;
+        font-size: 15px;
+        font-weight: bold;
+        width: 100px;
+        border-radius: 25px;
+        color: black;
+        margin-bottom: 9px;
+
+        ion-icon {
+          margin-right: 3px;
+          font-size: 22px;
+        }
+      }
+    }
+
   }
 }
 }

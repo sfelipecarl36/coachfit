@@ -42,18 +42,26 @@ export class LoginPage implements OnInit {
 
   async logar(email: any, senha: any){
 
+    const loading = await this.loadingController.create({
+      spinner: 'circular',
+      duration: 12000,
+    });
+
+    loading.present();
+
     this.auth.SignIn(email.value, senha.value)
     .then(async (res) => {
       const autenticacao = getAuth();
       setPersistence(autenticacao, browserSessionPersistence);
       this.database.atualizaValores();
+      loading.dismiss()
       this.router.navigateByUrl('home');
-      const loading = await this.loadingController.create({
+      const loading2 = await this.loadingController.create({
         spinner: 'circular',
         duration: 1200,
       });
   
-      loading.present();
+      loading2.present();
     }).catch(async (error) => {
       const alert = await this.alertController.create({
         header: 'Erro ao autenticar',

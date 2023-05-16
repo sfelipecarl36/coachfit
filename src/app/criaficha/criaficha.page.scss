@@ -60,11 +60,20 @@ h1.textformficha {
 ion-radio-group {
 
     display: flex;
-    transform: translateX(-20px);
+    transform: translateX(-10px);
     flex-direction: row;
 
     ion-radio {
         margin: 35px 35px;
+    }
+
+    ion-label {
+      position: relative;
+      left: -38px;
+      top: -15px;
+      z-index: 99;
+      font-size: 30px;
+      color: white;
     }
 
 
@@ -73,7 +82,8 @@ ion-radio-group {
         min-height: 60px;
         
         border-radius: 50%;
-        border: 2px solid #ddd;
+        border: 2px solid #fff;
+        background-color: rgba(77, 66, 255, 0.4);
       }
       
       ion-radio::part(mark) {

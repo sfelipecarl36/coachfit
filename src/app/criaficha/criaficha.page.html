@@ -12,7 +12,7 @@
     <ion-radio-group required
       [(ngModel)]="rotulo"
       (ionChange)="checkValue($event)">
-    <div *ngFor="let rot of rotulos">
+    <div class="block-rotulo" *ngFor="let rot of rotulos">
         <ion-radio class="rotulo" value="{{rot}}" id="{{rot}}" mode="md">
         </ion-radio>
         <ion-label for="rot">{{rot}}</ion-label>

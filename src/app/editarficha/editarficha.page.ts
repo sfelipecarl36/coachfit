@@ -7,7 +7,7 @@ import { subexercicioI } from '../model/subexercicios';
 import { AlertController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
 import { LoadingController } from '@ionic/angular';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 
 @Component({
   selector: 'app-editarficha',
@@ -177,42 +177,38 @@ export class EditarfichaPage implements OnInit {
 
     loading.present();
 
-    await this.subexerciciosLocal.subscribe((res: subexercicioI[]) => {
-
+    this.exercicios.pipe(take(1)).subscribe((res: subexercicioI[]) => {
       let i = 0;
-
-      res.forEach((exe) => {
-
-        i+=1;
-        
-        var inputSeries = (<HTMLInputElement>document.getElementById(exe.uid+"series")).value;
-        console.log('inputSeries:',inputSeries);
-
-        var inputRepeticoes = (<HTMLInputElement>document.getElementById(exe.uid+"repeticoes")).value;
-
-        var inputPeso = (<HTMLInputElement>document.getElementById(exe.uid+"peso")).value;
-
-        console.log('inputSeries'+i+': '+inputSeries);
-        console.log('inputRepeticoes'+i+': '+inputRepeticoes);
-        console.log('inputPeso'+i+': '+inputPeso);
-
-        this.firestore.collection('fichas').doc(this.fichaId).collection('exercicio').doc(exe.uid).update({series: inputSeries, repeticoes: inputRepeticoes, peso: inputPeso}).then ( () => {
-          console.log('Exercicio atualizado.')
-        })
-      
-      })
     
-    })
-
-            console.log(this.fichaId)
-            console.log(descansomin.value)
-            console.log(descansoseg.value)
-            console.log(fichaseries.value)
-            console.log(ficharepeticoes.value)
-
-    await this.firestore.collection('fichas').doc(this.fichaId).update({descanso: descansomin.value+":"+descansoseg.value, series: fichaseries.value, repeticoes: ficharepeticoes.value})
+      res.forEach((exe) => {
+        i += 1;
+        
+        var inputSeries = (<HTMLInputElement>document.getElementById(exe.uid + "series")).value;
+        console.log('inputSeries:', inputSeries);
+    
+        var inputRepeticoes = (<HTMLInputElement>document.getElementById(exe.uid + "repeticoes")).value;
+    
+        var inputPeso = (<HTMLInputElement>document.getElementById(exe.uid + "peso")).value;
+    
+        console.log('inputSeries' + i + ': ' + inputSeries);
+        console.log('inputRepeticoes' + i + ': ' + inputRepeticoes);
+        console.log('inputPeso' + i + ': ' + inputPeso);
+    
+        this.firestore.collection('fichas').doc(this.fichaId).collection('exercicio').doc(exe.uid).update({ series: inputSeries, repeticoes: inputRepeticoes, peso: inputPeso }).then(() => {
+          console.log('Exercicio atualizado.');
+        });
+      });
+    });
+    
+    console.log(this.fichaId);
+    console.log(descansomin.value);
+    console.log(descansoseg.value);
+    console.log(fichaseries.value);
+    console.log(ficharepeticoes.value);
+    
+    await this.firestore.collection('fichas').doc(this.fichaId).update({ descanso: descansomin.value + ":" + descansoseg.value, series: fichaseries.value, repeticoes: ficharepeticoes.value });
     await loading.dismiss();
-    await this.detalharFicha();
+    await this.detalharFicha();    
 
   }
 
