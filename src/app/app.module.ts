@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
-import { environment } from '../environments/environment';
+import { environment } from '../environments/environment.prod';
 import { Services } from './shared/services';
 import { CommonModule, DatePipe } from '@angular/common';
 

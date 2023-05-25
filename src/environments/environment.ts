@@ -1,5 +1,3 @@
-import { initializeApp } from "firebase/app";
-
 export const environment = {
   production: true,
   firebase: { 
