@@ -46,7 +46,7 @@ export class CriafichaPage implements OnInit {
 
 
   criarFicha() {
-    this.fichas.add({ uid: '', rotulo: this.rotulo, descanso: new Date (this.descanso).toLocaleTimeString().substring(0,5), series: this.series, repeticoes: this.repeticoes, usuario: this.auth.userData['uid']}).then( (novaFicha: { id: any; }) => {
+    this.fichas.add({ uid: '', rotulo: this.rotulo, descanso: new Date (this.descanso).toLocaleTimeString().substring(0,5), series: this.series, repeticoes: this.repeticoes, usuario: this.auth.userUid}).then( (novaFicha: { id: any; }) => {
       this.fichas.doc(novaFicha.id).update({uid: novaFicha.id})
       console.log('Ficha Criada!');
       this.service.navegar('meutreino');

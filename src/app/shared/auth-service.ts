@@ -9,7 +9,7 @@ import {
   AngularFirestoreDocument,
 } from '@angular/fire/compat/firestore';
 import firebase from 'firebase/compat';
-import { getAuth } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 @Injectable({
   providedIn: 'root',
 })
@@ -76,14 +76,14 @@ export class AuthService {
   RegisterUser(nome: any, usuario: any, email: string, senha: string) {
     
     return this.ngFireAuth.createUserWithEmailAndPassword(email, senha).then( newUser => {
+      this.userUid = newUser.user!.uid
       this.afs.collection('users').doc(newUser.user!.uid).set({ email: email,emailVerified: false,displayName: nome, usuario: usuario, photoURL: '../assets/perfil.png', uid: newUser.user!.uid});
       const ref = this.afStorage.ref('perfil.png')
       ref.getDownloadURL().subscribe((url) => {
         this.afs.collection('users').doc(newUser.user!.uid).update({photoURL: url})
       });
-      this.userUid = newUser.user!.uid
       newUser.user!.sendEmailVerification().then(() => {
-        this.router.navigate(['verify-email']);
+        console.log('email enviado');
       });
       
     })

@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { GuardGuard } from './shared/guard.guard';
+import { LoginblockGuard } from './shared/loginblock.guard';
 
 const routes: Routes = [
 
@@ -16,19 +18,23 @@ const routes: Routes = [
 
   {
     path: 'slideshow',
+    canActivate: [LoginblockGuard],
     loadChildren: () => import('./slideshow/slideshow.module').then( m => m.SlideshowPageModule)
   },
 
   {
     path: 'home',
+    canActivate: [GuardGuard],
     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
   },
   {
     path: 'login',
+    canActivate: [LoginblockGuard],
     loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
   },
   {
     path: 'cadastro',
+    canActivate: [LoginblockGuard],
     loadChildren: () => import('./cadastro/cadastro.module').then( m => m.CadastroPageModule)
   },
   {
@@ -54,7 +60,8 @@ const routes: Routes = [
   {
     path: 'detalhesficha',
     loadChildren: () => import('./detalhesficha/detalhesficha.module').then( m => m.DetalhesfichaPageModule)
-  },  {
+  },
+  {
     path: 'detalhesficha',
     loadChildren: () => import('./detalhesficha/detalhesficha.module').then( m => m.DetalhesfichaPageModule)
   },

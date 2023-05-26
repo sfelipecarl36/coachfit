@@ -63,6 +63,7 @@ export class LoginPage implements OnInit {
   
       loading2.present();
     }).catch(async (error) => {
+      loading.dismiss();
       const alert = await this.alertController.create({
         header: 'Erro ao autenticar',
         message: error.message,

@@ -70,7 +70,7 @@ export class ExerciciosPage implements OnInit {
   addExercicio(exercicio: any, categoria: any, ficha: any, series: any, repeticoes: any) {
     
     console.log(ficha);
-      this.firestore.collection('fichas', ref => ref.where('usuario', '==', this.auth.userData['uid'])).doc(ficha).collection('exercicio').add({uid: '', exercicio: exercicio, categoria: categoria, peso: 5, ficha: ficha, series: series, repeticoes: repeticoes, usuario: this.auth.userUid}).then(newExe => {
+      this.firestore.collection('fichas', ref => ref.where('usuario', '==', this.auth.userUid)).doc(ficha).collection('exercicio').add({uid: '', exercicio: exercicio, categoria: categoria, peso: 5, ficha: ficha, series: series, repeticoes: repeticoes, usuario: this.auth.userUid}).then(newExe => {
         console.log('Exercicio Adicionado a Ficha',ficha);
         this.firestore.collection('fichas').doc(ficha).collection('exercicio').doc(newExe.id).update({uid: newExe.id})
       });
