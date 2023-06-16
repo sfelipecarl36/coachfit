@@ -27,7 +27,7 @@
         <ion-popover trigger="{{exe.uid}}" triggerAction="click">
           <ng-template>
             <div class="popContainer">
-              <div class="popOption ion-activatable" *ngFor="let ficha of fichas | async" (click)="addExercicio(exe.uid, exe.categoria, ficha.uid, ficha.series, ficha.repeticoes);addExercicioToast(exe.nome, ficha.rotulo)">
+              <div class="popOption ion-activatable" *ngFor="let ficha of fichas" (click)="addExercicio(exe.uid, exe.categoria, ficha.uid, ficha.series, ficha.repeticoes);addExercicioToast(exe.nome, ficha.rotulo)">
                 <p>Adicionar a Ficha <em>{{ficha.rotulo}}</em></p>
                 <ion-ripple-effect></ion-ripple-effect>
               </div>

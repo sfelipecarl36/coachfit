@@ -29,6 +29,7 @@
     "@ionic/angular": "^6.1.9",
     "firebase": "^9.18.0",
     "ionicons": "^6.0.3",
+    "ngx-filter-pipe": "^2.1.2",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

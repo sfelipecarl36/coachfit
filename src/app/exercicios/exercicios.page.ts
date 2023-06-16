@@ -8,6 +8,7 @@ import { Services } from '../shared/services';
 import { ToastController } from '@ionic/angular';
 import { exercicioI } from '../model/exercicios';
 import { debounceTime, first } from 'rxjs';
+import { fichaI } from '../model/fichas';
 
 @Component({
   selector: 'app-exercicios',
@@ -20,6 +21,7 @@ export class ExerciciosPage implements OnInit {
   fichas!: any;
   categorias!: any;
   textSearch: any;
+  fichasSubscription: any;
 
   constructor(
     private firestore: AngularFirestore,
@@ -51,12 +53,22 @@ export class ExerciciosPage implements OnInit {
     await toast.present();
   }
 
+  async carregarFichas() {
+    
+    this.fichasSubscription = this.firestore
+      .collection<fichaI>('fichas', ref => ref
+      .where('usuario', '==', this.auth.userUid))
+      .valueChanges()
+      .subscribe((fichas: fichaI[]) => {
+        this.fichas = fichas;
+        console.log('This.fichas: ',this.fichas)
+      });
+  }
+
   ngOnInit() {
     this.exercicios = this.firestore.collection<exercicioI>('exercicios').valueChanges();
     this.categorias = this.database.categoriasLocal
-    setTimeout(() => {
-      this.fichas = this.database.fichasLocal
-    },1200);
+    this.carregarFichas();
   }
 
   ionViewWillEnter () {

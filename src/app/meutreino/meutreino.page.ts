@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Services } from '../shared/services';
 import { Database } from '../shared/database';
 import { AuthService } from '../shared/auth-service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { subexercicioI } from '../model/subexercicios';
 import { fichaI } from '../model/fichas';
-import { map } from 'rxjs/operators';
+import { FilterPipe } from 'ngx-filter-pipe';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 
@@ -17,10 +17,12 @@ import { LoadingController } from '@ionic/angular';
 })
 export class MeutreinoPage implements OnInit {
 
-  fichas!: Observable<Array<fichaI>>;
+  fichas!: any;
   exercicios!: Observable<Array<subexercicioI>>;
+  exerciciosPorFicha: { [key: string]: any[] } = {};
   categorias!: any;
   exerciciosBanco!: any;
+  fichasSubscription: any;
 
   constructor(
     public service: Services,
@@ -28,26 +30,55 @@ export class MeutreinoPage implements OnInit {
     private firestore: AngularFirestore,
     public database: Database,
     private auth: AuthService,
-    private loadingController: LoadingController
+    private loadingController: LoadingController,
   ) {
 
   }
 
+  async carregarFichas() {
+    const loading = await this.loadingController.create({
+      message: 'Carregando Fichas',
+      spinner: 'circular',
+      duration: 10000,
+    });
+    loading.present();
+    this.fichasSubscription = this.firestore
+      .collection<fichaI>('fichas', ref => ref
+      .where('usuario', '==', this.auth.userUid))
+      .valueChanges()
+      .subscribe((fichas: fichaI[]) => {
+        this.fichas = fichas;
+        console.log('This.fichas: ',this.fichas)
+        this.carregarExerciciosPorFicha();
+      });
+  }
+
+  carregarExerciciosPorFicha() {
+    for (const ficha of this.fichas) {
+      this.firestore
+        .collection('fichas')
+        .doc(ficha.uid)
+        .collection('exercicio')
+        .valueChanges()
+        .subscribe((exercicios: any[]) => {
+          this.exerciciosPorFicha[ficha.uid] = exercicios;
+          console.log(this.exerciciosPorFicha[ficha.uid]);
+        });
+    }
+
+    this.loadingController.dismiss();
+  }
+
+  ngOnDestroy() {
+    if (this.fichasSubscription) {
+      this.fichasSubscription.unsubscribe();
+    }
+  }
+
   async ngOnInit() {
+      this.carregarFichas()
       this.exerciciosBanco = this.database!.exerciciosLocal
       this.categorias = this.database!.categoriasLocal
-      const loading = await this.loadingController.create({
-        message: 'Carregando Fichas',
-        spinner: 'circular',
-        duration: 1500,
-      });
-  
-      loading.present();
-      setTimeout(() => {
-        this.fichas = this.database.fichasLocal
-        this.exercicios = this.database!.subexerciciosLocal
-      },1500);
-      
   }
 
   ionViewWillEnter () {

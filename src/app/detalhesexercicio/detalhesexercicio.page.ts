@@ -8,6 +8,7 @@ import { AlertController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
 import { AlertInput } from '@ionic/core/dist/types/components/alert/alert-interface';
 import { fichaI } from '../model/fichas';
+import { exercicioI } from '../model/exercicios';
 
 @Component({
   selector: 'app-detalhesexercicio',
@@ -22,6 +23,7 @@ export class DetalhesexercicioPage implements OnInit {
   fichas: any;
 
   alertInputs: AlertInput[] = []
+  exerciciosSubscribe: any;
 
   constructor(
     private firestore: AngularFirestore,
@@ -36,7 +38,11 @@ export class DetalhesexercicioPage implements OnInit {
       
     this.activatedRoute.queryParams.subscribe(params => {
         this.exercicioId = params[0];
-        this.exercicios = this.firestore.collection('exercicios', ref => ref.where('uid','==', this.exercicioId)).valueChanges();
+        this.exerciciosSubscribe = this.firestore.collection<exercicioI>('exercicios', ref => ref
+        .where('uid','==', this.exercicioId))
+        .valueChanges().subscribe((exercicios: exercicioI[]) => {
+          this.exercicios = exercicios
+        })
         this.categorias = this.database!.categoriasLocal
     })
 
