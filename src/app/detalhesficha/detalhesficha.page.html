@@ -1,17 +1,17 @@
 <ion-content>
   
-  <div class="fundo" *ngFor="let ficha of fichas | async">
+  <div class="fundo">
     <div class="container-left">
         <ion-back-button text="" defaultHref="meutreino"></ion-back-button>
-        <h1 class="top">Treino {{ficha.rotulo}}</h1>
+        <h1 class="top">Treino {{fichaRotulo}}</h1>
 
       <ng-container *ngIf="state == 'stop'; else timerStart">
       <div class="ficha-control">
-        <div class="caixa-icon ion-activatable" (click)="editarFicha(ficha.uid)">
+        <div class="caixa-icon ion-activatable" (click)="editarFicha(fichaId)">
           <ion-icon name="pencil-outline"></ion-icon>
           <ion-ripple-effect></ion-ripple-effect>
         </div>
-        <div class="caixa-icon ion-activatable" (click)="modalDeleteFicha(ficha.rotulo)">
+        <div class="caixa-icon ion-activatable" (click)="modalDeleteFicha(fichaRotulo)">
           <ion-icon name="trash"></ion-icon>
           <ion-ripple-effect></ion-ripple-effect>
         </div>
@@ -29,16 +29,16 @@
     <div #fichacaixa class="ficha-caixa">
       <div class="container-info">
 
-        <div class="rotulo">{{ficha.rotulo}}</div>
+        <div class="rotulo">{{fichaRotulo}}</div>
         
         <div class="container-info-dados">
           <div class="ficha-dado">
             <ion-icon name="alarm-outline"></ion-icon>
-            <p>Tempo Descanso: {{ficha.descanso}}</p>
+            <p>Tempo Descanso: {{fichaDescanso}}</p>
           </div>
           <div class="ficha-dado">
             <ion-icon name="flame-outline"></ion-icon>
-            <p>Frequência: {{ficha.series}}x{{ficha.repeticoes}}</p>
+            <p>Frequência: {{fichaSeries}}x{{fichaRepeticoes}}</p>
           </div>
         </div>
       </div>
@@ -47,6 +47,11 @@
         <div class="noexercicio-div">
         <p>Não há exercícios por aqui.</p>
         <img src="../assets/img/noexercicioficha.png" />
+        <div class="container-novoexercicio ion-activatable" (click)="service.navegar('exercicios')">
+          <h2>Adicionar Exercícios à Ficha</h2>
+          <ion-icon name="add-circle"></ion-icon>
+          <ion-ripple-effect class="primary"></ion-ripple-effect>
+        </div>
         </div>
       </ng-container>
 
@@ -54,8 +59,8 @@
       <ion-button (click)="startTimer()">COMEÇAR</ion-button>
       </ng-container>
 
-      <ng-container *ngFor="let cat of categoriasList">
-        <ng-container *ngFor="let categoria of categorias | async">
+      <ng-container *ngFor="let cat of categoriasList; let i = index">
+        <ng-container *ngFor="let categoria of categorias">
       <div class="container-categoria" *ngIf="cat==categoria.uid">
         <ion-icon mode="md" name="barbell"></ion-icon>
         <h1>{{categoria.nome}}</h1>
@@ -63,11 +68,12 @@
       </div>
         </ng-container>
 
-      <ng-container *ngFor="let exe of exercicios | async">
-      <div class="container-exercicio ion-activatable" id="{{exe.uid}}" #exe.uid *ngIf="exe.categoria==cat" (click)="clickExercicio(ficha.rotulo, ficha.series, ficha.repeticoes, ficha.descanso, exe.uid, exe.exercicio, exe.series, exe.repeticoes, exe.peso, ficha.descanso)">
+      <ng-container *ngIf="exerciciosPorCategoria[cat] && exerciciosPorCategoria[cat].length">
+      <ng-container *ngFor="let exe of exerciciosPorCategoria[cat]; let j = index">
+      <div class="container-exercicio ion-activatable" id="{{exe.uid}}" #exe.uid *ngIf="exe.categoria==cat" (click)="clickExercicio(fichaRotulo, fichaSeries, fichaRepeticoes, fichaDescanso, exe.uid, exe.exercicio, exe.series, exe.repeticoes, exe.peso)">
         <div class="exercicio-info" >
           <div class="exercicio-title">
-            <strong>{{ficha.rotulo}}</strong>
+            <strong>{{fichaRotulo}}{{ getTotalIndex(i, j) }}</strong>
             <ng-container class="w-auto" *ngFor="let exercicio of exerciciosBanco | async"><h1 *ngIf="exe.exercicio==exercicio.uid">{{exercicio.nome}}</h1></ng-container>
           </div>
           <div class="exercicio-categoria">
@@ -76,12 +82,13 @@
         </div>
 
         <div class="exercicio-info2">                
-          <strong *ngIf="exe.ficha==ficha.uid">{{exe.series}}x{{exe.repeticoes}}</strong>
+          <strong *ngIf="exe.ficha==fichaId">{{exe.series}}x{{exe.repeticoes}}</strong>
           <h1>{{exe.peso}}KG/B</h1>
         </div>
         <ion-ripple-effect></ion-ripple-effect>
       </div>
       </ng-container>
+    </ng-container>
 
     </ng-container>
       <p></p>

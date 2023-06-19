@@ -1,3 +1,7 @@
+span {
+    width: auto;
+}
+
 .fundo {
     justify-content: center;
     background-color: #f3f4f5;
@@ -57,7 +61,7 @@ p.noficha {
     }
 
     ion-icon {
-        color: var(--ion-color-primary);
+        color: var(--ion-color-secondary);
         font-size: 80px;
     }
 }
@@ -112,7 +116,7 @@ p.noficha {
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
+            align-items: end;
             font-size: 15px;
 
             h1 {
@@ -122,32 +126,6 @@ p.noficha {
             }
 
             }
-    }
-}
-
-.container-novoexercicio {
-
-        width: 100%;
-        min-height: 50px;
-        max-height: 50px;
-        background-color: #F5F5F5;
-        margin: 20px 0px;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        padding: 0;
-        border-radius: 12px;
-
-    h2 {
-        font-size: 16px !important;
-        margin: 0 !important;
-    }
-
-    ion-icon {
-        color: var(--ion-color-primary);
-        font-size: 30px;
-        margin: 0px 3px;
     }
 }
 
@@ -238,7 +216,7 @@ p.noficha {
         .rotulo-box {
             position: absolute;
             left: 13px;
-            background-color: var(--ion-color-primary);
+            background-color: var(--ion-color-secondary);
             top: -38px;
             min-width: 60px;
             min-height: 60px;

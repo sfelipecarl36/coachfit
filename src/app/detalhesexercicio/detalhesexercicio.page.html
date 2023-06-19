@@ -1,19 +1,19 @@
 <ion-content>
   
-  <div class="fundo" *ngFor="let exercicio of exercicios">
+  <div class="fundo">
     <div class="container-left">
         <ion-back-button text="" defaultHref="window.location" (click)="service.voltar()"></ion-back-button>
         <h1 class="top">Detalhes</h1>
       <p></p>
     </div>
 
-    <img referrerpolicy=“no-referrer” id="fotoperfil" src="{{exercicio.img2}}"/>
-    <h2>{{exercicio.nome}}</h2>
-    <span *ngFor="let cat of categorias | async"><h5 *ngIf="exercicio.categoria==cat.uid">Tipo de Exercício: {{cat.nome}}</h5></span>
-    <h4>Área de Treino: {{exercicio.regiao}}</h4>
-    <p>{{exercicio.descricao}}</p>
+    <img referrerpolicy=“no-referrer” id="fotoperfil" src="{{exercicioImg}}"/>
+    <h2>{{exercicioNome}}</h2>
+    <span *ngFor="let cat of categorias | async"><h5 *ngIf="exercicioCat==cat.uid">Tipo de Exercício: {{cat.nome}}</h5></span>
+    <h4>Área de Treino: {{exercicioRegiao}}</h4>
+    <p>{{exercicioDesc}}</p>
 
-    <span class="span-button" *ngFor="let cat of categorias | async"><ion-button *ngIf="exercicio.categoria==cat.uid" id="addExeFicha" (click)="presentAlertAdd(exercicio.uid, cat.uid)">Adicionar para Ficha</ion-button></span>
+    <span class="span-button" *ngFor="let cat of categorias | async"><ion-button *ngIf="exercicioCat==cat.uid" id="addExeFicha" (click)="presentAlertAdd(exercicioUid, cat.uid)">Adicionar para Ficha</ion-button></span>
 
   </div>
   

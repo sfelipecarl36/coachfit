@@ -24,6 +24,12 @@ export class DetalhesexercicioPage implements OnInit {
 
   alertInputs: AlertInput[] = []
   exerciciosSubscribe: any;
+  exercicioNome: any;
+  exercicioImg: any;
+  exercicioDesc: any;
+  exercicioRegiao: any;
+  exercicioCat: any;
+  exercicioUid: any;
 
   constructor(
     private firestore: AngularFirestore,
@@ -41,9 +47,17 @@ export class DetalhesexercicioPage implements OnInit {
         this.exerciciosSubscribe = this.firestore.collection<exercicioI>('exercicios', ref => ref
         .where('uid','==', this.exercicioId))
         .valueChanges().subscribe((exercicios: exercicioI[]) => {
-          this.exercicios = exercicios
+          exercicios.forEach(exercicio => {
+            this.exercicioNome = exercicio.nome
+            this.exercicioImg = exercicio.img2
+            this.exercicioDesc = exercicio.descricao
+            this.exercicioRegiao = exercicio.regiao
+            this.exercicioCat = exercicio.categoria
+            this.exercicioUid = exercicio.uid
+          });
         })
         this.categorias = this.database!.categoriasLocal
+
     })
 
    }

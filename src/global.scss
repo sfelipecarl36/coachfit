@@ -84,6 +84,7 @@ p {
 
 .fundo {
     width: 100vw;
+    user-select: none;
     display: flex;
     flex-direction: column;
     padding: 25px;
@@ -117,6 +118,32 @@ div.container-left {
     flex-direction: row;
     align-items: center;
     justify-content: start;
+}
+
+.container-novoexercicio {
+
+    width: 100%;
+    min-height: 50px;
+    max-height: 50px;
+    background-color: #F5F5F5;
+    margin: 20px 0px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 12px;
+
+h2 {
+    font-size: 16px !important;
+    margin: 0 !important;
+}
+
+ion-icon {
+    color: var(--ion-color-primary);
+    font-size: 30px;
+    margin: 0px 3px;
+}
 }
 
 ion-item {

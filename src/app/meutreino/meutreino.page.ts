@@ -48,7 +48,6 @@ export class MeutreinoPage implements OnInit {
       .valueChanges()
       .subscribe((fichas: fichaI[]) => {
         this.fichas = fichas;
-        console.log('This.fichas: ',this.fichas)
         this.carregarExerciciosPorFicha();
       });
   }
@@ -62,7 +61,6 @@ export class MeutreinoPage implements OnInit {
         .valueChanges()
         .subscribe((exercicios: any[]) => {
           this.exerciciosPorFicha[ficha.uid] = exercicios;
-          console.log(this.exerciciosPorFicha[ficha.uid]);
         });
     }
 

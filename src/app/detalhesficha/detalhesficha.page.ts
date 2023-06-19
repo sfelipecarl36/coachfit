@@ -14,6 +14,8 @@ import { ModalController } from '@ionic/angular';
 import { CircleComponentComponent } from '../modal/circle-component/circle-component.component';
 import { fichaHistoricoI } from '../model/fichaHistorico';
 import { subexercicioHistI } from '../model/subexerciciosHist';
+import { fichaI } from '../model/fichas';
+import { categoriaI } from '../model/categorias';
 
 @Component({
   selector: 'app-detalhesficha',
@@ -55,6 +57,12 @@ export class DetalhesfichaPage implements OnInit {
 
   fichaRotulo: any;
   exerciciosHistList: Array<any> = [];
+  fichasSubscription: any;
+  exerciciosPorCategoria: { [key: string]: any[] } = {};
+  categoriasSubscription: any;
+  fichaDescanso: any;
+  fichaSeries: any
+  fichaRepeticoes: any
   
   constructor(
     private firestore: AngularFirestore,
@@ -71,7 +79,7 @@ export class DetalhesfichaPage implements OnInit {
   ) 
     {}
 
-    async presentModal(ficha: any, fichaseries: any, ficharepeticoes: any, fichadescanso: any, exeuid: any, exe: any, series: any, repeticoes: any,  peso: any, descanso: any) {
+    async presentModal(ficha: any, fichaseries: any, ficharepeticoes: any, fichadescanso: any, exeuid: any, exe: any, series: any, repeticoes: any,  peso: any) {
       let i = 0
       console.log(this.date)
       const modal = await this.modalCtrl.create({
@@ -83,7 +91,7 @@ export class DetalhesfichaPage implements OnInit {
           series: series,
           repeticoes: repeticoes,
           peso: peso,
-          descanso: descanso
+          descanso: fichadescanso
         }
       });
       await modal.present();
@@ -248,28 +256,11 @@ export class DetalhesfichaPage implements OnInit {
           this.router.navigateByUrl('meutreino')
         }
       }
-      this.fichas = this.firestore.collection('fichas', ref => ref.where('uid','==', this.fichaId)).valueChanges();
-      this.exercicios = this.firestore.collection('fichas').doc(this.fichaId).collection('exercicio').valueChanges();
-      this.subexerciciosLocal = this.firestore!.collectionGroup<subexercicioI>('exercicio', ref => ref.where('ficha', '==', this.fichaId).orderBy('ficha')).valueChanges();
+      
   })
+    this.carregarFichas()
     this.exerciciosBanco = this.database!.exerciciosLocal
     this.categorias = this.database!.categoriasLocal
-
-    this.exercicios.subscribe((res: subexercicioI[]) => {
-
-      res.forEach((item) => {
-        if(this.categoriasList.length<1) {
-          this.categoriasList.push(item.categoria)
-        }
-
-        else {
-          if (this.categoriasList.indexOf(item.categoria)==-1) {
-            this.categoriasList.push(item.categoria)
-          }
-        }
-        this.lengthExercicios+=1;
-      })
-    })
 
   }
 
@@ -290,11 +281,15 @@ export class DetalhesfichaPage implements OnInit {
   }
 
   async contarExercicios() {
-    const query = this.firestore!.collectionGroup<subexercicioI>('exercicio', ref => ref.where('ficha', '==', this.fichaId))
-    const querySnapshot = await query.get().toPromise();
-    const numDocumentos = querySnapshot!.size;
-    console.log(`Número de registros: ${numDocumentos}`);
-    return numDocumentos
+    return this.exerciciosBanco.length
+  }
+
+  getTotalIndex(categoryIndex: number, exerciseIndex: number): number {
+    let totalIndex = 0;
+    for (let i = 0; i < categoryIndex; i++) {
+      totalIndex += this.exerciciosPorCategoria[this.categoriasList[i]].length;
+    }
+    return totalIndex + exerciseIndex + 1;
   }
 
   async checkFicha() {
@@ -381,7 +376,7 @@ export class DetalhesfichaPage implements OnInit {
     return numDocumentos
   }
 
-  async clickExercicio(ficha: any, fichaseries: any, ficharepeticoes: any, fichadescanso: any, exeuid: any, exe: any, series:any, repeticoes: any, peso: any, descanso: any) {
+  async clickExercicio(ficha: any, fichaseries: any, ficharepeticoes: any, fichadescanso: any, exeuid: any, exe: any, series:any, repeticoes: any, peso: any) {
 
     const toast = await this.toastController.create({
       message: 'Você já concluiu essa atividade hoje',
@@ -396,7 +391,7 @@ export class DetalhesfichaPage implements OnInit {
     else if(this.state=='start') {
       
       if(await this.contarRegistros(exeuid)==0){
-        this.presentModal(ficha, fichaseries, ficharepeticoes, fichadescanso, exeuid, exe, series, repeticoes, peso, descanso);
+        this.presentModal(ficha, fichaseries, ficharepeticoes, fichadescanso, exeuid, exe, series, repeticoes, peso);
       }
       else {
         await toast.present();
@@ -493,7 +488,90 @@ export class DetalhesfichaPage implements OnInit {
     await alert.present();
   }
 
-  ngOnInit() {
+  async carregarFichas() {
+    const loading = await this.loadingController.create({
+      message: 'Carregando Exercícios',
+      spinner: 'circular',
+      duration: 10000,
+    });
+    loading.present();
+    this.fichasSubscription = this.firestore
+      .collection<fichaI>('fichas', ref => ref
+      .where('uid', '==', String(this.fichaId)))
+      .valueChanges()
+      .subscribe((fichas: fichaI[]) => {
+        fichas.forEach(ficha => {
+          this.fichaDescanso = ficha.descanso
+          this.fichaSeries = ficha.series
+          this.fichaRepeticoes = ficha.repeticoes
+        });
+      });
+      this.carregarCategorias();
   }
 
+  async carregarCategorias() {
+    
+    this.categoriasSubscription = this.firestore
+      .collection<categoriaI>('categorias')
+      .valueChanges()
+      .subscribe((categorias: categoriaI[]) => {
+        this.categorias = categorias;
+      });
+
+      this.firestore
+      .collection('fichas')
+      .doc(this.fichaId)
+      .collection('exercicio')
+      .get()
+      .toPromise() // Convertendo para Promise
+      .then((querySnapshot: any) => {
+        querySnapshot.forEach((doc: any) => {
+          if (this.categoriasList.length < 1) {
+            this.categoriasList.push(doc.data().categoria);
+          } else {
+            if (this.categoriasList.indexOf(doc.data().categoria) === -1) {
+              this.categoriasList.push(doc.data().categoria);
+            }
+          }
+        });
+        this.carregarExerciciosPorCategoria();
+      })
+      .catch((error: any) => {
+        console.error('Erro ao obter os exercícios:', error);
+      });
+    
+  }
+
+  carregarExerciciosPorCategoria() {
+    if(this.categoriasList.length) {
+    for (const cat of this.categoriasList) {
+      this.firestore
+        .collection<fichaI>('fichas')
+        .doc(this.fichaId)
+        .collection('exercicio', ref => ref
+        .where('categoria', '==', cat))
+        .valueChanges()
+        .subscribe((exercicios: any[]) => {
+          this.lengthExercicios+=1;
+          this.exerciciosPorCategoria[cat] = exercicios;
+        });
+    }
+
+  }
+
+  else {
+    console.log('categoriasList:',this.categoriasList)
+  }
+
+  this.loadingController.dismiss()
+  }
+
+  ngOnDestroy() {
+    if (this.fichasSubscription) {
+      this.fichasSubscription.unsubscribe();
+    }
+  }
+
+  ngOnInit() {
+  }
 }
