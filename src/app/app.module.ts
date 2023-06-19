@@ -4,7 +4,6 @@ import { RouteReuseStrategy } from '@angular/router';
 import { environment } from '../environments/environment.prod';
 import { Services } from './shared/services';
 import { CommonModule, DatePipe } from '@angular/common';
-import { FilterPipeModule } from 'ngx-filter-pipe';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
@@ -20,7 +19,6 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,
-    FilterPipeModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFirestoreModule,
