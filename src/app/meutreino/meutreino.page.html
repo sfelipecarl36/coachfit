@@ -31,10 +31,10 @@
                 <div class="exercicio-info" >
                   <div class="exercicio-title">
                     <strong>{{ficha.rotulo}}{{i+1}}</strong>
-                    <span class="w-auto" *ngFor="let exercicio of exerciciosBanco | async"><h1 *ngIf="exe.exercicio==exercicio.uid">{{exercicio.nome}}</h1></span>
+                    <span class="w-auto" *ngFor="let exercicio of exerciciosBanco"><h1 *ngIf="exe.exercicio==exercicio.uid">{{exercicio.nome}}</h1></span>
                   </div>
                   <div class="exercicio-categoria">
-                    <span *ngFor="let exercicio of exerciciosBanco | async"><span *ngIf="exe.exercicio==exercicio.uid"><span *ngFor="let cat of categorias | async"><p *ngIf="exercicio.categoria==cat.uid">{{cat.nome}}</p></span></span></span>
+                    <span *ngFor="let exercicio of exerciciosBanco"><span *ngIf="exe.exercicio==exercicio.uid"><span *ngFor="let cat of categorias"><p *ngIf="exercicio.categoria==cat.uid">{{cat.nome}}</p></span></span></span>
                   </div>
                 </div>
   

@@ -8,6 +8,7 @@ import { AlertController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
 import { LoadingController } from '@ionic/angular';
 import { Observable, take } from 'rxjs';
+import { fichaI } from '../model/fichas';
 
 @Component({
   selector: 'app-editarficha',
@@ -24,7 +25,14 @@ export class EditarfichaPage implements OnInit {
   exerciciosBanco: any;
   desfazer = false;
   subexerciciosLocal!: Observable<Array<subexercicioI>>;
+  exerciciosPorFicha: { [key: string]: any[] } = {};
   fichaRotulo: any;
+  fichasSubscription: any;
+  fichaDescanso: any;
+  fichaSeries: any;
+  fichaRepeticoes: any;
+  fichaDescansoMin: any;
+  fichaDescansoSeg: any;
 
   constructor(
     private firestore: AngularFirestore,
@@ -40,14 +48,40 @@ export class EditarfichaPage implements OnInit {
     
    }
 
+   async carregarExerciciosPorFicha() {
+    const loading = await this.loadingController.create({
+      message: 'Carregando Exercícios',
+      spinner: 'circular',
+      duration: 10000,
+    });
+    loading.present();
+      this.database.getExerciciosPorFicha(this.fichaId).subscribe((exercicios: any[]) => {
+        this.exerciciosPorFicha[this.fichaId] = exercicios;
+        setTimeout(() => {
+          loading.dismiss();
+        }, 500)
+        
+      })
+  }
+
    ionViewWillEnter() { 
+
 
     this.categoriasList = [];
 
     this.activatedRoute.queryParams.subscribe(params => {
       this.fichaId = params[0];
       this.fichaRotulo = params[1];
-      this.fichas = this.firestore.collection('fichas', ref => ref.where('uid','==', this.fichaId)).valueChanges();
+      
+      this.fichasSubscription = this.database.getFichaPorId(this.fichaId).subscribe((ficha: fichaI) => {
+        this.fichaDescanso = ficha.descanso;
+        this.fichaSeries = ficha.series;
+        this.fichaRepeticoes = ficha.repeticoes;
+        this.fichaDescansoMin = this.fichaDescanso.substring(0,2)
+        this.fichaDescansoSeg = this.fichaDescanso.substring(3,5)
+        this.carregarExerciciosPorFicha();
+      });
+
       this.exercicios = this.firestore.collection('fichas').doc(this.fichaId).collection('exercicio').valueChanges();
       this.subexerciciosLocal = this.firestore!.collectionGroup<subexercicioI>('exercicio', ref => ref.where('ficha', '==', this.fichaId)).valueChanges();
   })

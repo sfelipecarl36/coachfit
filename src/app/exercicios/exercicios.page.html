@@ -16,11 +16,11 @@
     ></ion-searchbar>
 
     <div class="container-exercicios">
-      <div class="exercicio ion-activatable" *ngFor="let exe of exercicios | async">
+      <div class="exercicio ion-activatable" *ngFor="let exe of exercicios">
         <img [src]="exe.img"/>
         <div class="exercicio-info" (click)="detalharExercicio(exe.uid)">
           <h1>{{exe.nome}}</h1>
-          <span *ngFor="let catexe of categorias | async"><h4 *ngIf="catexe.uid==exe.categoria">{{catexe.nome}}</h4></span>
+          <span *ngFor="let catexe of categorias"><h4 *ngIf="catexe.uid==exe.categoria">{{catexe.nome}}</h4></span>
           <h5>{{exe.regiao}}</h5>
         </div>
         <ion-icon id="{{exe.uid}}" name="ellipsis-horizontal-circle-outline"></ion-icon>
@@ -50,7 +50,7 @@
     </div>
 
     <div class="container-categorias">
-      <div class="categoria ion-activatable" *ngFor="let cat of categorias | async">
+      <div class="categoria ion-activatable" *ngFor="let cat of categorias">
         <img [src]="cat.img"/>
         <h5>{{cat.nome}}</h5>
         <ion-ripple-effect></ion-ripple-effect>

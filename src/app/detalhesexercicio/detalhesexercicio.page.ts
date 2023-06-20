@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Database } from '../shared/database';
 import { Services } from '../shared/services';
 import { AuthService } from '../shared/auth-service';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
 import { AlertInput } from '@ionic/core/dist/types/components/alert/alert-interface';
 import { fichaI } from '../model/fichas';
@@ -30,6 +30,7 @@ export class DetalhesexercicioPage implements OnInit {
   exercicioRegiao: any;
   exercicioCat: any;
   exercicioUid: any;
+  loading: any;
 
   constructor(
     private firestore: AngularFirestore,
@@ -39,27 +40,42 @@ export class DetalhesexercicioPage implements OnInit {
     public service: Services,
     public auth: AuthService,
     private alertController: AlertController,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private loadingController: LoadingController,
   ) {
-      
+    this.abrirLoading();
     this.activatedRoute.queryParams.subscribe(params => {
+
         this.exercicioId = params[0];
-        this.exerciciosSubscribe = this.firestore.collection<exercicioI>('exercicios', ref => ref
-        .where('uid','==', this.exercicioId))
-        .valueChanges().subscribe((exercicios: exercicioI[]) => {
-          exercicios.forEach(exercicio => {
-            this.exercicioNome = exercicio.nome
-            this.exercicioImg = exercicio.img2
-            this.exercicioDesc = exercicio.descricao
-            this.exercicioRegiao = exercicio.regiao
-            this.exercicioCat = exercicio.categoria
-            this.exercicioUid = exercicio.uid
-          });
-        })
+        this.database.getExercicioPorId(this.exercicioId).subscribe(
+          (exercicio: exercicioI) => {
+            this.exercicioNome = exercicio.nome;
+            this.exercicioImg = exercicio.img2;
+            this.exercicioDesc = exercicio.descricao;
+            this.exercicioRegiao = exercicio.regiao;
+            this.exercicioCat = exercicio.categoria;
+            this.exercicioUid = exercicio.uid;
+          },
+          (error: any) => {
+            console.error(error)
+          }
+        );
         this.categorias = this.database!.categoriasLocal
-
     })
+   }
 
+   async abrirLoading() {
+    this.loading = await this.loadingController.create({
+      spinner: 'circular',
+      duration: 500,
+    });
+    this.loading.present();
+   }
+
+   async fecharLoading() {
+    setTimeout(() => {
+      this.loading.dismiss();
+    }, 500)
    }
 
   ionViewWillEnter () {
@@ -78,8 +94,6 @@ export class DetalhesexercicioPage implements OnInit {
   }
 
   async addExercicio(exercicio: any, categoria: any, ficha: any) {
-    
-    console.log(ficha);
 
     let series = ''
     let repeticoes = ''

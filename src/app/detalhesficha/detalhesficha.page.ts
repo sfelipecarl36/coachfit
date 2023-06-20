@@ -101,7 +101,6 @@ export class DetalhesfichaPage implements OnInit {
         this.firestore.collection<fichaHistoricoI>('fichaHistorico', ref => ref.where('data', '==', this.date).where('fichaId', '==', this.fichaId)).valueChanges().subscribe( (historico: fichaHistoricoI[]) => {
           if(i==0) {
           i+=1;
-          console.log('executei, ó!')
           if (historico.length!=0) {
             historico.forEach((item) => {
               this.firestore.collection('fichaHistorico').doc(item.uid).collection('exercicioHist').add({ exeuid: exeuid, exercicio: data.exercicio, peso: data.peso, series: data.series, repeticoes: data.repeticoes, usuario: this.auth.userUid, data: this.date, fichaId: this.fichaId })
@@ -443,9 +442,9 @@ export class DetalhesfichaPage implements OnInit {
 
   }
 
-  editarFicha(ficha: any) {
+  editarFicha() {
     setTimeout(() => this.router.navigate(['editarficha'],{
-      queryParams: [ficha, this.fichaRotulo]
+    queryParams: [this.fichaId, this.fichaRotulo]
       }),150);
   }
 
@@ -495,18 +494,14 @@ export class DetalhesfichaPage implements OnInit {
       duration: 10000,
     });
     loading.present();
-    this.fichasSubscription = this.firestore
-      .collection<fichaI>('fichas', ref => ref
-      .where('uid', '==', String(this.fichaId)))
-      .valueChanges()
-      .subscribe((fichas: fichaI[]) => {
-        fichas.forEach(ficha => {
-          this.fichaDescanso = ficha.descanso
-          this.fichaSeries = ficha.series
-          this.fichaRepeticoes = ficha.repeticoes
-        });
-      });
+    
+    this.fichasSubscription = this.database.getFichaPorId(this.fichaId).subscribe((ficha: fichaI) => {
+      this.fichaDescanso = ficha.descanso;
+      this.fichaSeries = ficha.series;
+      this.fichaRepeticoes = ficha.repeticoes;
+  
       this.carregarCategorias();
+    });
   }
 
   async carregarCategorias() {
@@ -563,8 +558,11 @@ export class DetalhesfichaPage implements OnInit {
     console.log('categoriasList:',this.categoriasList)
   }
 
-  this.loadingController.dismiss()
-  }
+  setTimeout(() => {
+    this.loadingController.dismiss()
+  }, 700)
+  
+}
 
   ngOnDestroy() {
     if (this.fichasSubscription) {

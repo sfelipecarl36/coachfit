@@ -22,6 +22,8 @@ export class MeutreinoPage implements OnInit {
   categorias!: any;
   exerciciosBanco!: any;
   fichasSubscription: any;
+  exerciciosSubscription: any;
+  categoriasSubscription: any;
 
   constructor(
     public service: Services,
@@ -34,36 +36,15 @@ export class MeutreinoPage implements OnInit {
 
   }
 
-  async carregarFichas() {
-    const loading = await this.loadingController.create({
-      message: 'Carregando Fichas',
-      spinner: 'circular',
-      duration: 10000,
-    });
-    loading.present();
-    this.fichasSubscription = this.firestore
-      .collection<fichaI>('fichas', ref => ref
-      .where('usuario', '==', this.auth.userUid))
-      .valueChanges()
-      .subscribe((fichas: fichaI[]) => {
-        this.fichas = fichas;
-        this.carregarExerciciosPorFicha();
-      });
-  }
-
-  carregarExerciciosPorFicha() {
+  carregarExerciciosPorFicha(): void {
     for (const ficha of this.fichas) {
-      this.firestore
-        .collection('fichas')
-        .doc(ficha.uid)
-        .collection('exercicio')
-        .valueChanges()
-        .subscribe((exercicios: any[]) => {
-          this.exerciciosPorFicha[ficha.uid] = exercicios;
-        });
+      this.database.getExerciciosPorFicha(ficha.uid).subscribe((exercicios: any[]) => {
+        this.exerciciosPorFicha[ficha.uid] = exercicios;
+      });
     }
-
-    this.loadingController.dismiss();
+    setTimeout(() =>{
+      this.loadingController.dismiss();
+    }, 500)
   }
 
   ngOnDestroy() {
@@ -73,9 +54,25 @@ export class MeutreinoPage implements OnInit {
   }
 
   async ngOnInit() {
-      this.carregarFichas()
-      this.exerciciosBanco = this.database!.exerciciosLocal
-      this.categorias = this.database!.categoriasLocal
+    
+    const loading = await this.loadingController.create({
+      message: 'Carregando Fichas',
+      spinner: 'circular',
+      duration: 10000,
+    });
+    loading.present();
+
+    this.fichasSubscription = this.database.getFichas().subscribe(fichas => {
+      this.fichas = fichas;
+      this.carregarExerciciosPorFicha();
+    });
+
+    this.exerciciosSubscription = this.database.getExercicios().subscribe(exercicios => {
+      this.exerciciosBanco = exercicios
+    })
+      this.categoriasSubscription = this.database.getCategorias().subscribe(categorias => {
+        this.categorias = categorias
+      })
   }
 
   ionViewWillEnter () {

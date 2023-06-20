@@ -3,7 +3,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import { AuthService } from '../shared/auth-service';
 import { Database } from '../shared/database';
-import { PopoverController } from '@ionic/angular';
+import { LoadingController, PopoverController } from '@ionic/angular';
 import { Services } from '../shared/services';
 import { ToastController } from '@ionic/angular';
 import { exercicioI } from '../model/exercicios';
@@ -22,6 +22,9 @@ export class ExerciciosPage implements OnInit {
   categorias!: any;
   textSearch: any;
   fichasSubscription: any;
+  exerciciosSubscription: any;
+  categoriasSubscription: any;
+  loading: any;
 
   constructor(
     private firestore: AngularFirestore,
@@ -30,7 +33,8 @@ export class ExerciciosPage implements OnInit {
     private auth: AuthService,
     private database: Database,
     public service: Services,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private loadingController: LoadingController,
   ) { 
 
   }
@@ -53,23 +57,36 @@ export class ExerciciosPage implements OnInit {
     await toast.present();
   }
 
-  async carregarFichas() {
-    
-    this.fichasSubscription = this.firestore
-      .collection<fichaI>('fichas', ref => ref
-      .where('usuario', '==', this.auth.userUid))
-      .valueChanges()
-      .subscribe((fichas: fichaI[]) => {
-        this.fichas = fichas;
-        console.log('This.fichas: ',this.fichas)
-      });
-  }
 
   ngOnInit() {
-    this.exercicios = this.firestore.collection<exercicioI>('exercicios').valueChanges();
-    this.categorias = this.database.categoriasLocal
-    this.carregarFichas();
+    this.abrirLoading();
+    this.categoriasSubscription = this.database.getCategorias().subscribe(categorias => {
+      this.categorias = categorias
+    })
+        
+    this.fichasSubscription = this.database.getFichas().subscribe(fichas => {
+      this.fichas = fichas;
+    })
+
+    this.exerciciosSubscription = this.database.getExercicios().subscribe(exercicios => {
+      this.exercicios = exercicios
+      this.fecharLoading();
+    })
   }
+
+  async abrirLoading() {
+    this.loading = await this.loadingController.create({
+      spinner: 'circular',
+      duration: 500,
+    });
+    this.loading.present();
+   }
+
+   async fecharLoading() {
+    setTimeout(() => {
+      this.loading.dismiss();
+    }, 500)
+   }
 
   ionViewWillEnter () {
     this.database.atualizaValores();
