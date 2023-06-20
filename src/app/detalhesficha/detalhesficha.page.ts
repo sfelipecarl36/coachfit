@@ -430,13 +430,11 @@ export class DetalhesfichaPage implements OnInit {
   }
 
   async deletarFicha() {
-    
-    await this.subexerciciosLocal.subscribe(async (res: subexercicioI[]) => {
-
-      await res.forEach((item) => {
-        this.firestore.collection('fichas').doc(this.fichaId).collection('exercicio').doc(item.uid).delete();
+      const exerciciosCollection = this.firestore.collection(`fichas/${this.fichaId}/exercicio`);
+      exerciciosCollection.get().subscribe(snapshot => {
+      snapshot.forEach(doc => {
+        exerciciosCollection.doc(doc.id).delete();
       });
-
       this.firestore.collection('fichas').doc(this.fichaId).delete();
     })
 
@@ -449,11 +447,6 @@ export class DetalhesfichaPage implements OnInit {
   }
 
   async modalDeleteFicha(ficha: any) {
-    const loading = await this.loadingController.create({
-      message: 'Deletando Treino'+ficha,
-      spinner: 'circular',
-      duration: 5000,
-    });
 
     const alert = await this.alertController.create({
       cssClass: 'modal-delete',
@@ -472,10 +465,10 @@ export class DetalhesfichaPage implements OnInit {
           text: 'Deletar',
           handler: async () => {
             console.log('Ficha sendo Deletada');
-            loading.present();
+            this.database.abrirLoading('Deletando Ficha '+this.fichaRotulo)
             await this.deletarFicha();
             this.avisoDeletado();
-            loading.dismiss();
+            this.database.fecharLoading()
             this.router.navigateByUrl('meutreino');
           },
         },
@@ -488,12 +481,7 @@ export class DetalhesfichaPage implements OnInit {
   }
 
   async carregarFichas() {
-    const loading = await this.loadingController.create({
-      message: 'Carregando Exercícios',
-      spinner: 'circular',
-      duration: 10000,
-    });
-    loading.present();
+    this.database.abrirLoading('Carregando Exercícios')
     
     this.fichasSubscription = this.database.getFichaPorId(this.fichaId).subscribe((ficha: fichaI) => {
       this.fichaDescanso = ficha.descanso;
@@ -558,9 +546,7 @@ export class DetalhesfichaPage implements OnInit {
     console.log('categoriasList:',this.categoriasList)
   }
 
-  setTimeout(() => {
-    this.loadingController.dismiss()
-  }, 700)
+  this.database.fecharLoading();
   
 }
 

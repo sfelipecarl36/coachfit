@@ -23,30 +23,30 @@
 
     <ion-datetime
         [(ngModel)]="descanso"
-        (ionChange)="checkValue2($event)"
+        (ionChange)="checkValue2()"
         presentation="time"
         hourCycle="h23"
-        value="00:30"
         hourValues="0,1,2,3,4,5"
         minuteValues="0,10,20,30,40,50"
-        locale="pt-BR" displayFormat="HH:mm">
+        locale="pt-BR"
+        displayFormat="HH:mm">
     </ion-datetime>
   
     <div class="container-lr">
       <div class="container-input">
         <h1>SÉRIES</h1>
-        <ion-input type="text" pattern="[0-9]+" maxlength="2" [(ngModel)]="series" placeholder="3" (ionChange)="checkValue3($event)"></ion-input>
+        <ion-input type="number" pattern="[0-9]+" maxlength="2" [(ngModel)]="series" placeholder="3" (ionChange)="checkValue3()"></ion-input>
       </div>
 
       <div class="container-input"><h1>X</h1></div>
 
       <div class="container-input">
         <h1>REPETIÇÕES</h1>
-        <ion-input type="text" pattern="[0-9]" maxlength="2" [(ngModel)]="repeticoes" placeholder="12" (ionChange)="checkValue3($event)"></ion-input>
+        <ion-input type="number" pattern="[0-9]" maxlength="2" [(ngModel)]="repeticoes" placeholder="12" (ionChange)="checkValue3()"></ion-input>
       </div>
     </div>
 
-    <ion-button (click)="criarFicha()">Criar Ficha</ion-button>
+    <ion-button (click)="criarFicha()" [disabled]="canCreate()">Criar Ficha</ion-button>
   
   </div>
   

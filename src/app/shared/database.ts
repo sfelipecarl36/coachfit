@@ -1,14 +1,13 @@
-import { Injectable, NgZone, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { exercicioI } from '../model/exercicios';
 import { subexercicioI } from '../model/subexercicios';
 import { categoriaI } from '../model/categorias';
-import { Observable, filter, map } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { fichaI } from '../model/fichas';
-import { Router } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { subexercicioHistI } from '../model/subexerciciosHist';
 import { AuthService } from './auth-service';
+import { LoadingController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root',
@@ -19,14 +18,15 @@ export class Database {
     public categoriasLocal: Observable<Array<categoriaI>>;
     public subexerciciosLocal!: Observable<Array<subexercicioI>>;
     public fichasLocal!: Observable<Array<fichaI>>;
-    private router!: Router;
     public user: any
     public subexerciciosHist!: Observable<Array<subexercicioHistI>>;
     public fichasSubscription: any;
+    public loading: any;
 
   constructor(
     private firestore: AngularFirestore,
-    private auth: AuthService
+    private auth: AuthService,
+    private loadingController: LoadingController
   ) {
     this.exerciciosLocal = this.firestore.collection<exercicioI>('exercicios').valueChanges();
     this.categoriasLocal = this.firestore.collection<categoriaI>('categorias').valueChanges();
@@ -35,7 +35,7 @@ export class Database {
   public getFichas(): Observable<Array<fichaI>> {
     return this.firestore
       .collection<fichaI>('fichas', ref => ref
-      .where('usuario', '==', this.auth.userUid))
+      .where('usuario', '==', this.auth.userUid).orderBy('rotulo'))
       .valueChanges()
       .pipe(map((fichas: fichaI[]) => fichas));
   }
@@ -93,19 +93,21 @@ export class Database {
       );
   }
 
-  public atualizaValores () {
-    const autenticacao = getAuth();
-    onAuthStateChanged(autenticacao, (user) => {
-          if(user) {
-              this.user = user.uid
-              this.subexerciciosHist = this.firestore!.collectionGroup<subexercicioHistI>('exercicioHist', ref => ref.where('usuario', '==', this.user)).valueChanges();
-          }
-
-          else {
-            this.router.navigateByUrl('login');
-          }
-    })
-  }
+  async abrirLoading(message?: string) {
+    this.loading = await this.loadingController.create({
+      message: message ? message : '',
+      spinner: 'circular',
+      duration: 10000,
+    });
+    this.loading.present();
+   }
+  
+  async fecharLoading() {
+    setTimeout(() => {
+      this.loading.dismiss();
+    }, 500)
+   }
+  
 
   ngOnInit() {
     

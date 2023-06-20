@@ -75,10 +75,6 @@ export class MeutreinoPage implements OnInit {
       })
   }
 
-  ionViewWillEnter () {
-      this.database.atualizaValores()
-  }
-
   detalharFicha(ficha: any, ficharotulo: any) {
     setTimeout(() => this.router.navigate(['detalhesficha'],{
       queryParams: [ficha, ficharotulo]

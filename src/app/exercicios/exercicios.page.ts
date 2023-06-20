@@ -7,8 +7,6 @@ import { LoadingController, PopoverController } from '@ionic/angular';
 import { Services } from '../shared/services';
 import { ToastController } from '@ionic/angular';
 import { exercicioI } from '../model/exercicios';
-import { debounceTime, first } from 'rxjs';
-import { fichaI } from '../model/fichas';
 
 @Component({
   selector: 'app-exercicios',
@@ -24,7 +22,6 @@ export class ExerciciosPage implements OnInit {
   fichasSubscription: any;
   exerciciosSubscription: any;
   categoriasSubscription: any;
-  loading: any;
 
   constructor(
     private firestore: AngularFirestore,
@@ -34,7 +31,6 @@ export class ExerciciosPage implements OnInit {
     private database: Database,
     public service: Services,
     private toastController: ToastController,
-    private loadingController: LoadingController,
   ) { 
 
   }
@@ -59,7 +55,7 @@ export class ExerciciosPage implements OnInit {
 
 
   ngOnInit() {
-    this.abrirLoading();
+    this.database.abrirLoading();
     this.categoriasSubscription = this.database.getCategorias().subscribe(categorias => {
       this.categorias = categorias
     })
@@ -70,26 +66,12 @@ export class ExerciciosPage implements OnInit {
 
     this.exerciciosSubscription = this.database.getExercicios().subscribe(exercicios => {
       this.exercicios = exercicios
-      this.fecharLoading();
     })
+
+    this.database.fecharLoading();
   }
 
-  async abrirLoading() {
-    this.loading = await this.loadingController.create({
-      spinner: 'circular',
-      duration: 500,
-    });
-    this.loading.present();
-   }
-
-   async fecharLoading() {
-    setTimeout(() => {
-      this.loading.dismiss();
-    }, 500)
-   }
-
   ionViewWillEnter () {
-    this.database.atualizaValores();
   }
 
   async DismissClick() {

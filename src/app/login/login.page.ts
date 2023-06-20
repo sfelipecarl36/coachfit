@@ -53,7 +53,6 @@ export class LoginPage implements OnInit {
     .then(async (res) => {
       const autenticacao = getAuth();
       setPersistence(autenticacao, browserSessionPersistence);
-      this.database.atualizaValores();
       loading.dismiss()
       this.router.navigateByUrl('home');
       const loading2 = await this.loadingController.create({

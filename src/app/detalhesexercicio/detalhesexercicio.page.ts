@@ -31,6 +31,8 @@ export class DetalhesexercicioPage implements OnInit {
   exercicioCat: any;
   exercicioUid: any;
   loading: any;
+  fichasSubscription: any;
+  categoriasSubscription: any;
 
   constructor(
     private firestore: AngularFirestore,
@@ -43,7 +45,7 @@ export class DetalhesexercicioPage implements OnInit {
     private toastController: ToastController,
     private loadingController: LoadingController,
   ) {
-    this.abrirLoading();
+    this.database.abrirLoading()
     this.activatedRoute.queryParams.subscribe(params => {
 
         this.exercicioId = params[0];
@@ -55,32 +57,17 @@ export class DetalhesexercicioPage implements OnInit {
             this.exercicioRegiao = exercicio.regiao;
             this.exercicioCat = exercicio.categoria;
             this.exercicioUid = exercicio.uid;
+            this.database.fecharLoading()
           },
           (error: any) => {
             console.error(error)
           }
         );
-        this.categorias = this.database!.categoriasLocal
+        this.categoriasSubscription = this.database.getCategorias().subscribe(categorias => {
+          this.categorias = categorias
+        })
     })
    }
-
-   async abrirLoading() {
-    this.loading = await this.loadingController.create({
-      spinner: 'circular',
-      duration: 500,
-    });
-    this.loading.present();
-   }
-
-   async fecharLoading() {
-    setTimeout(() => {
-      this.loading.dismiss();
-    }, 500)
-   }
-
-  ionViewWillEnter () {
-    this.database.atualizaValores();
-  }
 
   async addExercicioToast() {
     const toast = await this.toastController.create({
@@ -141,35 +128,32 @@ export class DetalhesexercicioPage implements OnInit {
 
   ngOnInit() {
     this.alertInputs = []
-    setTimeout(() => {
-      this.fichas = this.database.fichasLocal
-      this.fichas.subscribe((res: fichaI[]) => {
-        res.forEach((item) => {
-          if(this.alertInputs.length==0){
-            this.alertInputs.push({
-              name: item.rotulo,
-              label: 'Ficha '+item.rotulo,
-              type: 'radio',
-              value: item.uid,
-            })
-          }
-          else {
-            if(this.alertInputs.filter(e => e.name === item.rotulo).length > 0){
-              console.log('ficha repetida')
-            }
-            else {
-              this.alertInputs.push({
-                name: item.rotulo,
-                label: 'Ficha '+item.rotulo,
-                type: 'radio',
-                value: item.uid,
-              })
-            }
-          }
-            console.log('Ficha:',item.rotulo)
-        });
-      })
-    },1200);
+    this.fichasSubscription = this.database.getFichas().subscribe(fichas => {
+    fichas.forEach(ficha => {
+      if(this.alertInputs.length==0){
+        this.alertInputs.push({
+          name: ficha.rotulo,
+          label: 'Ficha '+ficha.rotulo,
+          type: 'radio',
+          value: ficha.uid,
+        })
+      }
+      else {
+        if(this.alertInputs.filter(e => e.name === ficha.rotulo).length > 0){
+          console.log('ficha repetida')
+        }
+        else {
+          this.alertInputs.push({
+            name: ficha.rotulo,
+            label: 'Ficha '+ficha.rotulo,
+            type: 'radio',
+            value: ficha.uid,
+          })
+        }
+      }
+        console.log('Ficha:',ficha.rotulo)
+    });
+    });
   }
 
 
