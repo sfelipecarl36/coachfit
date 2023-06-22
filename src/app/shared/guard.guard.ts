@@ -16,7 +16,6 @@ export class GuardGuard implements CanActivate {
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     return new Promise((resolve, reject) => {
       const auth = getAuth();
-
       onAuthStateChanged(auth, (user) => {
         if (user) {
           resolve(true);

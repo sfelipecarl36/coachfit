@@ -28,11 +28,11 @@
         <div class="container-info-dados">
           <div class="ficha-dado">
             <ion-icon name="alarm-outline"></ion-icon>
-            <p>Descanso: </p><ion-input maxlength="2" placeholder="00" #descansomin value="{{fichaDescansoMin}}"></ion-input>:<ion-input maxlength="2" placeholder="00" #descansoseg value="{{fichaDescansoSeg}}"></ion-input>
+            <p>Descanso: </p><ion-input type="number" maxlength="2" placeholder="00" #descansomin value="{{fichaDescansoMin}}"></ion-input>:<ion-input type="number" maxlength="2" placeholder="00" #descansoseg value="{{fichaDescansoSeg}}"></ion-input>
           </div>
           <div class="ficha-dado">
             <ion-icon name="flame-outline"></ion-icon>
-            <p>Frequência: </p><ion-input maxlength="2" placeholder="3" #fichaseries value="{{fichaSeries}}"></ion-input>x<ion-input maxlength="2" placeholder="12" #ficharepeticoes value="{{fichaRepeticoes}}"></ion-input>
+            <p>Frequência: </p><ion-input type="number" maxlength="2" placeholder="3" #fichaseries value="{{fichaSeries}}"></ion-input>x<ion-input type="number" maxlength="2" placeholder="12" #ficharepeticoes value="{{fichaRepeticoes}}"></ion-input>
           </div>
         </div>
       </div>
@@ -56,8 +56,8 @@
         </div>
 
         <div class="exercicio-info2" *ngIf="exe.ficha==fichaId">
-          <ion-input pattern="[0-9]" maxlength="2" placeholder="S" #{{exe.uid}}series id="{{exe.uid}}series" value="{{exe.series}}"></ion-input>x<ion-input pattern="[0-9]" maxlength="3" placeholder="R" #{{exe.uid}}repeticoes id="{{exe.uid}}repeticoes" value="{{exe.repeticoes}}"></ion-input>
-          <ion-input pattern="[0-9]" maxlength="3" placeholder="Peso" #{{exe.uid}}peso id="{{exe.uid}}peso" value="{{exe.peso}}"></ion-input>Kg
+          <ion-input type="number" pattern="[0-9]" maxlength="2" placeholder="S" #{{exe.uid}}series id="{{exe.uid}}series" value="{{exe.series}}"></ion-input>x<ion-input type="number" pattern="[0-9]" maxlength="3" placeholder="R" #{{exe.uid}}repeticoes id="{{exe.uid}}repeticoes" value="{{exe.repeticoes}}"></ion-input>
+          <ion-input type="number" pattern="[0-9]" maxlength="3" placeholder="Peso" #{{exe.uid}}peso id="{{exe.uid}}peso" value="{{exe.peso}}"></ion-input>Kg
         </div>
         <ion-ripple-effect></ion-ripple-effect>
       </div>

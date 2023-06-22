@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Router } from '@angular/router';
 import { AuthService } from './shared/auth-service';
 import { AlertController, Platform } from '@ionic/angular';
-import { Location } from '@angular/common';
 import { NavController } from '@ionic/angular';
+import { StatusBar, Style } from '@capacitor/status-bar';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-root',
@@ -16,16 +15,20 @@ export class AppComponent {
   public user: any;
   
   constructor(
-    private router: Router,
     private platform: Platform,
-    private location: Location,
     private alertCtrl: AlertController,
-    private fireAuth: AngularFireAuth,
     private auth: AuthService,
     private navCtrl: NavController,
   ) {
     this.backButtonEvent();
-    // StatusBar.setBackgroundColor({color: '#ffffff'});
+
+    this.platform.ready().then(() => {
+      if (Capacitor.isPluginAvailable('StatusBar') && this.platform.is('android')) {
+        StatusBar.setOverlaysWebView({ overlay: true });
+        StatusBar.setBackgroundColor({color: '#ffffff'});
+        StatusBar.setStyle({ style: Style.Light})
+      }
+    });
   }
 
   backButtonEvent () {

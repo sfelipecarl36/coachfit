@@ -41,9 +41,7 @@ export class HomePage {
   ) {}
 
   async logout(){
-      this.auth.SignOut().then(() => {
-        window.location.reload();
-      });
+      this.auth.SignOut()
     }
 
     ngOnInit() {

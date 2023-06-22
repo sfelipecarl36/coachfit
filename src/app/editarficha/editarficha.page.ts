@@ -9,6 +9,7 @@ import { ToastController } from '@ionic/angular';
 import { LoadingController } from '@ionic/angular';
 import { Observable, take } from 'rxjs';
 import { fichaI } from '../model/fichas';
+import { StatusBar } from '@capacitor/status-bar';
 
 @Component({
   selector: 'app-editarficha',
@@ -42,7 +43,6 @@ export class EditarfichaPage implements OnInit {
     public service: Services,
     private alertController: AlertController,
     private toastController: ToastController,
-    private loadingController: LoadingController
 
   ) {
     
@@ -55,8 +55,6 @@ export class EditarfichaPage implements OnInit {
   }
 
    ionViewWillEnter() { 
-
-
     this.categoriasList = [];
 
     this.activatedRoute.queryParams.subscribe(params => {

@@ -16,6 +16,7 @@ import { fichaHistoricoI } from '../model/fichaHistorico';
 import { subexercicioHistI } from '../model/subexerciciosHist';
 import { fichaI } from '../model/fichas';
 import { categoriaI } from '../model/categorias';
+import { StatusBar, Style } from '@capacitor/status-bar';
 
 @Component({
   selector: 'app-detalhesficha',
@@ -122,7 +123,6 @@ export class DetalhesfichaPage implements OnInit {
         }
         })
       }
-      this.service.fecharLoading();
     }
 
     async ionViewDidEnter(){
@@ -227,9 +227,15 @@ export class DetalhesfichaPage implements OnInit {
         }
     }
 
+    ionViewDidLeave () {
+      StatusBar.setBackgroundColor({color: '#ffffff'});  
+      StatusBar.setStyle({ style: Style.Light})
+    }
 
    async ionViewWillEnter() { 
 
+    StatusBar.setBackgroundColor({color: '#3225ff'});
+    StatusBar.setStyle({ style: Style.Dark})
     this.alertExecucaoBol = false
 
     if(this.state == 'start'){
@@ -265,6 +271,14 @@ export class DetalhesfichaPage implements OnInit {
     this.categorias = this.database!.categoriasLocal
   }
 
+  async contarExercicios() {
+    const query = this.firestore!.collection('fichas').doc(this.fichaId).collection('exercicio')
+    const querySnapshot = await query.get().toPromise();
+    const numDocumentos = querySnapshot!.size;
+    console.log(`Número de registros: ${numDocumentos}`);
+    return numDocumentos
+  }
+
   async contarSubExercicios() {
     const query = this.firestore!.collectionGroup<subexercicioHistI>('exercicioHist', ref => ref.where('data', '==', this.date).where('fichaId', '==', this.fichaId))
     const querySnapshot = await query.get().toPromise();
@@ -275,14 +289,6 @@ export class DetalhesfichaPage implements OnInit {
 
   async contarTreinosConcluidos() {
     const query = this.firestore.collection<fichaHistoricoI>('fichaHistorico', ref => ref.where('data', '==', this.date).where('concluido', '==', true).where('fichaId', '==', this.fichaId))
-    const querySnapshot = await query.get().toPromise();
-    const numDocumentos = querySnapshot!.size;
-    console.log(`Número de registros: ${numDocumentos}`);
-    return numDocumentos
-  }
-
-  async contarExercicios() {
-    const query = this.firestore!.collectionGroup<subexercicioHistI>('exercicioHist', ref => ref.where('fichaId', '==', this.fichaId))
     const querySnapshot = await query.get().toPromise();
     const numDocumentos = querySnapshot!.size;
     console.log(`Número de registros: ${numDocumentos}`);
@@ -301,9 +307,9 @@ export class DetalhesfichaPage implements OnInit {
     let i = 0
     if(this.state == 'start'){
       const exeCount = await this.contarExercicios()
-      console.log(exeCount)
+      console.log("Exercícios da ficha",exeCount)
       const subexeCount = await this.contarSubExercicios()
-      console.log(subexeCount)
+      console.log("Exercícios do histórico da ficha",subexeCount)
       if(subexeCount>=exeCount){
         this.firestore!.collection<fichaHistoricoI>('fichaHistorico', ref => ref.where('data', '==', this.date).where('fichaId', '==', this.fichaId)).valueChanges().subscribe((res: fichaHistoricoI[]) => {
           res.forEach(async (item) => {    
@@ -346,9 +352,11 @@ export class DetalhesfichaPage implements OnInit {
         const element = (<HTMLElement>document.getElementById(String(item.exeuid)))
         if(element!=undefined || element!=null){
           element.classList.add('executado');
+          this.service.fecharLoading();
         }
         else{
           console.log('não encontrou elementos executados')
+          this.service.fecharLoading();
         }
       })
     })
@@ -444,6 +452,7 @@ export class DetalhesfichaPage implements OnInit {
         exerciciosCollection.doc(doc.id).delete();
       });
       this.firestore.collection('fichas').doc(this.fichaId).delete();
+      this.service.fecharLoading()
     })
 
   }
@@ -476,7 +485,6 @@ export class DetalhesfichaPage implements OnInit {
             this.service.abrirLoading('Deletando Ficha '+this.fichaRotulo)
             await this.deletarFicha();
             this.avisoDeletado();
-            this.service.fecharLoading()
             this.router.navigateByUrl('meutreino');
           },
         },

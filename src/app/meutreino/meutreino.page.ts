@@ -46,7 +46,7 @@ export class MeutreinoPage implements OnInit {
 
   async ngOnInit() {
     
-    this.service.abrirLoading();
+    this.service.abrirLoading('Carregando Fichas');
 
     this.fichasSubscription = this.database.getFichas().subscribe(fichas => {
       this.fichas = fichas;

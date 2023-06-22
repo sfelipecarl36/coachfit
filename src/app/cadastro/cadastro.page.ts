@@ -15,7 +15,7 @@ export class CadastroPage implements OnInit {
     private auth: AuthService,
     private router: Router,
     private toastController: ToastController,
-    private servives: Services
+    private service: Services
   ) { 
 
   }
@@ -34,10 +34,14 @@ export class CadastroPage implements OnInit {
   }
 
   async cadastrar(nomecompleto: any, usuario: any, email: any, senha: any, confirmasenha: any){
+    this.service.abrirLoading('Cadastrando')
     if(senha.value==confirmasenha.value){
-      this.presentToast();
-      this.auth.RegisterUser(nomecompleto.value, usuario.value, email.value, senha.value);
-      this.servives.navegar('login');
+      this.auth.RegisterUser(nomecompleto.value, usuario.value, email.value, senha.value).then(() => {
+        this.presentToast();
+        this.service.navegar('login');
+        this.service.fecharLoading();
+      });
+      
     }
   }
 

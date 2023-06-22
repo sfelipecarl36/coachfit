@@ -63,7 +63,7 @@ export class CircleComponentComponent  implements OnInit {
   }
 
   async fecharModal() {
-    this.service.abrirLoading();
+    this.service.abrirLoading('Concluindo');
     const dataToReturn = {
       exercicio: this.exe,
       series: this.series,
