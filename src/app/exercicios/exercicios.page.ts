@@ -3,7 +3,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import { AuthService } from '../shared/auth-service';
 import { Database } from '../shared/database';
-import { LoadingController, PopoverController } from '@ionic/angular';
+import { PopoverController } from '@ionic/angular';
 import { Services } from '../shared/services';
 import { ToastController } from '@ionic/angular';
 import { exercicioI } from '../model/exercicios';
@@ -55,7 +55,7 @@ export class ExerciciosPage implements OnInit {
 
 
   ngOnInit() {
-    this.database.abrirLoading();
+    this.service.abrirLoading();
     this.categoriasSubscription = this.database.getCategorias().subscribe(categorias => {
       this.categorias = categorias
     })
@@ -68,7 +68,7 @@ export class ExerciciosPage implements OnInit {
       this.exercicios = exercicios
     })
 
-    this.database.fecharLoading();
+    this.service.fecharLoading();
   }
 
   ionViewWillEnter () {
@@ -80,12 +80,12 @@ export class ExerciciosPage implements OnInit {
 
   addExercicio(exercicio: any, categoria: any, ficha: any, series: any, repeticoes: any) {
     
+    this.DismissClick();
     console.log(ficha);
       this.firestore.collection('fichas', ref => ref.where('usuario', '==', this.auth.userUid)).doc(ficha).collection('exercicio').add({uid: '', exercicio: exercicio, categoria: categoria, peso: 5, ficha: ficha, series: series, repeticoes: repeticoes, usuario: this.auth.userUid}).then(newExe => {
         console.log('Exercicio Adicionado a Ficha',ficha);
         this.firestore.collection('fichas').doc(ficha).collection('exercicio').doc(newExe.id).update({uid: newExe.id})
       });
-      this.DismissClick();
   }
 
   detalharExercicio(exercicio: any) {

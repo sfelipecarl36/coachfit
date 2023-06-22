@@ -9,6 +9,7 @@ import { ToastController } from '@ionic/angular';
 import { AlertInput } from '@ionic/core/dist/types/components/alert/alert-interface';
 import { fichaI } from '../model/fichas';
 import { exercicioI } from '../model/exercicios';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-detalhesexercicio',
@@ -30,7 +31,6 @@ export class DetalhesexercicioPage implements OnInit {
   exercicioRegiao: any;
   exercicioCat: any;
   exercicioUid: any;
-  loading: any;
   fichasSubscription: any;
   categoriasSubscription: any;
 
@@ -43,9 +43,8 @@ export class DetalhesexercicioPage implements OnInit {
     public auth: AuthService,
     private alertController: AlertController,
     private toastController: ToastController,
-    private loadingController: LoadingController,
   ) {
-    this.database.abrirLoading()
+    this.service.abrirLoading()
     this.activatedRoute.queryParams.subscribe(params => {
 
         this.exercicioId = params[0];
@@ -57,7 +56,6 @@ export class DetalhesexercicioPage implements OnInit {
             this.exercicioRegiao = exercicio.regiao;
             this.exercicioCat = exercicio.categoria;
             this.exercicioUid = exercicio.uid;
-            this.database.fecharLoading()
           },
           (error: any) => {
             console.error(error)
@@ -65,6 +63,7 @@ export class DetalhesexercicioPage implements OnInit {
         );
         this.categoriasSubscription = this.database.getCategorias().subscribe(categorias => {
           this.categorias = categorias
+          this.service.fecharLoading()
         })
     })
    }
@@ -81,23 +80,29 @@ export class DetalhesexercicioPage implements OnInit {
   }
 
   async addExercicio(exercicio: any, categoria: any, ficha: any) {
-
-    let series = ''
-    let repeticoes = ''
-
-    await this.fichas.subscribe((res: fichaI[]) => {
-      res.forEach((item) => {
-          series = String(item.series)
-          repeticoes = String(item.repeticoes)
-      });
-    })
-    setTimeout(() => {
-      this.firestore.collection('fichas').doc(ficha).collection('exercicio').add({uid: '', exercicio: exercicio, categoria: categoria, peso: 5, ficha: ficha, series: series, repeticoes: repeticoes, usuario: this.auth.userUid}).then(newExe => {
-        console.log('Exercicio Adicionado a Ficha',ficha);
-        this.firestore.collection('fichas').doc(ficha).collection('exercicio').doc(newExe.id).update({uid: newExe.id})
-      })
-    },500);
-    this.addExercicioToast();
+    try {
+      const fichaU: fichaI | undefined = await this.database.getFichaPorId(ficha).pipe(take(1)).toPromise();
+      if (!fichaU) {
+      throw new Error('Ficha não encontrada');
+      }
+  
+      const series = String(fichaU.series);
+      const repeticoes = String(fichaU.repeticoes);
+  
+      const newExe = await this.firestore
+        .collection('fichas')
+        .doc(ficha)
+        .collection('exercicio')
+        .add({ uid: '', exercicio: exercicio, categoria: categoria, peso: 5, ficha: ficha, series: series, repeticoes: repeticoes, usuario: this.auth.userUid });
+  
+      console.log('Exercicio Adicionado a Ficha', ficha);
+      await this.firestore.collection('fichas').doc(ficha).collection('exercicio').doc(newExe.id).update({ uid: newExe.id });
+  
+      this.addExercicioToast();
+    } catch (error) {
+      console.error('Erro ao adicionar exercício:', error);
+      // Trate o erro de acordo com sua lógica de tratamento de erros
+    }
   }
 
   async presentAlertAdd(exercicio: any, categoria: any) {
@@ -128,7 +133,8 @@ export class DetalhesexercicioPage implements OnInit {
 
   ngOnInit() {
     this.alertInputs = []
-    this.fichasSubscription = this.database.getFichas().subscribe(fichas => {
+    this.database.getFichas().subscribe(fichas => {
+    this.fichas = fichas
     fichas.forEach(ficha => {
       if(this.alertInputs.length==0){
         this.alertInputs.push({
@@ -137,6 +143,7 @@ export class DetalhesexercicioPage implements OnInit {
           type: 'radio',
           value: ficha.uid,
         })
+        console.log(ficha.uid)
       }
       else {
         if(this.alertInputs.filter(e => e.name === ficha.rotulo).length > 0){

@@ -49,18 +49,8 @@ export class EditarfichaPage implements OnInit {
    }
 
    async carregarExerciciosPorFicha() {
-    const loading = await this.loadingController.create({
-      message: 'Carregando Exercícios',
-      spinner: 'circular',
-      duration: 10000,
-    });
-    loading.present();
       this.database.getExerciciosPorFicha(this.fichaId).subscribe((exercicios: any[]) => {
         this.exerciciosPorFicha[this.fichaId] = exercicios;
-        setTimeout(() => {
-          loading.dismiss();
-        }, 500)
-        
       })
   }
 
@@ -79,11 +69,11 @@ export class EditarfichaPage implements OnInit {
         this.fichaRepeticoes = ficha.repeticoes;
         this.fichaDescansoMin = this.fichaDescanso.substring(0,2)
         this.fichaDescansoSeg = this.fichaDescanso.substring(3,5)
-        this.carregarExerciciosPorFicha();
       });
 
       this.exercicios = this.firestore.collection('fichas').doc(this.fichaId).collection('exercicio').valueChanges();
       this.subexerciciosLocal = this.firestore!.collectionGroup<subexercicioI>('exercicio', ref => ref.where('ficha', '==', this.fichaId)).valueChanges();
+      this.carregarExerciciosPorFicha();
   })
     this.exerciciosBanco = this.database!.exerciciosLocal
     this.categorias = this.database!.categoriasLocal
@@ -176,10 +166,8 @@ export class EditarfichaPage implements OnInit {
         {
           text: 'Confirmar',
           handler: async () => {
-            console.log('Ficha Atualizada');
-            alert.dismiss();            
+            alert.dismiss();
             await this.salvarAlteracoes(descansomin, descansoseg, fichaseries, ficharepeticoes);
-            this.toastFichaEditada()
           },
         },
       ],
@@ -203,30 +191,17 @@ export class EditarfichaPage implements OnInit {
 
   async salvarAlteracoes(descansomin: any, descansoseg: any, fichaseries: any, ficharepeticoes: any) {
 
-    const loading = await this.loadingController.create({
-      message: 'Salvando Alterações',
-      spinner: 'circular',
-      duration: 8000,
-    });
+    this.service.abrirLoading("Salvando");
 
-    loading.present();
-
-    this.exercicios.pipe(take(1)).subscribe((res: subexercicioI[]) => {
-      let i = 0;
+    await this.exercicios.pipe(take(1)).subscribe((res: subexercicioI[]) => {
     
       res.forEach((exe) => {
-        i += 1;
         
         var inputSeries = (<HTMLInputElement>document.getElementById(exe.uid + "series")).value;
-        console.log('inputSeries:', inputSeries);
     
         var inputRepeticoes = (<HTMLInputElement>document.getElementById(exe.uid + "repeticoes")).value;
     
         var inputPeso = (<HTMLInputElement>document.getElementById(exe.uid + "peso")).value;
-    
-        console.log('inputSeries' + i + ': ' + inputSeries);
-        console.log('inputRepeticoes' + i + ': ' + inputRepeticoes);
-        console.log('inputPeso' + i + ': ' + inputPeso);
     
         this.firestore.collection('fichas').doc(this.fichaId).collection('exercicio').doc(exe.uid).update({ series: inputSeries, repeticoes: inputRepeticoes, peso: inputPeso }).then(() => {
           console.log('Exercicio atualizado.');
@@ -234,16 +209,11 @@ export class EditarfichaPage implements OnInit {
       });
     });
     
-    console.log(this.fichaId);
-    console.log(descansomin.value);
-    console.log(descansoseg.value);
-    console.log(fichaseries.value);
-    console.log(ficharepeticoes.value);
-    
-    await this.firestore.collection('fichas').doc(this.fichaId).update({ descanso: descansomin.value + ":" + descansoseg.value, series: fichaseries.value, repeticoes: ficharepeticoes.value });
-    await loading.dismiss();
-    await this.detalharFicha();    
+    await this.firestore.collection('fichas').doc(this.fichaId).update({ descanso: descansomin.value + ":" + descansoseg.value, series: fichaseries.value, repeticoes: ficharepeticoes.value })
 
+    await this.toastFichaEditada()
+    this.detalharFicha()
+    this.service.fecharLoading()
   }
 
   ngOnInit() {

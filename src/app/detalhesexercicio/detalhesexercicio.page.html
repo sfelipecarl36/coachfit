@@ -8,10 +8,14 @@
     </div>
 
     <img referrerpolicy=“no-referrer” id="fotoperfil" src="{{exercicioImg}}"/>
+
+    <div class="content-exe">
     <h2>{{exercicioNome}}</h2>
     <span *ngFor="let cat of categorias"><h5 *ngIf="exercicioCat==cat.uid">Tipo de Exercício: {{cat.nome}}</h5></span>
     <h4>Área de Treino: {{exercicioRegiao}}</h4>
     <p>{{exercicioDesc}}</p>
+
+    </div>
 
     <span class="span-button" *ngFor="let cat of categorias"><ion-button *ngIf="exercicioCat==cat.uid" id="addExeFicha" (click)="presentAlertAdd(exercicioUid, cat.uid)">Adicionar para Ficha</ion-button></span>
 

@@ -55,6 +55,8 @@ export class CriafichaPage implements OnInit {
 
   async criarFicha() {
 
+    this.service.abrirLoading('Criando sua ficha')
+
     const toast = await this.toastController.create ({
       message: 'Ficha '+this.rotulo+' criada!',
       position: 'middle',
@@ -66,6 +68,7 @@ export class CriafichaPage implements OnInit {
         console.log('Ficha Criada!');
         toast.present();
         this.service.navegar('meutreino');
+        this.service.fecharLoading();
         });
   }
 

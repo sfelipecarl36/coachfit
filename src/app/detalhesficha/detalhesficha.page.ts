@@ -122,6 +122,7 @@ export class DetalhesfichaPage implements OnInit {
         }
         })
       }
+      this.service.fecharLoading();
     }
 
     async ionViewDidEnter(){
@@ -257,10 +258,11 @@ export class DetalhesfichaPage implements OnInit {
       }
       
   })
+
+
     this.carregarFichas()
     this.exerciciosBanco = this.database!.exerciciosLocal
     this.categorias = this.database!.categoriasLocal
-
   }
 
   async contarSubExercicios() {
@@ -280,7 +282,11 @@ export class DetalhesfichaPage implements OnInit {
   }
 
   async contarExercicios() {
-    return this.exerciciosBanco.length
+    const query = this.firestore!.collectionGroup<subexercicioHistI>('exercicioHist', ref => ref.where('fichaId', '==', this.fichaId))
+    const querySnapshot = await query.get().toPromise();
+    const numDocumentos = querySnapshot!.size;
+    console.log(`Número de registros: ${numDocumentos}`);
+    return numDocumentos
   }
 
   getTotalIndex(categoryIndex: number, exerciseIndex: number): number {
@@ -295,7 +301,9 @@ export class DetalhesfichaPage implements OnInit {
     let i = 0
     if(this.state == 'start'){
       const exeCount = await this.contarExercicios()
+      console.log(exeCount)
       const subexeCount = await this.contarSubExercicios()
+      console.log(subexeCount)
       if(subexeCount>=exeCount){
         this.firestore!.collection<fichaHistoricoI>('fichaHistorico', ref => ref.where('data', '==', this.date).where('fichaId', '==', this.fichaId)).valueChanges().subscribe((res: fichaHistoricoI[]) => {
           res.forEach(async (item) => {    
@@ -465,10 +473,10 @@ export class DetalhesfichaPage implements OnInit {
           text: 'Deletar',
           handler: async () => {
             console.log('Ficha sendo Deletada');
-            this.database.abrirLoading('Deletando Ficha '+this.fichaRotulo)
+            this.service.abrirLoading('Deletando Ficha '+this.fichaRotulo)
             await this.deletarFicha();
             this.avisoDeletado();
-            this.database.fecharLoading()
+            this.service.fecharLoading()
             this.router.navigateByUrl('meutreino');
           },
         },
@@ -481,7 +489,8 @@ export class DetalhesfichaPage implements OnInit {
   }
 
   async carregarFichas() {
-    this.database.abrirLoading('Carregando Exercícios')
+
+    this.service.abrirLoading('Carregando Exercícios')
     
     this.fichasSubscription = this.database.getFichaPorId(this.fichaId).subscribe((ficha: fichaI) => {
       this.fichaDescanso = ficha.descanso;
@@ -494,12 +503,9 @@ export class DetalhesfichaPage implements OnInit {
 
   async carregarCategorias() {
     
-    this.categoriasSubscription = this.firestore
-      .collection<categoriaI>('categorias')
-      .valueChanges()
-      .subscribe((categorias: categoriaI[]) => {
-        this.categorias = categorias;
-      });
+    this.categoriasSubscription = this.database.getCategorias().subscribe(categorias => {
+      this.categorias = categorias
+    })
 
       this.firestore
       .collection('fichas')
@@ -546,7 +552,7 @@ export class DetalhesfichaPage implements OnInit {
     console.log('categoriasList:',this.categoriasList)
   }
 
-  this.database.fecharLoading();
+  this.service.fecharLoading();
   
 }
 

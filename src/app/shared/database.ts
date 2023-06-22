@@ -7,7 +7,6 @@ import { fichaI } from '../model/fichas';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { subexercicioHistI } from '../model/subexerciciosHist';
 import { AuthService } from './auth-service';
-import { LoadingController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root',
@@ -21,12 +20,10 @@ export class Database {
     public user: any
     public subexerciciosHist!: Observable<Array<subexercicioHistI>>;
     public fichasSubscription: any;
-    public loading: any;
 
   constructor(
     private firestore: AngularFirestore,
     private auth: AuthService,
-    private loadingController: LoadingController
   ) {
     this.exerciciosLocal = this.firestore.collection<exercicioI>('exercicios').valueChanges();
     this.categoriasLocal = this.firestore.collection<categoriaI>('categorias').valueChanges();
@@ -92,21 +89,6 @@ export class Database {
         })
       );
   }
-
-  async abrirLoading(message?: string) {
-    this.loading = await this.loadingController.create({
-      message: message ? message : '',
-      spinner: 'circular',
-      duration: 10000,
-    });
-    this.loading.present();
-   }
-  
-  async fecharLoading() {
-    setTimeout(() => {
-      this.loading.dismiss();
-    }, 500)
-   }
   
 
   ngOnInit() {

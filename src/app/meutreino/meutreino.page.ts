@@ -1,13 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Services } from '../shared/services';
 import { Database } from '../shared/database';
-import { AuthService } from '../shared/auth-service';
 import { Observable, of } from 'rxjs';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { subexercicioI } from '../model/subexercicios';
-import { fichaI } from '../model/fichas';
 import { Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-meutreino',
@@ -28,10 +24,7 @@ export class MeutreinoPage implements OnInit {
   constructor(
     public service: Services,
     private router: Router,
-    private firestore: AngularFirestore,
     public database: Database,
-    private auth: AuthService,
-    private loadingController: LoadingController,
   ) {
 
   }
@@ -42,9 +35,7 @@ export class MeutreinoPage implements OnInit {
         this.exerciciosPorFicha[ficha.uid] = exercicios;
       });
     }
-    setTimeout(() =>{
-      this.loadingController.dismiss();
-    }, 500)
+    this.service.fecharLoading();
   }
 
   ngOnDestroy() {
@@ -55,12 +46,7 @@ export class MeutreinoPage implements OnInit {
 
   async ngOnInit() {
     
-    const loading = await this.loadingController.create({
-      message: 'Carregando Fichas',
-      spinner: 'circular',
-      duration: 10000,
-    });
-    loading.present();
+    this.service.abrirLoading();
 
     this.fichasSubscription = this.database.getFichas().subscribe(fichas => {
       this.fichas = fichas;

@@ -5,6 +5,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { CommonModule } from '@angular/common';
 import { ModalController } from '@ionic/angular';
 import { IonicModule } from '@ionic/angular';
+import { Services } from 'src/app/shared/services';
 
 const circleR = 80;
 const circleDasharray = 2 * Math.PI * circleR;
@@ -53,7 +54,8 @@ export class CircleComponentComponent  implements OnInit {
 
   constructor(
     private firestore: AngularFirestore,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private service: Services
   ) { }
 
   ngOnInit() {
@@ -61,6 +63,7 @@ export class CircleComponentComponent  implements OnInit {
   }
 
   async fecharModal() {
+    this.service.abrirLoading();
     const dataToReturn = {
       exercicio: this.exe,
       series: this.series,

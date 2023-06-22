@@ -10,6 +10,7 @@ import {
 } from '@angular/fire/compat/firestore';
 import firebase from 'firebase/compat';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { UserI } from '../model/users';
 @Injectable({
   providedIn: 'root',
 })
@@ -28,22 +29,43 @@ export class AuthService {
     public afs: AngularFirestore,
   ) {
 
-    this.ngFireAuth.authState.subscribe((user) => {
-      if (user) { 
-        this.userUid = user.uid
-        this.userData = user;
+  }
 
-        localStorage.setItem('user', JSON.stringify(this.userData));
-        JSON.parse(localStorage.getItem('user')!);
-        this.userData = JSON.parse(localStorage.getItem('user')!);
-
-      } else {
-        localStorage.setItem('user', '');
-        JSON.parse(localStorage.getItem('user')!);
-        this.router.navigate(['slideshow']);
-      }
+  async setUser() {
+    return new Promise<string>((resolve, reject) => {
+      this.ngFireAuth.authState.subscribe((user) => {
+        if (user) {
+          console.log('Está Logado.');
+          resolve(user.uid);
+        } else {
+          reject('Usuário não autenticado');
+        }
+      });
     });
   }
+
+  async getUser(): Promise<any> {
+    const userUid = await this.setUser();
+    return new Promise((resolve, reject) => {
+      this.afs.collection('users').doc(userUid).get().subscribe((doc) => {
+        if (doc.exists) {
+          const userData = doc.data() as any;
+          const user = {
+            nome: userData.displayName.substring(0, userData.displayName.indexOf(' ')),
+            nomecompleto: userData.displayName,
+            email: userData.email,
+          };
+          console.log('User:',user)
+          resolve(user);
+        } else {
+          reject('Usuário não encontrado');
+        }
+      }, (error) => {
+        reject(error);
+      });
+    });
+  }
+
   // Login in with email/password
   async SignIn(email: string, senha: string) {
 
@@ -53,24 +75,7 @@ export class AuthService {
             return user;
  
           })
-          
 }
-
-  // async getName() {
-  //   const autenticacao = getAuth();
-  //           this.userDados = this.afs.collection('users', ref => ref.
-  //           where('uid', '==', autenticacao.currentUser!.uid)).valueChanges();
-  //           this.userDados.subscribe((res: User[]) => {
-        
-  //             res.forEach((item) => {
-  //               this.name = item.displayName;
-  //               this.userData['displayName'] = item.displayName;
-  //               this.userData['name'] = item.displayName.substring(0, item.displayName.indexOf(' '));
-  //               return item.displayName;
-  //             });
-              
-  //           })
-  // }
 
   // Register user with email/password
   RegisterUser(nome: any, usuario: any, email: string, senha: string) {
@@ -171,7 +176,7 @@ export class AuthService {
   SignOut() {
     return this.ngFireAuth.signOut().then(() => {
       this.userUid = ''
-      localStorage.removeItem('user');
+      this.userData = undefined
       this.router.navigate(['login']);
     });
   }
