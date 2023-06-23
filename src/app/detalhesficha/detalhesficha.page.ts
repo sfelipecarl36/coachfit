@@ -134,12 +134,7 @@ export class DetalhesfichaPage implements OnInit {
 
     async startTimer() {
 
-      const loading = await this.loadingController.create({
-        spinner: 'circular',
-        duration: 1000,
-        message: 'Iniciando'
-      });
-      loading.present();
+      this.service.abrirLoading('Iniciando');
 
       if(await this.contarTreinosConcluidos()>0){
         const alertConcluido = await this.alertController.create({
@@ -163,6 +158,7 @@ export class DetalhesfichaPage implements OnInit {
         this.interval = setInterval( () => {
           this.updateTimeValue();
         }, 1000)
+        this.service.fecharLoading();
     }
   }
 
